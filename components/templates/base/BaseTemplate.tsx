@@ -1,11 +1,11 @@
-import styles from './BaseTemplate.module.css';
+import Wrapper from './BaseTemplate.styled';
 
 export interface IBaseTemplate {
-  sampleTextProps: string;
+  sampleTextProps?: string;
 }
 
 const BaseTemplate: React.FC<IBaseTemplate> = ({ sampleTextProps }) => {
-  return <div className={styles.contaier}>{sampleTextProps}</div>;
+  return <Wrapper>{sampleTextProps}</Wrapper>;
 };
 
 export default BaseTemplate;
