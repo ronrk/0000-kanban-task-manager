@@ -3,21 +3,25 @@ import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import ShowDrawerButton from '@/components/ui/showDrawerButton/ShowDrawerButton';
 import Drawer from '@/components/utility/drawer/Drawer';
+import { selectClientValue } from '@/store';
 import Image from 'next/image';
 import { HiOutlinePlus } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
 import Wrapper from './Appbar.styled';
 
 export interface IAppbar extends React.ComponentPropsWithoutRef<'header'> {}
 
 const Appbar: React.FC<IAppbar> = () => {
+  const { isDrawerOpen, darkTheme } = useSelector(selectClientValue);
   const activeBoard = true;
-  const darkTheme = false;
-  const showDrawer = true;
+
   return (
     <Wrapper className="flex bg-box">
       <Drawer />
       <div
-        className={showDrawer ? 'image-wrapper' : 'image-wrapper drawer-hidden'}
+        className={
+          isDrawerOpen ? 'image-wrapper' : 'image-wrapper drawer-hidden'
+        }
       >
         <Image
           src={darkTheme ? '/assets/logo-light.svg' : '/assets/logo-dark.svg'}
@@ -45,7 +49,7 @@ const Appbar: React.FC<IAppbar> = () => {
           />
         </div>
       </div>
-      {!showDrawer && <ShowDrawerButton />}
+      {!isDrawerOpen && <ShowDrawerButton />}
     </Wrapper>
   );
 };

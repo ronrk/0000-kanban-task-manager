@@ -7,16 +7,14 @@ interface IProps {}
 
 const Home: NextPageWithLayout<IProps> = () => {
   return (
-    <section>
-      <TaskManagerContainer />
-    </section>
+    <PrimaryLayout>
+      <section>
+        <TaskManagerContainer />
+      </section>
+    </PrimaryLayout>
   );
 };
 export default Home;
-
-Home.getLayout = (page) => {
-  return <PrimaryLayout>{page}</PrimaryLayout>;
-};
 
 export const getServerSideProps: GetServerSideProps = async () => {
   let props: IProps = {};

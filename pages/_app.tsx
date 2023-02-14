@@ -1,5 +1,7 @@
+import { store } from '@/store';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
+import { Provider } from 'react-redux';
 import { NextPageWithLayout } from './page';
 
 interface AppPropsWithLayout extends AppProps {
@@ -7,7 +9,9 @@ interface AppPropsWithLayout extends AppProps {
 }
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout || ((page) => page);
-
-  return getLayout(<Component {...pageProps} />);
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  );
 }

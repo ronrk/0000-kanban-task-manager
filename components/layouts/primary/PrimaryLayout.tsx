@@ -1,5 +1,7 @@
 import Appbar from '@/components/navigation/Appbar/Appbar';
+import { selectClientValue } from '@/store';
 import Head from 'next/head';
+import { useSelector } from 'react-redux';
 import Wrapper from './PrimaryLayout.styled';
 
 export interface IPrimaryLayout extends React.ComponentPropsWithoutRef<'div'> {
@@ -11,7 +13,8 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
   title = 'Task Manager',
   ...divProps
 }) => {
-  const showDrawer = true;
+  const { darkTheme, isDrawerOpen } = useSelector(selectClientValue);
+
   return (
     <>
       <Head>
@@ -23,9 +26,9 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
-      <Wrapper {...divProps}>
+      <Wrapper {...divProps} className={darkTheme ? 'dark' : ''}>
         <Appbar />
-        <main className={showDrawer ? 'app bg-app' : 'app bg-app full-w'}>
+        <main className={isDrawerOpen ? 'app bg-app' : 'app bg-app full-w'}>
           {children}
         </main>
         {/* <div className="m-auto" /> */}
