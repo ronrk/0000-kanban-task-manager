@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const StyledBoardDrawerList = styled.div`
   flex: 1;
+  width: 100%;
   & h3 {
     padding: 1em;
   }
@@ -19,6 +20,10 @@ const StyledBoardDrawerList = styled.div`
 
       &.create-new-link {
         margin-left: 0.5em;
+        & button {
+          align-items: center;
+          --gap: 0.5rem;
+        }
       }
     }
     & button {

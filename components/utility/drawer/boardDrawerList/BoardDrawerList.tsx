@@ -23,7 +23,7 @@ const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
           </button>
         ))}
         <li className="create-new-link">
-          <button className="text-primary fs-400 fw-b">
+          <button className="text-primary fs-400 fw-b flex">
             <HiOutlinePlus /> Create New Board
           </button>
         </li>

@@ -4,7 +4,7 @@ const StyledAppbar = styled.header`
   position: relative;
   --gap: 0;
   height: 10vh;
-  /* align-items: center; */
+  align-items: center;
 
   & h2 {
     text-transform: capitalize;
@@ -13,14 +13,16 @@ const StyledAppbar = styled.header`
   & .image-wrapper {
     padding: 1em 2em;
     position: relative;
-    width: var(--drawer-width);
+    min-width: var(--drawer-width);
     border-right: 2px solid hsl(var(--clr-line));
     border-bottom: 2px solid transparent;
     padding-left: 1em;
     height: 100%;
+
     transition: all 0.2s;
     & img {
-      object-fit: contain;
+      padding: 1.5rem;
+      /* width: 50%; */
     }
     &.drawer-hidden {
       border-color: hsl(var(--clr-line));
@@ -33,6 +35,7 @@ const StyledAppbar = styled.header`
     flex: 1;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
 
     & .actions {
       align-items: center;

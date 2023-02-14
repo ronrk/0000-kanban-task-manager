@@ -26,8 +26,7 @@ const Appbar: React.FC<IAppbar> = () => {
         <Image
           src={darkTheme ? '/assets/logo-light.svg' : '/assets/logo-dark.svg'}
           alt={''}
-          width={150}
-          height={60}
+          fill
         />
       </div>
       <div className="appBar flex">
