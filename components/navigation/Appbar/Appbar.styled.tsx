@@ -18,11 +18,9 @@ const StyledAppbar = styled.header`
     border-bottom: 2px solid transparent;
     padding-left: 1em;
     height: 100%;
-
     transition: all 0.2s;
     & img {
       padding: 1.5rem;
-      /* width: 50%; */
     }
     &.drawer-hidden {
       border-color: hsl(var(--clr-line));
