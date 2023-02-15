@@ -1,54 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import useDropdownHook from '@/hooks/useDropdownHook';
 import { HiDotsVertical } from 'react-icons/hi';
 import Wrapper from './MenuDropdown.styled';
 
 export interface IMenuDropdown {
   // eslint-disable-next-line no-unused-vars
-  onChange: (type: string) => void;
+  onChange(type: string): void;
   value: string | null;
   options: string[];
-  type: string;
 }
 
 const MenuDropdown: React.FC<IMenuDropdown> = ({
   onChange,
   value,
   options,
-  type,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const divEl = useRef<HTMLDivElement>(null);
   const activeBoard = true;
-
-  useEffect(() => {
-    function handler(event: any) {
-      if (!divEl.current) {
-        return;
-      }
-      if (event.target === null) {
-        return;
-      }
-      if (!divEl.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener('click', handler, true);
-
-    return () => {
-      document.removeEventListener('click', handler);
-    };
-  }, []);
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleOptionClick = (option: string) => {
-    setIsOpen(false);
-    onChange(option);
-  };
-
+  const { handleOptionClick, handleClick, isOpen, divElRef } =
+    useDropdownHook(onChange);
   const renderedOptions = options.map((option: string, id): React.ReactNode => {
     return (
       <div
@@ -64,17 +32,18 @@ const MenuDropdown: React.FC<IMenuDropdown> = ({
         onClick={() => handleOptionClick(option)}
         key={id}
       >
-        {option} {type}
+        {option}
       </div>
     );
   });
 
   return (
-    <Wrapper ref={divEl} className="menu fs-300">
+    <Wrapper ref={divElRef} className="menu fs-300">
       <button
         className="flex bg-box text-light btn--menu"
         onClick={handleClick}
         disabled={activeBoard ? false : true}
+        type="button"
       >
         <HiDotsVertical className="icon" />
       </button>

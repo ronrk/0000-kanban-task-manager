@@ -1,13 +1,18 @@
+import ModalContainer from '@/components/cards/modalContainer/ModalContainer';
 import PrimaryLayout from '@/components/layouts/primary/PrimaryLayout';
 import TaskManagerContainer from '@/components/surfaces/taskManagerContainer/TaskManagerContainer';
+import { selectClientValue } from '@/store';
 import { GetServerSideProps } from 'next';
+import { useSelector } from 'react-redux';
 import { NextPageWithLayout } from './page';
 
 interface IProps {}
 
 const Home: NextPageWithLayout<IProps> = () => {
+  const { isModalOpen, modalChildren } = useSelector(selectClientValue);
   return (
     <PrimaryLayout>
+      {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
       <section>
         <TaskManagerContainer />
       </section>

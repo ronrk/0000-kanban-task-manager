@@ -1,10 +1,12 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 
-export interface IPrimaryButton {
+export interface IPrimaryButton
+  extends React.ComponentPropsWithoutRef<'button'> {
   fullWidth?: boolean;
   color: 'primary' | 'primary-light' | 'red' | 'white';
 }
-const PrimaryButton = styled.button<IPrimaryButton>`
+const StyledPrimaryButton = styled.button<IPrimaryButton>`
   align-items: center;
   --gap: 0.5em;
   background-color: ${({ color }) =>
@@ -27,5 +29,9 @@ const PrimaryButton = styled.button<IPrimaryButton>`
     cursor: not-allowed;
   }
 `;
+
+const PrimaryButton: FC<IPrimaryButton> = ({ children, ...props }) => (
+  <StyledPrimaryButton {...props}>{children}</StyledPrimaryButton>
+);
 
 export default PrimaryButton;

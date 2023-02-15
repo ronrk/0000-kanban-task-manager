@@ -3,16 +3,14 @@ import { connectMongo } from '@/database/connect';
 import {
   createNewBoard,
   getAllBoards,
+  getTemplateBoard,
 } from '@/database/controllers/boardController';
-import {
-  serverNoDataOnBodyError,
-  serverWrongMethodError,
-} from '@/lib/server/serverErrorRes';
+import { serverWrongMethodError } from '@/lib/server/serverErrorRes';
 import { IBoard } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export interface IApiBoardRequest extends NextApiRequest {
-  body: { board?: IBoard };
+  body: IBoard;
 }
 
 export default async function handler(
@@ -26,20 +24,24 @@ export default async function handler(
   const isQuery = Object.keys(query).length !== 0;
   switch (method) {
     case 'GET':
-      /*   if (isQuery) {
+      if (isQuery) {
+        if (query.template && query.template === 'true') {
+          getTemplateBoard(req, res);
+          break;
+        }
         res
           .status(200)
           .json({ message: 'Get single Board', boardId: query.boardId });
         break;
-      } */
+      }
       await getAllBoards(req, res);
       break;
 
     case 'POST':
-      if (!body) {
+      /*     if (!body) {
         serverNoDataOnBodyError(res);
         break;
-      }
+      } */
       await createNewBoard(req, res);
       break;
     default:

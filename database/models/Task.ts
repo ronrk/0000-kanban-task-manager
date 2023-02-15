@@ -7,9 +7,10 @@ const TaskSchema = new Schema({
   },
   description: String,
   status: String,
-  subtasks: { type: [mongoose.Types.ObjectId], ref: 'Subtask' },
+  subtasks: { type: [mongoose.SchemaTypes.ObjectId], ref: 'Subtask' },
+  column: { type: mongoose.SchemaTypes.ObjectId, ref: 'Column' },
 });
 
-const Tasks = models.task || model('Task', TaskSchema);
+const Tasks = models.Task || model('Task', TaskSchema);
 
 export default Tasks;

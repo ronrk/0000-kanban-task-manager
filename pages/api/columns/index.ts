@@ -1,4 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
+import { getTemplateColumn } from '@/database/controllers/columnController';
 import {
   serverNoDataOnBodyError,
   serverWrongMethodError,
@@ -6,20 +8,23 @@ import {
 import { IColumn } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-interface IApiSearchRequest extends NextApiRequest {
-  body: { column?: IColumn };
+export interface IApiColumnRequest extends NextApiRequest {
+  body: IColumn;
 }
 
-export default function handler(req: IApiSearchRequest, res: NextApiResponse) {
+export default function handler(req: IApiColumnRequest, res: NextApiResponse) {
   const { method, query, body } = req;
-  const { boardId, columnId } = query;
-  if (!boardId) {
-    res.status(401).json({ message: 'cant get columns withoud boardId' });
-    return;
-  }
+  const { boardId, columnId, template } = query;
+  const isQuery = Object.keys(query).length !== 0;
 
   switch (method) {
     case 'GET':
+      if (isQuery) {
+        if (query.template && template === 'true') {
+          getTemplateColumn(req, res);
+          break;
+        }
+      }
       if (columnId) {
         res.status(200).json({ mesage: 'get Single Columns by Id', columnId });
         break;

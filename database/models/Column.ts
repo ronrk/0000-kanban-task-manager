@@ -1,13 +1,15 @@
-import mongoose, { model, models, Schema } from 'mongoose';
+import { IColumnSchema } from '@/types';
+import { model, models, Schema } from 'mongoose';
 
-const ColumnSchema = new Schema({
+const ColumnSchema = new Schema<IColumnSchema>({
   name: {
     type: String,
-    required: [true, 'Board must have a name'],
+    required: [true, 'Column must have a name'],
   },
-  columnsId: { type: [mongoose.Types.ObjectId], ref: 'Task' },
+  board: { type: Schema.Types.ObjectId, ref: 'Board' },
+  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
 });
 
-const Columns = models.column || model('column', ColumnSchema);
+const Columns = models?.Column || model<IColumnSchema>('Column', ColumnSchema);
 
 export default Columns;

@@ -1,8 +1,6 @@
 import { ICreateNewBoard } from './CreateNewBoard';
 
-const base: ICreateNewBoard = {
-  sampleTextProps: 'Hello World',
-};
+const base: ICreateNewBoard = {};
 
 export const mockCreateNewBoardProps = {
   base,

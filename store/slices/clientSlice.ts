@@ -1,13 +1,15 @@
+import { StatusType } from '@/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import React from 'react';
-import { RootState } from '..';
+import { getTemplateBoard, RootState } from '..';
 
 interface IClientState {
   darkTheme: boolean;
   isDrawerOpen: boolean;
   isModalOpen: boolean;
   modalChildren: null | React.ReactNode;
+  status: StatusType;
 }
 
 const initialState: IClientState = {
@@ -15,6 +17,7 @@ const initialState: IClientState = {
   isDrawerOpen: true,
   isModalOpen: false,
   modalChildren: null,
+  status: StatusType.IDLE,
 };
 
 export const clientSlice = createSlice({
@@ -35,6 +38,17 @@ export const clientSlice = createSlice({
       state.modalChildren = null;
       state.isModalOpen = false;
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(getTemplateBoard.pending, (state, action) => {
+      state.status = StatusType.PENDING;
+    });
+    builder.addCase(getTemplateBoard.fulfilled, (state, action) => {
+      state.status = StatusType.FULLFILED;
+    });
+    builder.addCase(getTemplateBoard.rejected, (state, action) => {
+      state.status = StatusType.ERROR;
+    });
   },
 });
 

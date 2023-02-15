@@ -43,7 +43,6 @@ const Appbar: React.FC<IAppbar> = () => {
           <MenuDropdown
             value={null}
             options={['edit', 'delete']}
-            type={'board'}
             onChange={() => {}}
           />
         </div>
