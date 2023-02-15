@@ -3,7 +3,7 @@ import {
   serverNoDataOnBodyError,
   serverWrongMethodError,
 } from '@/lib/server/serverErrorRes';
-import { IColumn, IColumnWithId } from '@/types';
+import { IColumn } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface IApiSearchRequest extends NextApiRequest {
