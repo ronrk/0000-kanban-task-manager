@@ -3,11 +3,11 @@ import {
   serverNoDataOnBodyError,
   serverWrongMethodError,
 } from '@/lib/server/serverErrorRes';
-import { IColumnWithId } from '@/types';
+import { IColumn, IColumnWithId } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface IApiSearchRequest extends NextApiRequest {
-  body: { column?: IColumnWithId };
+  body: { column?: IColumn };
 }
 
 export default function handler(req: IApiSearchRequest, res: NextApiResponse) {

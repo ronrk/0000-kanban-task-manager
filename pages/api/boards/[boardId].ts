@@ -3,11 +3,11 @@ import {
   serverNoDataOnBodyError,
   serverWrongMethodError,
 } from '@/lib/server/serverErrorRes';
-import { IBoardWithId } from '@/types';
+import { IBoard } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface IApiSearchRequest extends NextApiRequest {
-  body: { board?: IBoardWithId };
+  body: { board?: IBoard };
 }
 
 export default function handler(req: IApiSearchRequest, res: NextApiResponse) {

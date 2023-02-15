@@ -3,11 +3,11 @@ import {
   serverNoDataOnBodyError,
   serverWrongMethodError,
 } from '@/lib/server/serverErrorRes';
-import { ITaskWithId } from '@/types';
+import { ITask } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface IApiSearchRequest extends NextApiRequest {
-  body: { task?: ITaskWithId };
+  body: { task?: ITask };
 }
 
 export default function handler(req: IApiSearchRequest, res: NextApiResponse) {
