@@ -1,6 +1,7 @@
-import { ICreateNewBoard } from './CreateNewBoard';
-
-const base: ICreateNewBoard = {};
+const base = {
+  templateBoard: {},
+  templateColumns: [],
+};
 
 export const mockCreateNewBoardProps = {
   base,
