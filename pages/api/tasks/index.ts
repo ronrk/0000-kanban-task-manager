@@ -1,44 +1,45 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { NextApiRequest, NextApiResponse } from 'next';
 import {
-  serverNoDataOnBodyError,
-  serverWrongMethodError,
-} from '@/lib/server/serverErrorRes';
-import { ITask } from '@/types';
-import type { NextApiRequest, NextApiResponse } from 'next';
+  connectMongo,
+  server404Error,
+  wrongMethodError,
+  Column,
+  Task,
+} from '@/database';
 
-interface IApiSearchRequest extends NextApiRequest {
-  body: { task?: ITask };
-}
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { body, query, method } = req;
+  try {
+    await connectMongo().catch((error) =>
+      res.status(405).json({ message: 'Error connecting to DB', error: error })
+    );
 
-export default function handler(req: IApiSearchRequest, res: NextApiResponse) {
-  const { method, query, body } = req;
-  const { columnId, taskId } = query;
-  if (!columnId) {
-    res.status(401).json({ message: 'cant get tasks withoud columnId' });
-    return;
-  }
+    const column = await Column.findById(query.columnId);
+    if (!column) {
+      server404Error(res, `Cant find column with id :${query.columnId}`);
+      return;
+    }
 
-  switch (method) {
-    case 'GET':
-      if (taskId) {
-        res.status(200).json({ mesage: 'get Single Tasks by Id', taskId });
-        break;
-      }
-      res
-        .status(200)
-        .json({ message: 'get all columns by Column id', columnId });
-      break;
-    case 'POST':
+    if (method === 'POST') {
       if (!body) {
-        serverNoDataOnBodyError(res);
-        break;
+        server404Error(res, 'createNewTask: No data on req.body');
+        return;
       }
-      res
+      const newTask = await Task.create({ ...body, colStatus: column.status });
+      column.tasks.push(newTask._id);
+      await column.save();
+
+      return res
         .status(200)
-        .json({ message: 'create task by columnId', columnId, column: body });
-      break;
-    default:
-      serverWrongMethodError(res, ['GET', 'POST'], method || '');
-      break;
+        .json({ message: 'Create new board', newTask, column });
+    }
+    wrongMethodError(req, res, ['POST']);
+    return;
+  } catch (error) {
+    console.log({ error });
+    return res.status(404).json({ message: 'Error propeties/', error });
   }
 }

@@ -5,32 +5,34 @@ import { ColType } from './index';
 export type TCol = ColType[];
 
 export interface IUser {
-  name: string;
-  boards?: [];
-}
-
-export interface ISubtask {
-  title: string;
-  status: boolean;
-}
-
-export interface IColumn {
-  name: ColType;
   _id: mongoose.Types.ObjectId;
-  board: mongoose.Types.ObjectId;
-  tasks: mongoose.Types.ObjectId[];
-}
-
-export interface ITask {
-  description: string;
-  title: string;
+  username: string;
+  email: string;
+  boards: IBoard[];
 }
 
 export interface IBoard {
   name: string;
   columns: IColumn[];
-  userId: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   _id: mongoose.Types.ObjectId;
+}
+export interface IColumn {
+  status: ColType;
+  _id: mongoose.Types.ObjectId;
+  tasks: ITask[];
+}
+export interface ITask {
+  title: string;
+  description: string;
+  _id: mongoose.Types.ObjectId;
+  subtasks: ISubtask[];
+  colStatus: ColType;
+}
+
+export interface ISubtask {
+  title: string;
+  isCompleted: boolean;
 }
 
 export interface IError {

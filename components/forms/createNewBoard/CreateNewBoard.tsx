@@ -3,43 +3,57 @@ import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import PrimaryInput from '@/components/ui/primaryInput/PrimaryInput.styled';
 import TodoDropdown from '@/components/ui/todoDropdown/TodoDropdown';
 import useInput from '@/hooks/useInput';
-import { getTemplateColumn } from '@/lib/queryColumn/queryColumn';
-import { closeModal, useAppDispatch, useCreateNewBoardMutation } from '@/store';
+
+import {
+  closeModal,
+  selectClientValue,
+  useAppDispatch,
+  useCreateNewBoardMutation,
+  useGetTemplateBoardQuery,
+} from '@/store';
 import { ColType, IBoard, IColumn } from '@/types';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { HiOutlinePlus } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
 import Wrapper from '../FormWrapper.styled';
 
 export interface ICreateNewBoard extends React.ComponentPropsWithoutRef<'div'> {
-  templateBoard: IBoard;
-  templateColumns: IColumn[];
+  board?: IBoard;
 }
 
-const CreateNewBoard: React.FC<ICreateNewBoard> = ({
-  templateBoard,
-  templateColumns,
-}) => {
-  const [board, setBoard] = useState<IBoard>(templateBoard);
-  const [columnsChoosen, setColumnsChoosen] =
-    useState<IColumn[]>(templateColumns);
+const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
+  const [formBoard, setFormBoard] = useState<IBoard | null>(board || null);
+  const [columnsChoosen, setColumnsChoosen] = useState<IColumn[]>(
+    board?.columns || []
+  );
+  const { user } = useSelector(selectClientValue);
 
   const [addBoard] = useCreateNewBoardMutation();
-
-  const addNewColumn = () => {
-    getTemplateColumn(board!._id)
-      .then((data: IColumn) => {
-        setBoard((prev) => {
-          if (!prev) {
-            return prev;
-          }
-          return { ...prev, columns: [...board!.columns, data] };
-        });
-        setColumnsChoosen((prev) => [...prev, data]);
-      })
-      .catch((e) => console.log({ e, message: 'Error fetching data' }));
-  };
-
   const dispatch = useAppDispatch();
+
+  const { data, isSuccess } = useGetTemplateBoardQuery('');
+
+  useEffect(() => {
+    if (!formBoard && isSuccess) {
+      setFormBoard(data);
+      setColumnsChoosen(data?.columns);
+    }
+  }, [data, isSuccess, formBoard]);
+
+  const addNewColumn = async () => {
+    fetch('/api/boards?template=true')
+      .then((res) => res.json())
+      .then((data: { initialColumn: IColumn }) => {
+        setColumnsChoosen((prev) => [...prev, data.initialColumn]);
+        setFormBoard((prev) => {
+          if (!prev) return prev;
+          return { ...prev, columns: [...prev.columns, data.initialColumn] };
+        });
+      })
+      .catch((error) =>
+        console.log({ message: 'Error create new column', error })
+      );
+  };
 
   const {
     value: enteredName,
@@ -52,7 +66,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({
   const handleColChange = (col: any, colType: ColType) => {
     const updatedColumns = columnsChoosen.map((column) => {
       if (column._id === col._id) {
-        return { ...column, name: colType };
+        return { ...column, status: colType };
       }
       return column;
     });
@@ -60,11 +74,17 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({
     setColumnsChoosen(updatedColumns);
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addBoard({ ...board, name: enteredName }).then(() =>
-      dispatch(closeModal())
-    );
+
+    addBoard({
+      uid: user._id,
+      board: { ...formBoard, name: enteredName },
+    })
+      .then(() => dispatch(closeModal()))
+      .catch((error) => {
+        console.log({ error, message: 'Error Creating New Board' });
+      });
   };
   let content = (
     <form onSubmit={submitHandler} className="flex-col">
@@ -94,7 +114,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({
             <div className="form-control flex" key={idx}>
               <TodoDropdown
                 onChange={(colType) => handleColChange(col, colType)}
-                value={col.name}
+                value={col.status}
               />
 
               <IconRemove

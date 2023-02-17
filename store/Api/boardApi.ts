@@ -1,28 +1,51 @@
-import { formatBoards } from '@/lib/helpers';
 import { IBoard, IColumn } from '@/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import mongoose from 'mongoose';
 
 export const boardApi = createApi({
   reducerPath: 'boardApi',
-  tagTypes: ['boards'],
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/boards' }),
+  tagTypes: ['boards', 'tasks'],
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/boards' }),
   endpoints: (builder) => ({
     getTemplateBoard: builder.query({
-      forceRefetch(params) {
-        return true;
-      },
-      query: (query) => query,
-      transformResponse: (res: {
+      query: () => '?template=true',
+      transformResponse: (data: {
         initialBoard: IBoard;
         initialColumn: IColumn;
-      }) => formatBoards(res),
+      }) => ({ ...data.initialBoard, columns: [data.initialColumn] }),
     }),
-    getAllBoards: builder.query({
-      query: () => '/',
-      providesTags: ['boards'],
+    getBoardById: builder.query({
+      query: (boardId) => `?boardId=${boardId}`,
+      providesTags: ['boards', 'tasks'],
     }),
     createNewBoard: builder.mutation({
-      query: (board) => ({ url: '/', method: 'POST', body: board }),
+      query: ({ uid, board }: { uid: string; board: any }) => ({
+        url: `?uid=${uid}`,
+        method: 'POST',
+        body: board,
+      }),
+
+      invalidatesTags: ['boards'],
+    }),
+    createNewColumn: builder.mutation({
+      query: ({ boardId, column }: { boardId: string; column: any }) => ({
+        url: `/${boardId}`,
+        method: 'POST',
+        body: column,
+      }),
+      invalidatesTags: ['boards'],
+    }),
+    removeColumns: builder.mutation({
+      query: ({
+        boardId,
+        columnId,
+      }: {
+        boardId: string;
+        columnId: string;
+      }) => ({
+        url: `/${boardId}/${columnId}`,
+        method: 'DELETE',
+      }),
       invalidatesTags: ['boards'],
     }),
     removeBoard: builder.mutation({
@@ -34,7 +57,9 @@ export const boardApi = createApi({
 
 export const {
   useGetTemplateBoardQuery,
-  useGetAllBoardsQuery,
+  useGetBoardByIdQuery,
   useCreateNewBoardMutation,
+  useCreateNewColumnMutation,
   useRemoveBoardMutation,
+  useRemoveColumnsMutation,
 } = boardApi;

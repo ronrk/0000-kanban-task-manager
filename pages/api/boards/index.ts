@@ -1,51 +1,57 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { connectMongo } from '@/database/connect';
 import {
-  createNewBoard,
-  getAllBoards,
-  getTemplateBoard,
-} from '@/database/controllers/boardController';
-import { serverWrongMethodError } from '@/lib/server/serverErrorRes';
-import { IBoard } from '@/types';
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-export interface IApiBoardRequest extends NextApiRequest {
-  body: IBoard;
-}
+  Board,
+  Column,
+  connectMongo,
+  server404Error,
+  User,
+  wrongMethodError,
+} from '@/database';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
-  req: IApiBoardRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
-  connectMongo().catch(() =>
-    res.status(405).json({ error: 'Error in the Connction' })
-  );
-  const { method, body, query } = req;
-  const isQuery = Object.keys(query).length !== 0;
-  switch (method) {
-    case 'GET':
-      if (isQuery) {
-        if (query.template && query.template === 'true') {
-          getTemplateBoard(req, res);
-          break;
-        }
-        res
-          .status(200)
-          .json({ message: 'Get single Board', boardId: query.boardId });
-        break;
+  const { body, query, method } = req;
+  try {
+    await connectMongo().catch((error) =>
+      res.status(405).json({ message: 'Error connecting to DB', error: error })
+    );
+    if (method === 'GET') {
+      if (query.template === 'true') {
+        const initialColumn = new Column({ status: 'Todo' });
+        const initialBoard = new Board({
+          name: '',
+        });
+        console.log({ initialColumn, initialBoard });
+        return res.status(200).json({ initialBoard, initialColumn });
       }
-      await getAllBoards(req, res);
-      break;
-
-    case 'POST':
-      /*     if (!body) {
-        serverNoDataOnBodyError(res);
-        break;
-      } */
-      await createNewBoard(req, res);
-      break;
-    default:
-      serverWrongMethodError(res, ['GET', 'POST'], method || '');
-      break;
+      const board = await Board.findById(query.boardId);
+      if (!board) {
+        server404Error(res, `Cant find board with id :${query.boardId}`);
+        return;
+      }
+      return res.status(200).json({ message: 'Get board by board id', board });
+    }
+    if (method === 'POST') {
+      const user = await User.findById(query.uid);
+      if (!user) {
+        server404Error(res, `Cant create board without UID`, 401);
+        return;
+      }
+      if (!body) {
+        server404Error(res, 'createNewBoard: No data on req.body');
+        return;
+      }
+      const newBoard = await Board.create({ ...body, user: query.uid });
+      user.boards.push(newBoard.id);
+      await user.save();
+      return res.status(200).json({ message: 'Create new board', newBoard });
+    }
+    wrongMethodError(req, res, ['GET', 'POST']);
+    return;
+  } catch (error) {
+    console.log({ error });
+    return res.status(404).json({ message: 'Error propeties/', error });
   }
 }

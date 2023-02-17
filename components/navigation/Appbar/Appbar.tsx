@@ -3,7 +3,7 @@ import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import ShowDrawerButton from '@/components/ui/showDrawerButton/ShowDrawerButton';
 import Drawer from '@/components/utility/drawer/Drawer';
-import { selectClientValue } from '@/store';
+import { selectBoardValue, selectClientValue } from '@/store';
 import Image from 'next/image';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
@@ -12,8 +12,9 @@ import Wrapper from './Appbar.styled';
 export interface IAppbar extends React.ComponentPropsWithoutRef<'header'> {}
 
 const Appbar: React.FC<IAppbar> = () => {
-  const { isDrawerOpen, darkTheme } = useSelector(selectClientValue);
-  const activeBoard = true;
+  const { user, isDrawerOpen, darkTheme } = useSelector(selectClientValue);
+
+  const { activeBoard } = useSelector(selectBoardValue);
 
   return (
     <Wrapper className="flex bg-box">
@@ -30,12 +31,14 @@ const Appbar: React.FC<IAppbar> = () => {
         />
       </div>
       <div className="appBar flex">
-        <h2 className="fs-600 line-h-500 text-dark">`Welcome, Guest</h2>
+        <h2 className="fs-600 line-h-500 text-dark">Welcome {user.username}</h2>
         <div className="actions flex">
           <PrimaryButton
             color="primary"
             className="create-task-btn flex text-dark"
-            disabled={!activeBoard ? true : false}
+            disabled={
+              !activeBoard || activeBoard.columns.length === 0 ? true : false
+            }
           >
             <HiOutlinePlus />
             <span className="create-btn-text">Add New Task</span>

@@ -1,57 +1,65 @@
-import { IBoardSchema } from '@/types';
 import { Model, model, models, Schema } from 'mongoose';
+import { removeEntiteis } from '../serverFunction';
+import { IBoardSchema, IColumnsSchema } from './types';
 
-interface ISchemaMethods {
-  getBoardWithColumns(): any;
-}
-type IBoardModel = Model<IBoardSchema, {}, ISchemaMethods>;
+// TYPES MODEL
 
-const BoardSchema = new Schema<IBoardSchema, IBoardModel, ISchemaMethods>({
-  name: {
+interface IColumnMethods {}
+interface IBoardMethods {}
+
+type ColumnModel = Model<IColumnsSchema, {}, IColumnMethods>;
+type BoardModel = Model<IBoardSchema, {}, IBoardMethods>;
+
+// COLUMN MODEL
+
+const columnSchema: Schema = new Schema<
+  IColumnsSchema,
+  ColumnModel,
+  IColumnMethods
+>({
+  status: {
     type: String,
-    required: [true, 'Board must have a name'],
+    default: 'Todo',
   },
-  columns: [{ type: Schema.Types.ObjectId, ref: 'Column' }],
+  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
 });
 
-BoardSchema.methods.getBoardWithColumns = function () {
-  console.log('HIHIHIHI');
-  return this;
-};
-/* BoardSchema.methods.sayHi = function () {
-  console.log(`Hi ${this.name}`);
-}; */
+export const Column: Model<IColumnsSchema> =
+  models.Column || model('Column', columnSchema);
 
-const Boards =
-  models?.Board || model<IBoardSchema, IBoardModel>('Board', BoardSchema);
+// BOARD MODEL
 
-export default Boards;
-
-/* BoardSchema.statics.findByName = function (name) {
-  return this.where({ name: new RegExp(name, 'i') });
-};
-// Board.findByName('Some Name')
-
-BoardSchema.methods.sayHi = function () {
-  console.log(`Hi. my name is ${this.name}`);
-};
-// Board.sayHi()
-
-BoardSchema.virtual('namedEmail').get(function () {
-  return `${this.name} `;
-});
-
-BoardSchema.pre('save', function (next) {
-  // SOME LOGIC
+const boardScehma: Schema = new Schema<IBoardSchema, BoardModel, IBoardMethods>(
+  {
+    name: String,
+    columns: [{ type: Schema.Types.ObjectId, ref: 'Column' }],
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Cant sign new board without user signed in'],
+    },
+  }
+);
+boardScehma.pre('findOne', function (next) {
+  console.log('FIND BOARD');
+  this.populate({
+    path: 'columns',
+    model: 'Column',
+    populate: {
+      path: 'tasks',
+      model: 'Task',
+      populate: { path: 'subtasks', model: 'Subtask' },
+    },
+  });
   next();
 });
 
-BoardSchema.pre('remove', function (next) {
-  // SOME LOGIC
+boardScehma.pre<IBoardSchema>('remove', async function (next) {
+  console.log('BOARD PRE REMOVE');
+  this.columns.forEach(async (column) => {
+    removeEntiteis(Column, column);
+  });
   next();
 });
-
-BoardSchema.post('save', function (doc,next) {
-  // SOME LOGIC this = doc
-  next();
-}); */
+export const Board: Model<IBoardSchema> =
+  models.Board || model('Board', boardScehma);

@@ -2,7 +2,7 @@ import { StatusType } from '@/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import React from 'react';
-import { getTemplateBoard, RootState } from '..';
+import { RootState } from '..';
 
 interface IClientState {
   darkTheme: boolean;
@@ -10,6 +10,7 @@ interface IClientState {
   isModalOpen: boolean;
   modalChildren: null | React.ReactNode;
   status: StatusType;
+  user: any;
 }
 
 const initialState: IClientState = {
@@ -18,6 +19,7 @@ const initialState: IClientState = {
   isModalOpen: false,
   modalChildren: null,
   status: StatusType.IDLE,
+  user: null,
 };
 
 export const clientSlice = createSlice({
@@ -38,22 +40,19 @@ export const clientSlice = createSlice({
       state.modalChildren = null;
       state.isModalOpen = false;
     },
-  },
-  extraReducers(builder) {
-    builder.addCase(getTemplateBoard.pending, (state, action) => {
-      state.status = StatusType.PENDING;
-    });
-    builder.addCase(getTemplateBoard.fulfilled, (state, action) => {
-      state.status = StatusType.FULLFILED;
-    });
-    builder.addCase(getTemplateBoard.rejected, (state, action) => {
-      state.status = StatusType.ERROR;
-    });
+    setActiveUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
 });
 
-export const { toggleTheme, toggleDrawer, openModal, closeModal } =
-  clientSlice.actions;
+export const {
+  toggleTheme,
+  toggleDrawer,
+  openModal,
+  closeModal,
+  setActiveUser,
+} = clientSlice.actions;
 
 export const selectClientValue = (state: RootState) => state.client;
 export default clientSlice.reducer;
