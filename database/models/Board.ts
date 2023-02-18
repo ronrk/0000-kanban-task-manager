@@ -43,13 +43,13 @@ const boardScehma: Schema = new Schema<IBoardSchema, BoardModel, IBoardMethods>(
 boardScehma.pre('find', function (next) {
   console.log('FIND ALL BOARDS');
   this.populate({
-    // path: 'columns',
-    // model: 'Column',
-    // populate: {
-    //   path: 'tasks',
-    //   model: 'Task',
-    //   populate: { path: 'subtasks', model: 'Subtask' },
-    // },
+    path: 'columns',
+    model: 'Column',
+    populate: {
+      path: 'tasks',
+      model: 'Task',
+      populate: { path: 'subtasks', model: 'Subtask' },
+    },
   });
   next();
 });
