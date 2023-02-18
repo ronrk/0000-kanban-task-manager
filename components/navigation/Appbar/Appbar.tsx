@@ -31,7 +31,9 @@ const Appbar: React.FC<IAppbar> = () => {
         />
       </div>
       <div className="appBar flex">
-        <h2 className="fs-600 line-h-500 text-dark">Welcome {user.username}</h2>
+        <h2 className="fs-600 line-h-500 text-dark">
+          Welcome {user?.username}
+        </h2>
         <div className="actions flex">
           <PrimaryButton
             color="primary"
