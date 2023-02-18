@@ -1,10 +1,7 @@
+import BoardColumn from '@/components/cards/boardColumn/BoardColumn';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import EmptyColumn from '@/components/utility/taskManager/emptyColumn/EmptyColumn';
-import {
-  selectBoardValue,
-  selectTaskValue,
-  useGetBoardByIdQuery,
-} from '@/store';
+import { selectBoardValue } from '@/store';
 import { StatusType } from '@/types';
 import { useSelector } from 'react-redux';
 import Wrapper from './TaskManagerContainer.styled';
@@ -12,17 +9,20 @@ import Wrapper from './TaskManagerContainer.styled';
 export interface ITaskManagerContainer {}
 
 const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
-  const { activeBoard } = useSelector(selectBoardValue);
-  const { status: isBoardLoading } = useSelector(selectBoardValue);
-  const { status: isTaskLoading } = useSelector(selectTaskValue);
-  const { data, isLoading, isSuccess, error, isError } = useGetBoardByIdQuery(
+  const { activeBoard, status } = useSelector(selectBoardValue);
+  /* const { data, isLoading, isSuccess, error, isError } = useGetBoardByIdQuery(
     activeBoard?._id
   );
-  console.log({ data });
-  if (
-    isBoardLoading === StatusType.PENDING ||
-    isTaskLoading === StatusType.PENDING
-  ) {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('USE EFFECT IS SUCCESS');
+      dispatch(changeActiveBoard(data.data));
+    }
+  });
+
+  if (isLoading || status === StatusType.PENDING) {
     return (
       <Wrapper className="flex">
         <LoadingSpinner />
@@ -30,25 +30,30 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
     );
   }
 
-  if (
-    isBoardLoading === StatusType.ERROR ||
-    isTaskLoading === StatusType.ERROR
-  ) {
+  if (isError || !activeBoard) {
+    console.log({ error });
     return (
       <Wrapper>
         <h2>ERRROR</h2>
+        <div>Empty Board</div>
       </Wrapper>
     );
+  } */
+  if (status === StatusType.PENDING) {
+    return <LoadingSpinner />;
+  }
+  if (status === StatusType.ERROR) {
+    return <div>ERROR</div>;
   }
 
-  /*   let boardColumnsDisplay = activeBoard?.columns.map((col) => {
+  console.log({ activeBoard });
+  let boardColumnsDisplay = activeBoard?.columns.map((col) => {
     return <BoardColumn key={col._id.toString()} column={col} />;
-  }); */
+  });
 
   return (
     <Wrapper className="flex">
-      {!activeBoard && <div>Empty Board</div>}
-      {/* {activeBoard && boardColumnsDisplay} */}
+      {boardColumnsDisplay}
       <EmptyColumn />
     </Wrapper>
   );

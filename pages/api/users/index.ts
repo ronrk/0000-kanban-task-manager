@@ -1,35 +1,25 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import {
   connectMongo,
-  server404Error,
-  User,
+  createNewUserAPI,
+  getUserAPI,
   wrongMethodError,
 } from '@/database';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, query, body } = req;
+  const { method } = req;
   try {
     await connectMongo().catch((error) =>
       res.status(405).json({ message: 'Error connecting to DB', error: error })
     );
     if (method === 'GET') {
-      const user = await User.findById(query.uid);
-      if (!user) {
-        server404Error(res, `Cant find user with id :${query.uid}`);
-        return;
-      }
-      return res.status(200).json({ message: 'Get user By UID', user });
+      return await getUserAPI(req, res);
     }
     if (method === 'POST') {
-      if (!body) {
-        server404Error(res, 'createNewUser: no data on req.body');
-        return;
-      }
-      const newUser = await User.create(body);
-      return res.status(200).json({ message: 'Create new user', newUser });
+      return await createNewUserAPI(req, res);
     }
 
     wrongMethodError(req, res, ['GET', 'POST']);

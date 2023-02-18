@@ -1,6 +1,6 @@
 import { IBoard, StatusType } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
-import { boardApi, RootState, setActiveUser, userApi } from '..';
+import { boardApi, RootState, setActiveUser } from '..';
 
 interface IBoardState {
   data: IBoard[];
@@ -19,22 +19,18 @@ export const boardSlice = createSlice({
   initialState,
   reducers: {
     changeActiveBoard: (state, action) => {
+      console.log({ CHANGEACTIVEBOARDS: action.payload });
       state.activeBoard = action.payload;
     },
   },
   extraReducers(builder) {
     builder.addCase(setActiveUser, (state, action) => {
-      state.activeBoard = action.payload.boards[0];
+      console.log({ boardSliceSetActiveUser: action.payload });
+      if (!action.payload) {
+        return;
+      }
       state.data = action.payload.boards;
     });
-    builder.addMatcher(
-      userApi.endpoints.getUserByUID.matchFulfilled,
-      (state, action) => {
-        console.log({ action: action.payload });
-        state.activeBoard = action.payload.boards[0];
-        state.data = action.payload.boards;
-      }
-    );
 
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchPending,
@@ -43,12 +39,37 @@ export const boardSlice = createSlice({
       }
     );
     builder.addMatcher(
+      boardApi.endpoints.getBoardsByUID.matchPending,
+      (state) => {
+        state.status = StatusType.PENDING;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.createNewBoard.matchFulfilled,
+      (state, action) => {
+        console.log({ boardCreateNewBoard: action.payload });
+        /*         state.activeBoard = action.payload.data;
+        state.data.push(action.payload.data); */
+      }
+    );
+    builder.addMatcher(
       boardApi.endpoints.getBoardById.matchFulfilled,
       (state, action) => {
-        if (!state.activeBoard && action.payload.length > 0) {
-          state.activeBoard = action.payload[0];
-        }
+        console.log({ boardSliceGetBoard: action.payload });
+        state.activeBoard = action.payload.data;
 
+        state.status = StatusType.FULLFILED;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.getBoardsByUID.matchFulfilled,
+      (state, action) => {
+        console.log({ boardSliceGetBoardsByUID: action.payload });
+        if (action.payload.data.length > 0) {
+          state.data = action.payload.data;
+          state.activeBoard =
+            action.payload.data[action.payload.data.length - 1];
+        }
         state.status = StatusType.FULLFILED;
       }
     );
@@ -59,11 +80,12 @@ export const boardSlice = createSlice({
         console.log({ error: action.error, payload: action.payload });
       }
     );
+
     builder.addMatcher(
-      boardApi.endpoints.createNewBoard.matchFulfilled,
+      boardApi.endpoints.getBoardsByUID.matchRejected,
       (state, action) => {
-        state.activeBoard = action.payload.newBoard;
-        state.data.push(action.payload.newBoard);
+        state.status = StatusType.ERROR;
+        console.log(action.payload);
       }
     );
   },

@@ -6,7 +6,7 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/api/users' }),
   endpoints: (builder) => ({
     getUserByUID: builder.query({
-      query: (uid) => `?uid=${uid}`,
+      query: (uid: string) => `?uid=${uid}`,
       providesTags: ['user'],
     }),
   }),

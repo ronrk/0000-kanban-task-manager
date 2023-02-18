@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import {
   Board,
   Column,
@@ -6,6 +5,7 @@ import {
   server404Error,
   wrongMethodError,
 } from '@/database';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,6 +20,9 @@ export default async function handler(
     if (!board) {
       server404Error(res, `Cant find board with id :${query.boardId}`);
       return;
+    }
+    if (method === 'GET') {
+      res.status(200).json({ message: 'Get Single Board', board });
     }
     if (method === 'POST') {
       const newColumn = await Column.create({ ...body });

@@ -1,8 +1,8 @@
-import { StatusType } from '@/types';
+import { IUser, StatusType } from '@/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import React from 'react';
-import { RootState } from '..';
+import { boardApi, RootState, userApi } from '..';
 
 interface IClientState {
   darkTheme: boolean;
@@ -10,7 +10,7 @@ interface IClientState {
   isModalOpen: boolean;
   modalChildren: null | React.ReactNode;
   status: StatusType;
-  user: any;
+  user: IUser | null;
 }
 
 const initialState: IClientState = {
@@ -40,9 +40,26 @@ export const clientSlice = createSlice({
       state.modalChildren = null;
       state.isModalOpen = false;
     },
-    setActiveUser: (state, action) => {
+    setActiveUser: (state, action: PayloadAction<IUser | null>) => {
       state.user = action.payload;
     },
+  },
+  extraReducers(builder) {
+    builder.addMatcher(
+      userApi.endpoints.getUserByUID.matchFulfilled,
+      (state, action) => {
+        console.log({ clientSliceGetUserByUID: action.payload });
+        state.user = action.payload.data;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.createNewBoard.matchFulfilled,
+      (state, action) => {
+        console.log({ clientSliceCreateNewBoard: action.payload });
+        if (!state.user) return;
+        state.user.boards.push(action.payload.data);
+      }
+    );
   },
 });
 

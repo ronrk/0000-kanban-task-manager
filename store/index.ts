@@ -22,7 +22,8 @@ export const store = configureStore({
       serializableCheck: false,
     })
       .concat(boardApi.middleware)
-      .concat(taskApi.middleware),
+      .concat(taskApi.middleware)
+      .concat(userApi.middleware),
 });
 
 setupListeners(store.dispatch);

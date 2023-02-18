@@ -1,46 +1,56 @@
 import ModalContainer from '@/components/cards/modalContainer/ModalContainer';
 import PrimaryLayout from '@/components/layouts/primary/PrimaryLayout';
+import EmptyBoards from '@/components/surfaces/emptyBoards/EmptyBoards';
 import TaskManagerContainer from '@/components/surfaces/taskManagerContainer/TaskManagerContainer';
-import { connectMongo, User } from '@/database';
+import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import {
-  selectBoardValue,
   selectClientValue,
-  setActiveUser,
-  useAppDispatch,
+  useGetBoardsByUIDQuery,
+  useGetUserByUIDQuery,
 } from '@/store';
+import { StatusType } from '@/types';
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { NextPageWithLayout } from './page';
 
 interface IProps {
-  user: any;
+  uid: string;
+  status: StatusType;
+  error: null | { messsage: string; error?: any };
 }
 
-const Home: NextPageWithLayout<IProps> = ({ user }) => {
+const Home: NextPageWithLayout<IProps> = ({ uid }) => {
   const {
     isModalOpen,
     modalChildren,
     user: activeUser,
   } = useSelector(selectClientValue);
-  const { activeBoard } = useSelector(selectBoardValue);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(setActiveUser(user));
-  }, [dispatch, user]);
+  const { isLoading, isError, error } = useGetUserByUIDQuery(uid);
+  useGetBoardsByUIDQuery(uid);
+  const router = useRouter();
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+  if (isError) {
+    console.log({ error });
+    router.push('/401');
+  }
 
   if (!activeUser) {
-    return <div>NO ACTIVE USER</div>;
-  }
-  if (!activeBoard) {
-    return <>NO ACTIVE BOARD</>;
+    return <div>No ACTIOVE USER</div>;
   }
 
   return (
     <PrimaryLayout>
       {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
       <section>
-        <TaskManagerContainer />
+        {activeUser.boards.length > 0 ? (
+          <TaskManagerContainer />
+        ) : (
+          <EmptyBoards />
+        )}
       </section>
     </PrimaryLayout>
   );
@@ -48,35 +58,44 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  let props: IProps = { user: null };
-  let uid = '63ef6eabacbe17dbd582395d';
+  let props: IProps = { uid: '', status: StatusType.IDLE, error: null };
+  let uid = '63f0bd7db61e16a73559c7de';
 
   try {
-    await connectMongo().catch((e) => {
-      console.log('Error connection to database');
-      return {
-        props,
+    if (uid === '') {
+      props.error = {
+        messsage: `No user with id: ${uid}`,
+        error: `No user with id: ${uid}`,
       };
-    });
-
-    const user = await User.findById(uid);
-
-    if (!user) {
-      console.log(`No user with id: ${uid}`);
+      props.status = StatusType.ERROR;
       return {
         props,
+        redirect: {
+          destination: '/login',
+          permanent: true,
+        },
       };
     }
 
-    props.user = JSON.parse(JSON.stringify(user));
-
+    props.uid = uid;
+    props.status = StatusType.FULLFILED;
     return {
       props,
     };
   } catch (error) {
+    console.log({ status: 'Error Block' });
     console.log({ error });
+    props.error = {
+      messsage: `Error connecting to DB`,
+      error,
+    };
+    props.status = StatusType.ERROR;
     return {
       props,
+      redirect: {
+        destination: '/server500',
+        permanent: true,
+      },
     };
   }
 };

@@ -1,10 +1,9 @@
 import { IBoard, IColumn } from '@/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import mongoose from 'mongoose';
 
 export const boardApi = createApi({
   reducerPath: 'boardApi',
-  tagTypes: ['boards', 'tasks'],
+  tagTypes: ['boards', 'tasks', 'board'],
   baseQuery: fetchBaseQuery({ baseUrl: '/api/boards' }),
   endpoints: (builder) => ({
     getTemplateBoard: builder.query({
@@ -13,22 +12,26 @@ export const boardApi = createApi({
         initialBoard: IBoard;
         initialColumn: IColumn;
       }) => ({ ...data.initialBoard, columns: [data.initialColumn] }),
+      keepUnusedDataFor: 1,
     }),
     getBoardById: builder.query({
-      query: (boardId) => `?boardId=${boardId}`,
-      providesTags: ['boards', 'tasks'],
+      query: (boardId) => `/${boardId}`,
+      providesTags: ['board', 'tasks'],
+    }),
+    getBoardsByUID: builder.query({
+      query: (uid) => `?uid=${uid}`,
+      providesTags: ['boards'],
     }),
     createNewBoard: builder.mutation({
-      query: ({ uid, board }: { uid: string; board: any }) => ({
+      query: ({ uid, board }) => ({
         url: `?uid=${uid}`,
         method: 'POST',
         body: board,
       }),
-
       invalidatesTags: ['boards'],
     }),
     createNewColumn: builder.mutation({
-      query: ({ boardId, column }: { boardId: string; column: any }) => ({
+      query: ({ boardId, column }) => ({
         url: `/${boardId}`,
         method: 'POST',
         body: column,
@@ -36,20 +39,17 @@ export const boardApi = createApi({
       invalidatesTags: ['boards'],
     }),
     removeColumns: builder.mutation({
-      query: ({
-        boardId,
-        columnId,
-      }: {
-        boardId: string;
-        columnId: string;
-      }) => ({
+      query: ({ boardId, columnId }) => ({
         url: `/${boardId}/${columnId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['boards'],
     }),
     removeBoard: builder.mutation({
-      query: (boardId: string) => ({ url: `/${boardId}`, method: 'DELETE' }),
+      query: (boardId) => ({
+        url: `/${boardId}`,
+        method: 'DELETE',
+      }),
       invalidatesTags: ['boards'],
     }),
   }),
@@ -58,6 +58,7 @@ export const boardApi = createApi({
 export const {
   useGetTemplateBoardQuery,
   useGetBoardByIdQuery,
+  useGetBoardsByUIDQuery,
   useCreateNewBoardMutation,
   useCreateNewColumnMutation,
   useRemoveBoardMutation,

@@ -1,6 +1,7 @@
 import {
   Column,
   connectMongo,
+  getSingleBoardAPI,
   server404Error,
   wrongMethodError,
 } from '@/database';

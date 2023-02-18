@@ -12,6 +12,7 @@ import {
   useGetTemplateBoardQuery,
 } from '@/store';
 import { ColType, IBoard, IColumn } from '@/types';
+import mongoose from 'mongoose';
 import { FormEvent, useEffect, useState } from 'react';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
@@ -41,13 +42,23 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   }, [data, isSuccess, formBoard]);
 
   const addNewColumn = async () => {
-    fetch('/api/boards?template=true')
+    fetch(`/api/boards?template=true`)
       .then((res) => res.json())
       .then((data: { initialColumn: IColumn }) => {
-        setColumnsChoosen((prev) => [...prev, data.initialColumn]);
+        const newColumnId = new mongoose.Types.ObjectId();
+        setColumnsChoosen((prev) => [
+          ...prev,
+          { ...data.initialColumn, _id: newColumnId },
+        ]);
         setFormBoard((prev) => {
           if (!prev) return prev;
-          return { ...prev, columns: [...prev.columns, data.initialColumn] };
+          return {
+            ...prev,
+            columns: [
+              ...prev.columns,
+              { ...data.initialColumn, _id: newColumnId },
+            ],
+          };
         });
       })
       .catch((error) =>
@@ -70,15 +81,18 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
       }
       return column;
     });
-
     setColumnsChoosen(updatedColumns);
+    setFormBoard((prev) => {
+      if (!prev) return prev;
+      return { ...prev, columns: updatedColumns };
+    });
   };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     addBoard({
-      uid: user._id,
+      uid: user?._id,
       board: { ...formBoard, name: enteredName },
     })
       .then(() => dispatch(closeModal()))
@@ -86,6 +100,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         console.log({ error, message: 'Error Creating New Board' });
       });
   };
+
   let content = (
     <form onSubmit={submitHandler} className="flex-col">
       <div className="form-control flex-col">

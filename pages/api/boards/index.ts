@@ -1,52 +1,30 @@
 import {
-  Board,
-  Column,
   connectMongo,
-  server404Error,
-  User,
+  createNewBoardAPI,
+  generateTemplateBoardAPI,
+  getBoardByUID,
   wrongMethodError,
 } from '@/database';
+
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { body, query, method } = req;
+  const { query, method } = req;
   try {
     await connectMongo().catch((error) =>
       res.status(405).json({ message: 'Error connecting to DB', error: error })
     );
     if (method === 'GET') {
       if (query.template === 'true') {
-        const initialColumn = new Column({ status: 'Todo' });
-        const initialBoard = new Board({
-          name: '',
-        });
-        console.log({ initialColumn, initialBoard });
-        return res.status(200).json({ initialBoard, initialColumn });
+        return await generateTemplateBoardAPI(req, res);
       }
-      const board = await Board.findById(query.boardId);
-      if (!board) {
-        server404Error(res, `Cant find board with id :${query.boardId}`);
-        return;
-      }
-      return res.status(200).json({ message: 'Get board by board id', board });
+      return await getBoardByUID(req, res);
     }
     if (method === 'POST') {
-      const user = await User.findById(query.uid);
-      if (!user) {
-        server404Error(res, `Cant create board without UID`, 401);
-        return;
-      }
-      if (!body) {
-        server404Error(res, 'createNewBoard: No data on req.body');
-        return;
-      }
-      const newBoard = await Board.create({ ...body, user: query.uid });
-      user.boards.push(newBoard.id);
-      await user.save();
-      return res.status(200).json({ message: 'Create new board', newBoard });
+      return await createNewBoardAPI(req, res);
     }
     wrongMethodError(req, res, ['GET', 'POST']);
     return;
