@@ -2,7 +2,7 @@ import { IColumnSchema } from '@/types';
 import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Board, Column } from '../models/Board';
-import User from '../models/User';
+import { User } from '../models/User';
 import { server404Error } from '../serverFunction';
 
 export const createNewBoardAPI = async (
