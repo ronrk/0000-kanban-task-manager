@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 
-const useDropdownHook = (onChange: (arg: any) => void) => {
+const useDropdownHook = (onChange?: (arg: any) => void) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,9 @@ const useDropdownHook = (onChange: (arg: any) => void) => {
 
   const handleOptionClick = (option: any) => {
     setIsOpen(false);
-    onChange(option);
+    if (onChange) {
+      onChange(option);
+    }
   };
   return { divElRef: ref, handleOptionClick, handleClick, isOpen };
 };

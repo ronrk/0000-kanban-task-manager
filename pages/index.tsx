@@ -1,59 +1,76 @@
 import ModalContainer from '@/components/cards/modalContainer/ModalContainer';
 import PrimaryLayout from '@/components/layouts/primary/PrimaryLayout';
-import EmptyBoards from '@/components/surfaces/emptyBoards/EmptyBoards';
 import TaskManagerContainer from '@/components/surfaces/taskManagerContainer/TaskManagerContainer';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
-import { Board, checkClientSessionAuthentication } from '@/database';
-import { selectClientValue, useAppDispatch } from '@/store';
-import { IBoard, IUser } from '@/types';
+import { checkClientSessionAuthentication } from '@/database';
+import {
+  selectBoardValue,
+  selectClientValue,
+  setAuthenticatedUser,
+  useAppDispatch,
+  useGetBoardsByUIDQuery,
+} from '@/store';
+import { IUser, StatusType } from '@/types';
 import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
+
 import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { authOptions } from './api/auth/index';
 import { NextPageWithLayout } from './page';
 
 interface IProps {
   user: IUser | null;
-  boards: IBoard[];
 }
 
-const Home: NextPageWithLayout<IProps> = ({ user, boards }) => {
-  const { status, data } = useSession();
+const Home: NextPageWithLayout<IProps> = ({ user }) => {
+  const { status: authStatus } = useSession();
   const { isModalOpen, modalChildren } = useSelector(selectClientValue);
+  const { status: boardStatus } = useSelector(selectBoardValue);
   const dispatch = useAppDispatch();
-  console.log({ status });
+  const { isLoading: loadingBoards, isError } = useGetBoardsByUIDQuery(
+    user?._id
+  );
 
-  /*   useEffect(() => {
-    console.log('HOME PAGE USE EFFECT');
-    if (status === 'unauthenticated') Router.replace('/auth/signin');
-    if (status === 'authenticated') {
+  let isLoading = authStatus === 'loading' || loadingBoards;
+  let errorState =
+    isError ||
+    boardStatus === StatusType.ERROR ||
+    !user ||
+    authStatus === 'unauthenticated';
+
+  useEffect(() => {
+    if (authStatus === 'unauthenticated') {
+      console.log('HOME PAGE USE EFFECT NAVIGATE');
+      // Router.replace('/auth/signin');
+    }
+    if (authStatus === 'authenticated') {
+      console.log('HOME PAGE USE EFFECT SET AUTH USER');
+      console.log({ user });
       dispatch(setAuthenticatedUser(user));
     }
-  }, [status, user, dispatch]); */
+  }, [authStatus, user, dispatch]);
 
-  console.log({ user });
-
-  if (status === 'loading') {
+  if (isLoading) {
     return (
       <PrimaryLayout>
         <LoadingSpinner />;
       </PrimaryLayout>
     );
   }
-  if (status === 'authenticated' && user) {
+  if (errorState) {
     return (
       <PrimaryLayout>
-        {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
-        <section>
-          {user.boards.length > 0 ? <TaskManagerContainer /> : <EmptyBoards />}
-        </section>
+        <h2 className="text-dark">SOMETHING WRONG</h2>
       </PrimaryLayout>
     );
   }
+
   return (
-    <PrimaryLayout>
-      <LoadingSpinner />;
+    <PrimaryLayout withAppBar>
+      {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
+      <TaskManagerContainer />
     </PrimaryLayout>
   );
 };
@@ -63,8 +80,8 @@ export default Home;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let props: IProps = {
     user: null,
-    boards: [],
   };
+  console.log('SERVER SIDE RENDER');
 
   try {
     const user: false | IUser = await checkClientSessionAuthentication(
@@ -82,13 +99,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
     props.user = user;
-    const boards: IBoard[] = await Board.find({ user: user._id });
-    props.boards = JSON.parse(JSON.stringify(boards));
     return {
       props,
     };
   } catch (error) {
     console.log({ error });
+    console.log('INDEX PAGE SERVER REDNDER ERROR');
+
     return {
       props,
       redirect: {

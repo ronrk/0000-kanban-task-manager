@@ -59,15 +59,12 @@ export const checkClientSessionAuthentication = async (
 ) => {
   try {
     const session = await getServerSession(req, res, authOptions);
+    if (!session) return false;
 
-    if (!session) {
-      return false;
-    }
     await connectMongo().catch((error) => {
       throw error;
     });
-    const user = await User.findById(session.user._id);
-
+    const user = await User.findById(session.user._id).select('-password');
     if (!user) {
       return false;
     }
@@ -75,6 +72,7 @@ export const checkClientSessionAuthentication = async (
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     console.log({ error });
+    console.log('SERVER SIDE RENDERING ERROR');
     return false;
   }
 };

@@ -2,9 +2,8 @@ import useDropdownHook from '@/hooks/useDropdownHook';
 import { HiDotsVertical } from 'react-icons/hi';
 import Wrapper from './MenuDropdown.styled';
 
-export interface IMenuDropdown {
+export interface IMenuDropdown extends React.ComponentPropsWithoutRef<'div'> {
   // eslint-disable-next-line no-unused-vars
-  onChange(type: string): void;
   value: string | null;
   options: string[];
 }

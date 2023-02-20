@@ -1,39 +1,46 @@
 import BoardColumn from '@/components/cards/boardColumn/BoardColumn';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import EmptyColumn from '@/components/utility/taskManager/emptyColumn/EmptyColumn';
-import { selectBoardValue, useGetBoardByIdQuery } from '@/store';
+import { selectBoardValue } from '@/store';
 import { StatusType } from '@/types';
 import { useSelector } from 'react-redux';
+import EmptyBoards from '../emptyBoards/EmptyBoards';
 import Wrapper from './TaskManagerContainer.styled';
 
 export interface ITaskManagerContainer {}
 
 const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
-  const { currentBoard, status } = useSelector(selectBoardValue);
-  const { data, isLoading, isSuccess, error, isError } = useGetBoardByIdQuery(
-    currentBoard?._id
-  );
+  const { boards, currentBoard, status } = useSelector(selectBoardValue);
 
-  if (isLoading || status === StatusType.PENDING) {
+  let errorState = status === StatusType.ERROR || !currentBoard;
+
+  console.log({ status });
+
+  if (StatusType.PENDING === status) {
     return (
       <Wrapper className="flex">
         <LoadingSpinner />
       </Wrapper>
     );
   }
-
-  if (isError || !currentBoard || status === StatusType.ERROR) {
-    console.log({ error });
+  if (boards.length <= 0) {
     return (
-      <Wrapper>
-        <h2>ERRROR</h2>
-        <div>Empty Board</div>
+      <Wrapper className="flex">
+        <EmptyBoards />
       </Wrapper>
     );
   }
 
-  console.log({ currentBoard });
-  let boardColumnsDisplay = currentBoard.columns.map((col) => {
+  if (errorState) {
+    return (
+      <Wrapper>
+        <h2>ERRROR</h2>
+        <h4>Task Container</h4>
+      </Wrapper>
+    );
+  }
+
+  let boardColumnsDisplay = currentBoard?.columns.map((col) => {
     return <BoardColumn key={col._id.toString()} column={col} />;
   });
 

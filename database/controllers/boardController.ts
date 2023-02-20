@@ -72,6 +72,7 @@ export const getBoardByUID = async (
       .json({ message: `Get all boards for ${req.query.uid}`, data: boards });
   } catch (error) {
     console.log({ error, message: 'GetBoardsByUID' });
+    return server404Error(res, `Cant find boards`);
   }
 };
 

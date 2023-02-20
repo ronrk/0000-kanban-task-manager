@@ -1,6 +1,6 @@
 import { IUser, StatusType } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '..';
+import { boardApi, RootState } from '..';
 import { authApi } from '../Api/authApi';
 
 const initialState = {
@@ -21,6 +21,26 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addMatcher(
+      boardApi.endpoints.deleteBoardById.matchFulfilled,
+      (state, action) => {
+        console.log(action.payload);
+        /*         if (state.user && state.user.boards.length > 0) {
+          const updatedBoards = state.user?.boards.filter(
+            (board) => board._id !== action.payload.deletebBoard
+          );
+          state.user.boards = updatedBoards;
+        } */
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.createNewBoard.matchFulfilled,
+      (state, action) => {
+        /*   state.user?.boards.push(
+          action.payload.data[action.payload.data.length - 1]
+        ); */
+      }
+    );
     builder.addMatcher(authApi.endpoints.register.matchPending, (state) => {
       state.status = StatusType.PENDING;
     });

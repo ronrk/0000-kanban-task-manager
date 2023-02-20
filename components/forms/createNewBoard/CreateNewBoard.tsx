@@ -1,4 +1,5 @@
 import { IconRemove } from '@/components/ui/icons';
+import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import PrimaryInput from '@/components/ui/primaryInput/PrimaryInput.styled';
 import TodoDropdown from '@/components/ui/todoDropdown/TodoDropdown';
@@ -6,12 +7,13 @@ import useInput from '@/hooks/useInput';
 
 import {
   closeModal,
+  selectBoardValue,
   selectUser,
   useAppDispatch,
   useCreateNewBoardMutation,
   useGetTemplateBoardQuery,
 } from '@/store';
-import { ColType, IBoard, IColumn } from '@/types';
+import { ColType, IBoard, IColumn, StatusType } from '@/types';
 import mongoose from 'mongoose';
 import { FormEvent, useEffect, useState } from 'react';
 import { HiOutlinePlus } from 'react-icons/hi';
@@ -28,10 +30,9 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
     board?.columns || []
   );
   const { user } = useSelector(selectUser);
-
+  const { status } = useSelector(selectBoardValue);
   const [addBoard] = useCreateNewBoardMutation();
   const dispatch = useAppDispatch();
-
   const { data, isSuccess } = useGetTemplateBoardQuery('');
 
   useEffect(() => {
@@ -166,7 +167,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   return (
     <Wrapper className="bg-app create-board flex-col">
       <h3 className="text-dark fs-500">Add new Board</h3>
-      {content}
+      {status === StatusType.PENDING ? <LoadingSpinner /> : content}
     </Wrapper>
   );
 };

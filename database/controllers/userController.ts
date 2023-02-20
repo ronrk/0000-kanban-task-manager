@@ -6,7 +6,7 @@ export const getUserAPI = async (
   { query }: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const user = await User.findById(query.uid);
+  const user = await User.findById(query.uid).select('-password');
   if (!user) {
     return server404Error(res, `Cant find user with id :${query.uid}`);
   }

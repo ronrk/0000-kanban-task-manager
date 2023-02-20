@@ -26,8 +26,7 @@ export default async function handler(
     if (method === 'POST') {
       return await createNewBoardAPI(req, res);
     }
-    wrongMethodError(req, res, ['GET', 'POST']);
-    return;
+    return wrongMethodError(req, res, ['GET', 'POST']);
   } catch (error) {
     console.log({ error });
     return res.status(404).json({ message: 'Error propeties/', error });

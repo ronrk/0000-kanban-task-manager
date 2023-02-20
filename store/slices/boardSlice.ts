@@ -13,28 +13,105 @@ const slice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    changeActiveBoard: () => {},
+    changeActiveBoard: (state, action) => {
+      const foundBoard = state.boards.find(
+        (board) => board._id === action.payload
+      );
+      console.log({ foundBoard });
+      if (foundBoard) {
+        state.currentBoard = foundBoard;
+      }
+    },
   },
   extraReducers: (builder) => {
+    builder.addMatcher(
+      boardApi.endpoints.getBoardsByUID.matchPending,
+      (state) => {
+        console.log('PENDING');
+        state.status = StatusType.PENDING;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.getBoardById.matchPending,
+      (state) => {
+        state.status = StatusType.PENDING;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.createNewBoard.matchPending,
+      (state) => {
+        state.status = StatusType.PENDING;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.deleteBoardById.matchPending,
+      (state) => {
+        state.status = StatusType.PENDING;
+      }
+    );
+
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchFulfilled,
       (state, action) => {
         console.log('GET BOARD BY ID');
         console.log({ payload: action.payload });
+        state.status = StatusType.FULLFILED;
       }
     );
     builder.addMatcher(
       boardApi.endpoints.getBoardsByUID.matchFulfilled,
       (state, action) => {
         console.log('GET BOARD BY UID');
-        console.log({ payload: action.payload });
+        state.boards = action.payload.data;
+        if (action.payload.data.length > 0 && !state.currentBoard) {
+          state.currentBoard = action.payload.data[0];
+        }
+        state.status = StatusType.FULLFILED;
       }
     );
     builder.addMatcher(
       boardApi.endpoints.createNewBoard.matchFulfilled,
       (state, action) => {
-        console.log('CREATE NEW BOARD');
-        console.log({ payload: action.payload });
+        state.status = StatusType.FULLFILED;
+        state.boards = action.payload.data;
+        state.currentBoard =
+          action.payload.data[action.payload.data.length - 1];
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.deleteBoardById.matchFulfilled,
+      (state) => {
+        if (state.boards.length > 0) {
+          state.currentBoard = state.boards[state.boards.length - 1];
+        } else {
+          state.currentBoard = null;
+        }
+        state.status = StatusType.FULLFILED;
+      }
+    );
+
+    builder.addMatcher(
+      boardApi.endpoints.getBoardsByUID.matchRejected,
+      (state) => {
+        state.status = StatusType.ERROR;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.getBoardById.matchRejected,
+      (state) => {
+        state.status = StatusType.ERROR;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.createNewBoard.matchRejected,
+      (state) => {
+        state.status = StatusType.ERROR;
+      }
+    );
+    builder.addMatcher(
+      boardApi.endpoints.deleteBoardById.matchRejected,
+      (state) => {
+        state.status = StatusType.ERROR;
       }
     );
   },

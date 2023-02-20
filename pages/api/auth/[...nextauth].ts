@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
 
         const user = await User.findOne({
           username: username,
-        }).select('-passowrd');
+        });
 
         if (!user) {
           throw new Error(`No user with username: ${username}`);

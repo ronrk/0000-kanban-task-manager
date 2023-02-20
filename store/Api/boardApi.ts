@@ -5,7 +5,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: '/api/boards',
 });
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 6 });
+const baseQueryWithRetry = retry(baseQuery, { maxRetries: 3 });
 
 export const boardApi = createApi({
   reducerPath: 'boardApi',
@@ -26,7 +26,7 @@ export const boardApi = createApi({
       providesTags: ['Board'],
     }),
     getBoardsByUID: builder.query({
-      query: (uid) => `/boards/?uid=${uid}`,
+      query: (uid) => `?uid=${uid}`,
       providesTags: ['Boards'],
     }),
     createNewBoard: builder.mutation({
@@ -34,6 +34,13 @@ export const boardApi = createApi({
         url: `?uid=${uid}`,
         method: 'POST',
         body: board,
+      }),
+      invalidatesTags: ['Boards'],
+    }),
+    deleteBoardById: builder.mutation({
+      query: (boardId) => ({
+        url: `/${boardId}`,
+        method: 'DELETE',
       }),
       invalidatesTags: ['Boards'],
     }),
@@ -45,4 +52,5 @@ export const {
   useGetBoardByIdQuery,
   useGetBoardsByUIDQuery,
   useGetTemplateBoardQuery,
+  useDeleteBoardByIdMutation,
 } = boardApi;

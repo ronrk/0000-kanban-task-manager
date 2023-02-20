@@ -1,6 +1,7 @@
 import { Model, model, models, Schema } from 'mongoose';
 import { removeEntiteis } from '../serverFunction';
 import { IBoardSchema, IColumnsSchema } from './types';
+import { User } from './User';
 
 // TYPES MODEL
 
@@ -53,6 +54,25 @@ boardScehma.pre<IBoardSchema>('remove', async function (next) {
   this.columns.forEach(async (column) => {
     removeEntiteis(Column, column);
   });
+  const user = await User.findById(this.user);
+  // console.log({ user: user.boards, board: this }, 'BEFORE');
+  const updatedBoards = user.boards.filter((board: IBoardSchema) => {
+    /*     console.log({
+      typeBoard: typeof board._id,
+      typeThis: typeof this._id,
+      boardId: board._id,
+      thisID: this._id,
+      state: this._id.toString() === board._id.toString(),
+    }); */
+    return board._id.toString() !== this._id.toString();
+  });
+  const newUser = await User.findOneAndUpdate(
+    { _id: user._id },
+    { boards: updatedBoards },
+    { new: true }
+  );
+  // console.log({ newUser: newUser.boards, board: this, updatedBoards }, 'AFTER');
+
   next();
 });
 export const Board =

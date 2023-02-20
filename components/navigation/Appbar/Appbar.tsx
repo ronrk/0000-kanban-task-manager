@@ -1,10 +1,12 @@
 // import AuthButton from '../../buttons/auth/AuthButton';
+import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import ShowDrawerButton from '@/components/ui/showDrawerButton/ShowDrawerButton';
 import Drawer from '@/components/utility/drawer/Drawer';
 import {
   logout,
+  openModal,
   selectBoardValue,
   selectClientValue,
   selectUser,
@@ -71,7 +73,9 @@ const Appbar: React.FC<IAppbar> = () => {
           <MenuDropdown
             value={null}
             options={['edit', 'delete']}
-            onChange={() => {}}
+            onChange={() => {
+              dispatch(openModal(<DeleteBoard type={'board'} />));
+            }}
           />
         </div>
       </div>

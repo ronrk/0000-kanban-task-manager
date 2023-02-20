@@ -6,7 +6,7 @@ import { checkClientSessionAuthentication, CustomError } from '@/database';
 import { selectStatus, useRegisterMutation } from '@/store';
 import { IUser, StatusType } from '@/types';
 import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 import { signIn, useSession } from 'next-auth/react';
 import Router from 'next/router';
 import { ChangeEvent, FormEvent, useState } from 'react';
@@ -28,7 +28,6 @@ const Login: NextPageWithLayout<IProps> = () => {
   const [registerUser] = useRegisterMutation();
   const { status } = useSession();
   const authStatus = useSelector(selectStatus);
-
   let isLoading = authStatus === StatusType.PENDING || loadingState;
   let pageState = isLoading
     ? 'Loading...'
@@ -102,10 +101,24 @@ const Login: NextPageWithLayout<IProps> = () => {
 
       return;
     }
-    loginUser().catch((error) => {
-      console.log({ error });
-    });
+    await loginUser();
   };
+
+  const switchContent = isAlreadyUser ? (
+    <p className="text-light fs-500">
+      New User?
+      <button onClick={() => setIsAlreadyUser((prev) => !prev)}>
+        Click to <span>Signup</span>
+      </button>
+    </p>
+  ) : (
+    <p className="text-light fs-500">
+      Already a user? <br />
+      <button onClick={() => setIsAlreadyUser((prev) => !prev)}>
+        Click to <span>Login</span>
+      </button>
+    </p>
+  );
 
   return (
     <PrimaryLayout>
@@ -182,21 +195,8 @@ const Login: NextPageWithLayout<IProps> = () => {
             </section>
           )}
         </form>
-        {isAlreadyUser ? (
-          <p className="text-light fs-500">
-            New User?
-            <button onClick={() => setIsAlreadyUser((prev) => !prev)}>
-              Click to <span>Signup</span>
-            </button>
-          </p>
-        ) : (
-          <p className="text-light fs-500">
-            Already a user? <br />
-            <button onClick={() => setIsAlreadyUser((prev) => !prev)}>
-              Click to <span>Login</span>
-            </button>
-          </p>
-        )}
+
+        {isLoading ? null : switchContent}
       </section>
     </PrimaryLayout>
   );

@@ -34,13 +34,23 @@ const userSchema: Schema<IUserMethods> = new Schema({
   boards: [{ type: Schema.Types.ObjectId, ref: 'Board' }],
 });
 
+userSchema.methods.comparePassword = async function (password: string) {
+  console.log('COMPARING PASSWORDS');
+  const isMatch = bcrypt
+    .compare(password, this.password)
+    .then((data) => data)
+    .catch((e) => {
+      console.log(e);
+    });
+  return isMatch;
+};
+
 userSchema.pre('save', async function (next) {
   console.log('USER PRE SAVE');
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password.toString(), salt);
   next();
 });
-
 userSchema.pre('findOne', function (next) {
   this.populate('boards');
   next();
@@ -58,18 +68,6 @@ userSchema.pre<IUserSchema>('remove', async function (next): Promise<void> {
   });
   next();
 });
-
-userSchema.methods.comparePassword = async function (password: string) {
-  console.log('COMPARING PASSWORDS');
-  console.log({ password, old: this });
-  const isMatch = bcrypt
-    .compare(password, this.password)
-    .then((data) => data)
-    .catch((e) => {
-      console.log(e);
-    });
-  return isMatch;
-};
 
 export const User =
   models?.User || model<IUserMethods, IUserModel>('User', userSchema);

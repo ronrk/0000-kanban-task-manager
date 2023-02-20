@@ -1,14 +1,12 @@
 import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
 import { IconBoard } from '@/components/ui/icons';
-import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import {
   changeActiveBoard,
   openModal,
   selectBoardValue,
-  selectUser,
   useAppDispatch,
 } from '@/store';
-import { IBoard } from '@/types';
+import { IBoard, StatusType } from '@/types';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Wrapper from './BoardDrawerList.styled';
@@ -19,14 +17,26 @@ export interface IBoardDrawerList {
 
 const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
   const dispatch = useAppDispatch();
-  // const { data: boards, status } = useSelector(selectBoardValue);
-  const { currentBoard } = useSelector(selectBoardValue);
-  const { user } = useSelector(selectUser);
-  if (!user) {
-    return <LoadingSpinner />;
-  }
+  const { currentBoard, boards, status } = useSelector(selectBoardValue);
 
-  const { boards } = user;
+  let content: string | React.ReactNode;
+
+  if (status === StatusType.PENDING) {
+    content = '';
+  } else if (status === StatusType.FULLFILED) {
+    content = boards.map((board: IBoard) => (
+      <button
+        key={board._id.toString()}
+        className={currentBoard?._id === board._id ? 'active' : ''}
+        onClick={() => dispatch(changeActiveBoard(board._id))}
+      >
+        <li className="text-primary fs-500 fw-m capitalize flex">
+          <IconBoard />
+          {board.name}
+        </li>
+      </button>
+    ));
+  }
 
   return (
     <Wrapper>
@@ -34,18 +44,7 @@ const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
         All Boards{boards.length === 0 ? null : `(${boards.length})`}
       </h3>
       <ul className="board-list">
-        {boards.map((board: IBoard) => (
-          <button
-            key={board._id.toString()}
-            className={currentBoard?._id === board._id ? 'active' : ''}
-            onClick={() => dispatch(changeActiveBoard())}
-          >
-            <li className="text-primary fs-500 fw-m capitalize flex">
-              <IconBoard />
-              {board.name}
-            </li>
-          </button>
-        ))}
+        {content}
         <li className="create-new-link">
           <button
             className="text-primary fs-400 fw-b flex"

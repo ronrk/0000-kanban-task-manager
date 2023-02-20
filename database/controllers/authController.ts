@@ -65,7 +65,6 @@ export const registerUserAPI = async (
     }
     const emailAlreadyExist = await User.findOne({ email });
     const usernameAlreadyExist = await User.findOne({ username });
-    console.log({ emailAlreadyExist });
     if (emailAlreadyExist) {
       throw new CustomError.BadRequestError('Email already exist');
     }
