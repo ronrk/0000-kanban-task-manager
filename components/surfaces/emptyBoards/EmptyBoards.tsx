@@ -1,6 +1,6 @@
 import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
-import { openModal, selectClientValue, useAppDispatch } from '@/store';
+import { openModal, selectUser, useAppDispatch } from '@/store';
 import { useSelector } from 'react-redux';
 import Wrapper from './EmptyBoards.styled';
 
@@ -9,7 +9,7 @@ export interface IEmptyBoards {
 }
 
 const EmptyBoards: React.FC<IEmptyBoards> = () => {
-  const { user } = useSelector(selectClientValue);
+  const { user } = useSelector(selectUser);
   const dispatch = useAppDispatch();
   return (
     <Wrapper className="flex-col">
