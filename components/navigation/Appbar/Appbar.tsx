@@ -73,7 +73,7 @@ const Appbar: React.FC<IAppbar> = () => {
           <MenuDropdown
             value={null}
             options={['edit', 'delete']}
-            onChange={() => {
+            cb={() => {
               dispatch(openModal(<DeleteBoard type={'board'} />));
             }}
           />
