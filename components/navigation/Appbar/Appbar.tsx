@@ -21,7 +21,7 @@ export interface IAppbar extends React.ComponentPropsWithoutRef<'header'> {}
 
 const Appbar: React.FC<IAppbar> = () => {
   const { isDrawerOpen, darkTheme } = useSelector(selectClientValue);
-  const user = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
   const { currentBoard } = useSelector(selectBoardValue);
   const dispatch = useAppDispatch();
 

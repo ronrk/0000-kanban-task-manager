@@ -27,7 +27,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   const [columnsChoosen, setColumnsChoosen] = useState<IColumn[]>(
     board?.columns || []
   );
-  const user = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
 
   const [addBoard] = useCreateNewBoardMutation();
   const dispatch = useAppDispatch();

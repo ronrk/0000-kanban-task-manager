@@ -21,7 +21,7 @@ const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
   const dispatch = useAppDispatch();
   // const { data: boards, status } = useSelector(selectBoardValue);
   const { currentBoard } = useSelector(selectBoardValue);
-  const user = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
   if (!user) {
     return <LoadingSpinner />;
   }

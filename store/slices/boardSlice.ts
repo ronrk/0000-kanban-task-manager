@@ -12,7 +12,9 @@ const initialState = {
 const slice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {},
+  reducers: {
+    changeActiveBoard: () => {},
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchFulfilled,
@@ -38,7 +40,7 @@ const slice = createSlice({
   },
 });
 
-// export const {  } = slice.actions;
+export const { changeActiveBoard } = slice.actions;
 export default slice.reducer;
 
 export const selectBoardValue = (state: RootState) => state.boards;
