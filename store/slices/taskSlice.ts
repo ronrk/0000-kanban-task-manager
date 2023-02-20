@@ -18,5 +18,5 @@ export const taskSlice = createSlice({
   extraReducers(builder) {},
 });
 
-export const selectTaskValue = (state: RootState) => state.task;
+export const selectTaskValue = (state: RootState) => state;
 export default taskSlice.reducer;
