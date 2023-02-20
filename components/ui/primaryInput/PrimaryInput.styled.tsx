@@ -1,14 +1,15 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-export interface IPrimaryInput extends React.ComponentPropsWithoutRef<'input'> {
+export interface IPrimaryInput extends React.ComponentPropsWithRef<'input'> {
   fullWidth?: boolean;
 }
 
 const StyledPrimaryInput = styled.input<IPrimaryInput>`
   width: ${({ fullWidth }) => fullWidth && '100%'};
-
+  border: 2px solid transparent;
   outline: 1px solid hsla(var(--clr-text-light), 1);
+  border-radius: 5px;
 
   &:focus {
     border-color: hsla(var(--clr-text-light), 1);

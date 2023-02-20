@@ -6,4 +6,5 @@ export * from './models/Task';
 export * from './models/types';
 export * from './models/User';
 export * from './serverFunction';
+export * from './errors';
 export { connectMongo };

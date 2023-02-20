@@ -1,8 +1,8 @@
-import { IUser, StatusType } from '@/types';
+import { StatusType } from '@/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import React from 'react';
-import { boardApi, RootState, userApi } from '..';
+import { RootState } from '..';
 
 interface IClientState {
   darkTheme: boolean;
@@ -10,7 +10,6 @@ interface IClientState {
   isModalOpen: boolean;
   modalChildren: null | React.ReactNode;
   status: StatusType;
-  user: IUser | null;
 }
 
 const initialState: IClientState = {
@@ -19,7 +18,6 @@ const initialState: IClientState = {
   isModalOpen: false,
   modalChildren: null,
   status: StatusType.IDLE,
-  user: null,
 };
 
 export const clientSlice = createSlice({
@@ -40,36 +38,11 @@ export const clientSlice = createSlice({
       state.modalChildren = null;
       state.isModalOpen = false;
     },
-    setActiveUser: (state, action: PayloadAction<IUser | null>) => {
-      state.user = action.payload;
-    },
-  },
-  extraReducers(builder) {
-    builder.addMatcher(
-      userApi.endpoints.getUserByUID.matchFulfilled,
-      (state, action) => {
-        console.log({ clientSliceGetUserByUID: action.payload });
-        state.user = action.payload.data;
-      }
-    );
-    builder.addMatcher(
-      boardApi.endpoints.createNewBoard.matchFulfilled,
-      (state, action) => {
-        console.log({ clientSliceCreateNewBoard: action.payload });
-        if (!state.user) return;
-        state.user.boards.push(action.payload.data);
-      }
-    );
   },
 });
 
-export const {
-  toggleTheme,
-  toggleDrawer,
-  openModal,
-  closeModal,
-  setActiveUser,
-} = clientSlice.actions;
+export const { toggleTheme, toggleDrawer, openModal, closeModal } =
+  clientSlice.actions;
 
 export const selectClientValue = (state: RootState) => state.client;
 export default clientSlice.reducer;

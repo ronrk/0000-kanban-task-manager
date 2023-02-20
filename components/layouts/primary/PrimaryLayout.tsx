@@ -1,5 +1,5 @@
 import Appbar from '@/components/navigation/Appbar/Appbar';
-import { selectClientValue } from '@/store';
+import { selectClientValue, selectUser } from '@/store';
 import Head from 'next/head';
 import { useSelector } from 'react-redux';
 import Wrapper from './PrimaryLayout.styled';
@@ -14,6 +14,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
   ...divProps
 }) => {
   const { darkTheme, isDrawerOpen } = useSelector(selectClientValue);
+  const user = useSelector(selectUser);
 
   return (
     <>
@@ -27,8 +28,10 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
       <Wrapper {...divProps} className={darkTheme ? 'dark' : ''}>
-        <Appbar />
-        <main className={isDrawerOpen ? 'app bg-app' : 'app bg-app full-w'}>
+        {user && <Appbar />}
+        <main
+          className={isDrawerOpen && user ? 'app bg-app' : 'app bg-app full-w'}
+        >
           {children}
         </main>
         {/* <div className="m-auto" /> */}

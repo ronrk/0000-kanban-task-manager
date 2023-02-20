@@ -1,9 +1,11 @@
 import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
 import { IconBoard } from '@/components/ui/icons';
+import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import {
   changeActiveBoard,
   openModal,
   selectBoardValue,
+  selectUser,
   useAppDispatch,
 } from '@/store';
 import { IBoard } from '@/types';
@@ -17,8 +19,14 @@ export interface IBoardDrawerList {
 
 const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
   const dispatch = useAppDispatch();
-  const { data: boards, status } = useSelector(selectBoardValue);
-  const { activeBoard } = useSelector(selectBoardValue);
+  // const { data: boards, status } = useSelector(selectBoardValue);
+  const { currentBoard } = useSelector(selectBoardValue);
+  const user = useSelector(selectUser);
+  if (!user) {
+    return <LoadingSpinner />;
+  }
+
+  const { boards } = user;
 
   return (
     <Wrapper>
@@ -29,7 +37,7 @@ const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
         {boards.map((board: IBoard) => (
           <button
             key={board._id.toString()}
-            className={activeBoard?._id === board._id ? 'active' : ''}
+            className={currentBoard?._id === board._id ? 'active' : ''}
             onClick={() => dispatch(changeActiveBoard(board))}
           >
             <li className="text-primary fs-500 fw-m capitalize flex">

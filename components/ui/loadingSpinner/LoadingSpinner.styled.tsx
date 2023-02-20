@@ -7,6 +7,7 @@ const StyledLoadingSpinner = styled.div`
     width: 80px;
     height: 80px;
     justify-self: center;
+    align-self: center;
 
     & div {
       position: absolute;

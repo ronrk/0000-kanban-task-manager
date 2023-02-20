@@ -192,3 +192,33 @@ body {
   flex-direction: column;
   gap: var(--gap, 2rem);
 }
+
+.sign_in--page {
+  max-width: 80%;
+  margin-inline: auto;
+  align-items: center;
+  justify-content: center;
+}
+.sign_in--page form input {
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+.sign_in--page form .form-control {
+  padding-block: 0.5rem;
+}
+
+.sign_in--page p {
+  align-self: flex-start;
+}
+.sign_in--page p button:disabled {
+  background-color: black;
+}
+
+.sign_in--page p button span {
+  transition: all 0.2s;
+}
+
+.sign_in--page p button:hover span {
+  color: hsl(var(--clr-primary));
+}

@@ -6,7 +6,7 @@ import useInput from '@/hooks/useInput';
 
 import {
   closeModal,
-  selectClientValue,
+  selectUser,
   useAppDispatch,
   useCreateNewBoardMutation,
   useGetTemplateBoardQuery,
@@ -27,7 +27,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   const [columnsChoosen, setColumnsChoosen] = useState<IColumn[]>(
     board?.columns || []
   );
-  const { user } = useSelector(selectClientValue);
+  const user = useSelector(selectUser);
 
   const [addBoard] = useCreateNewBoardMutation();
   const dispatch = useAppDispatch();

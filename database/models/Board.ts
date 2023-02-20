@@ -4,19 +4,15 @@ import { IBoardSchema, IColumnsSchema } from './types';
 
 // TYPES MODEL
 
-interface IColumnMethods {}
-interface IBoardMethods {}
+interface IColumnMethods extends IColumnsSchema {}
+interface IBoardMethods extends IBoardSchema {}
 
-type ColumnModel = Model<IColumnsSchema, {}, IColumnMethods>;
-type BoardModel = Model<IBoardSchema, {}, IBoardMethods>;
+interface IColumnModel extends Model<IColumnMethods> {}
+interface IBoardModel extends Model<IBoardMethods> {}
 
 // COLUMN MODEL
 
-const columnSchema: Schema = new Schema<
-  IColumnsSchema,
-  ColumnModel,
-  IColumnMethods
->({
+const columnSchema: Schema<IColumnMethods> = new Schema({
   status: {
     type: String,
     default: 'Todo',
@@ -24,22 +20,20 @@ const columnSchema: Schema = new Schema<
   tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
 });
 
-export const Column: Model<IColumnsSchema> =
-  models.Column || model('Column', columnSchema);
+export const Column =
+  models?.Column || model<IColumnMethods, IColumnModel>('Column', columnSchema);
 
 // BOARD MODEL
 
-const boardScehma: Schema = new Schema<IBoardSchema, BoardModel, IBoardMethods>(
-  {
-    name: String,
-    columns: [{ type: Schema.Types.ObjectId, ref: 'Column' }],
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Cant sign new board without user signed in'],
-    },
-  }
-);
+const boardScehma: Schema<IBoardMethods> = new Schema({
+  name: String,
+  columns: [{ type: Schema.Types.ObjectId, ref: 'Column' }],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Cant sign new board without user signed in'],
+  },
+});
 boardScehma.pre('find', function (next) {
   console.log('FIND ALL BOARDS');
   this.populate({
@@ -61,5 +55,5 @@ boardScehma.pre<IBoardSchema>('remove', async function (next) {
   });
   next();
 });
-export const Board: Model<IBoardSchema> =
-  models.Board || model('Board', boardScehma);
+export const Board =
+  models?.Board || model<IBoardMethods, IBoardModel>('Board', boardScehma);

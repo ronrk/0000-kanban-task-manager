@@ -1,9 +1,4 @@
-import {
-  connectMongo,
-  createNewUserAPI,
-  getUserAPI,
-  wrongMethodError,
-} from '@/database';
+import { connectMongo, getUserAPI, wrongMethodError } from '@/database';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -19,7 +14,8 @@ export default async function handler(
       return await getUserAPI(req, res);
     }
     if (method === 'POST') {
-      return await createNewUserAPI(req, res);
+      // return await createNewUserAPI(req, res);
+      return res.status(200).json({ data: JSON.parse(req.body) });
     }
 
     wrongMethodError(req, res, ['GET', 'POST']);

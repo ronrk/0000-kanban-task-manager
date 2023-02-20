@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 
-import { ColType } from './index';
 import mongoose, { SchemaDefinitionProperty } from 'mongoose';
 
 export interface ISubtaskSchema {
@@ -31,7 +30,11 @@ export interface IBoardSchema extends Document {
 }
 
 export interface IUserSchema extends Document {
-  username: SchemaDefinitionProperty<string>;
-  email: SchemaDefinitionProperty<string>;
+  username:
+    | SchemaDefinitionProperty<SchemaDefinitionProperty<string> | undefined>
+    | undefined;
+  email: SchemaDefinitionProperty<string> | undefined;
   boards: mongoose.Types.ObjectId[];
+  password: string;
+  _id: mongoose.Types.ObjectId;
 }

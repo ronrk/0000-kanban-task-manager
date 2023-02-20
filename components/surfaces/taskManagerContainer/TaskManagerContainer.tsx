@@ -1,7 +1,7 @@
 import BoardColumn from '@/components/cards/boardColumn/BoardColumn';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import EmptyColumn from '@/components/utility/taskManager/emptyColumn/EmptyColumn';
-import { selectBoardValue } from '@/store';
+import { selectBoardValue, useGetBoardByIdQuery } from '@/store';
 import { StatusType } from '@/types';
 import { useSelector } from 'react-redux';
 import Wrapper from './TaskManagerContainer.styled';
@@ -9,18 +9,10 @@ import Wrapper from './TaskManagerContainer.styled';
 export interface ITaskManagerContainer {}
 
 const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
-  const { activeBoard, status } = useSelector(selectBoardValue);
-  /* const { data, isLoading, isSuccess, error, isError } = useGetBoardByIdQuery(
-    activeBoard?._id
+  const { currentBoard, status } = useSelector(selectBoardValue);
+  const { data, isLoading, isSuccess, error, isError } = useGetBoardByIdQuery(
+    currentBoard?._id
   );
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (isSuccess) {
-      console.log('USE EFFECT IS SUCCESS');
-      dispatch(changeActiveBoard(data.data));
-    }
-  });
 
   if (isLoading || status === StatusType.PENDING) {
     return (
@@ -30,7 +22,7 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
     );
   }
 
-  if (isError || !activeBoard) {
+  if (isError || !currentBoard || status === StatusType.ERROR) {
     console.log({ error });
     return (
       <Wrapper>
@@ -38,16 +30,10 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
         <div>Empty Board</div>
       </Wrapper>
     );
-  } */
-  if (status === StatusType.PENDING) {
-    return <LoadingSpinner />;
-  }
-  if (status === StatusType.ERROR) {
-    return <div>ERROR</div>;
   }
 
-  console.log({ activeBoard });
-  let boardColumnsDisplay = activeBoard?.columns.map((col) => {
+  console.log({ currentBoard });
+  let boardColumnsDisplay = currentBoard.columns.map((col) => {
     return <BoardColumn key={col._id.toString()} column={col} />;
   });
 

@@ -1,97 +1,44 @@
 import { IBoard, StatusType } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
-import { boardApi, RootState, setActiveUser } from '..';
+import { RootState } from '..';
+import { boardApi } from '../Api/boardApi';
 
-interface IBoardState {
-  data: IBoard[];
-  status: StatusType;
-  activeBoard: IBoard | null;
-}
-
-const initialState: IBoardState = {
-  data: [],
-  activeBoard: null,
+const initialState = {
+  boards: [],
+  currentBoard: null,
   status: StatusType.IDLE,
-};
+} as { boards: IBoard[]; currentBoard: IBoard | null; status: StatusType };
 
-export const boardSlice = createSlice({
-  name: 'board',
+const slice = createSlice({
+  name: 'boards',
   initialState,
-  reducers: {
-    changeActiveBoard: (state, action) => {
-      console.log({ CHANGEACTIVEBOARDS: action.payload });
-      state.activeBoard = action.payload;
-    },
-  },
-  extraReducers(builder) {
-    builder.addCase(setActiveUser, (state, action) => {
-      console.log({ boardSliceSetActiveUser: action.payload });
-      if (!action.payload) {
-        return;
-      }
-      state.data = action.payload.boards;
-    });
-
-    builder.addMatcher(
-      boardApi.endpoints.getBoardById.matchPending,
-      (state) => {
-        state.status = StatusType.PENDING;
-      }
-    );
-    builder.addMatcher(
-      boardApi.endpoints.getBoardsByUID.matchPending,
-      (state) => {
-        state.status = StatusType.PENDING;
-      }
-    );
-    builder.addMatcher(
-      boardApi.endpoints.createNewBoard.matchFulfilled,
-      (state, action) => {
-        console.log({ boardCreateNewBoard: action.payload });
-        /*         state.activeBoard = action.payload.data;
-        state.data.push(action.payload.data); */
-      }
-    );
+  reducers: {},
+  extraReducers: (builder) => {
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchFulfilled,
       (state, action) => {
-        console.log({ boardSliceGetBoard: action.payload });
-        state.activeBoard = action.payload.data;
-
-        state.status = StatusType.FULLFILED;
+        console.log('GET BOARD BY ID');
+        console.log({ payload: action.payload });
       }
     );
     builder.addMatcher(
       boardApi.endpoints.getBoardsByUID.matchFulfilled,
       (state, action) => {
-        console.log({ boardSliceGetBoardsByUID: action.payload });
-        if (action.payload.data.length > 0) {
-          state.data = action.payload.data;
-          state.activeBoard =
-            action.payload.data[action.payload.data.length - 1];
-        }
-        state.status = StatusType.FULLFILED;
+        console.log('GET BOARD BY UID');
+        console.log({ payload: action.payload });
       }
     );
     builder.addMatcher(
-      boardApi.endpoints.getBoardById.matchRejected,
+      boardApi.endpoints.createNewBoard.matchFulfilled,
       (state, action) => {
-        state.status = StatusType.ERROR;
-        console.log({ error: action.error, payload: action.payload });
-      }
-    );
-
-    builder.addMatcher(
-      boardApi.endpoints.getBoardsByUID.matchRejected,
-      (state, action) => {
-        state.status = StatusType.ERROR;
-        console.log(action.payload);
+        console.log('CREATE NEW BOARD');
+        console.log({ payload: action.payload });
       }
     );
   },
 });
 
-export const { changeActiveBoard } = boardSlice.actions;
+// export const {  } = slice.actions;
+export default slice.reducer;
 
-export const selectBoardValue = (state: RootState) => state.board;
-export default boardSlice.reducer;
+export const selectBoardValue = (state: RootState) => state.boards;

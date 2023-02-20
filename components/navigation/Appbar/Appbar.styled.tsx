@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyledAppbar = styled.header`
   position: relative;
-  --gap: 0;
+  --gap: 1rem;
   height: 10vh;
   align-items: center;
 
@@ -34,23 +34,40 @@ const StyledAppbar = styled.header`
     justify-content: space-between;
     align-items: center;
     height: 100%;
-
-    & .actions {
-      align-items: center;
-      margin-left: 1em;
-    }
+  }
+  & .actions {
+    align-items: center;
+    margin-left: 0.5em;
+    --gap: 1rem;
+  }
+  & .logout--icon {
+    display: none;
   }
 
   @media screen and (max-width: 870px) {
+    & .actions {
+      --gap: 0.3rem;
+    }
     & .create-btn-text {
       display: none;
+    }
+    & .logout--btn {
+      background-color: transparent;
+    }
+    & .logout--btn_text {
+      display: none;
+    }
+
+    & .logout--icon {
+      display: block;
+      font-size: 25px;
+      color: hsl(var(--clr-red));
     }
   }
   @media screen and (max-width: 750px) {
     & .actions {
-      /* flex-direction: column; */
       justify-content: center;
-      /* align-items: flex-start; */
+      --gap: 0;
 
       & .create-task-btn {
         background-color: transparent;

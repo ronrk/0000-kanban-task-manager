@@ -4,29 +4,26 @@ import { ISubtaskSchema, ITaskSchema } from './types';
 
 // TYPES MODEL
 
-interface ISubtaskMethods {}
-interface ITaskMethods {}
+interface ISubtaskMethods extends ISubtaskSchema {}
+interface ITaskMethods extends ITaskSchema {}
 
-type SubtaskModel = Model<ISubtaskSchema, {}, ISubtaskMethods>;
-type TaskModel = Model<ITaskSchema, {}, ITaskMethods>;
+interface ISubtaskModel extends Model<ISubtaskMethods> {}
+interface ITaskModel extends Model<ITaskMethods> {}
 
 // SUBTASK MODEL
 
-const subtaskSchema: Schema = new Schema<
-  ISubtaskSchema,
-  SubtaskModel,
-  ISubtaskMethods
->({
+const subtaskSchema: Schema<ISubtaskMethods> = new Schema({
   title: { type: String, required: [true, 'Subtask must have a title'] },
   isCompleted: { type: Boolean, default: false },
 });
 
 export const Subtask: Model<ISubtaskSchema> =
-  models.Subtask || model('Subtask', subtaskSchema);
+  models?.Subtask ||
+  model<ISubtaskMethods, ISubtaskModel>('Subtask', subtaskSchema);
 
 // TASK MODEL
 
-const taskSchema: Schema = new Schema<ITaskSchema, TaskModel, ITaskMethods>({
+const taskSchema: Schema<ITaskSchema> = new Schema({
   title: { type: String, required: [true, 'Task must have a title'] },
   description: String,
   colStatus: {
@@ -53,4 +50,4 @@ taskSchema.pre<ITaskSchema>('remove', async function (next) {
 });
 
 export const Task: Model<ITaskSchema> =
-  models.Task || model('Task', taskSchema);
+  models?.Task || model<ITaskMethods, ITaskModel>('Task', taskSchema);

@@ -3,93 +3,92 @@ import PrimaryLayout from '@/components/layouts/primary/PrimaryLayout';
 import EmptyBoards from '@/components/surfaces/emptyBoards/EmptyBoards';
 import TaskManagerContainer from '@/components/surfaces/taskManagerContainer/TaskManagerContainer';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
-import {
-  selectClientValue,
-  useGetBoardsByUIDQuery,
-  useGetUserByUIDQuery,
-} from '@/store';
-import { StatusType } from '@/types';
+import { Board, checkClientSessionAuthentication } from '@/database';
+import { selectClientValue, useAppDispatch } from '@/store';
+import { IBoard, IUser } from '@/types';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
+import { getServerSession } from 'next-auth/next';
+import { useSession } from 'next-auth/react';
 import { useSelector } from 'react-redux';
+import { authOptions } from './api/auth/index';
 import { NextPageWithLayout } from './page';
 
 interface IProps {
-  uid: string;
-  status: StatusType;
-  error: null | { messsage: string; error?: any };
+  user: IUser | null;
+  boards: IBoard[];
 }
 
-const Home: NextPageWithLayout<IProps> = ({ uid }) => {
-  const {
-    isModalOpen,
-    modalChildren,
-    user: activeUser,
-  } = useSelector(selectClientValue);
-  const { isLoading, isError, error } = useGetUserByUIDQuery(uid);
-  useGetBoardsByUIDQuery(uid);
-  const router = useRouter();
+const Home: NextPageWithLayout<IProps> = ({ user, boards }) => {
+  const { status, data } = useSession();
+  const { isModalOpen, modalChildren } = useSelector(selectClientValue);
+  const dispatch = useAppDispatch();
+  console.log({ status });
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-  if (isError) {
-    console.log({ error });
-    router.push('/401');
-  }
+  /*   useEffect(() => {
+    console.log('HOME PAGE USE EFFECT');
+    if (status === 'unauthenticated') Router.replace('/auth/signin');
+    if (status === 'authenticated') {
+      dispatch(setAuthenticatedUser(user));
+    }
+  }, [status, user, dispatch]); */
 
-  if (!activeUser) {
-    return <div>No ACTIOVE USER</div>;
-  }
+  console.log({ user });
 
+  if (status === 'loading') {
+    return (
+      <PrimaryLayout>
+        <LoadingSpinner />;
+      </PrimaryLayout>
+    );
+  }
+  if (status === 'authenticated' && user) {
+    return (
+      <PrimaryLayout>
+        {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
+        <section>
+          {user.boards.length > 0 ? <TaskManagerContainer /> : <EmptyBoards />}
+        </section>
+      </PrimaryLayout>
+    );
+  }
   return (
     <PrimaryLayout>
-      {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
-      <section>
-        {activeUser.boards.length > 0 ? (
-          <TaskManagerContainer />
-        ) : (
-          <EmptyBoards />
-        )}
-      </section>
+      <LoadingSpinner />;
     </PrimaryLayout>
   );
 };
+
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  let props: IProps = { uid: '', status: StatusType.IDLE, error: null };
-  let uid = '63f0bd7db61e16a73559c7de';
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  let props: IProps = {
+    user: null,
+    boards: [],
+  };
 
   try {
-    if (uid === '') {
-      props.error = {
-        messsage: `No user with id: ${uid}`,
-        error: `No user with id: ${uid}`,
-      };
-      props.status = StatusType.ERROR;
+    const user: false | IUser = await checkClientSessionAuthentication(
+      context,
+      authOptions,
+      getServerSession
+    );
+
+    if (!user) {
       return {
-        props,
         redirect: {
-          destination: '/login',
           permanent: true,
+          destination: '/auth/signin',
         },
       };
     }
-
-    props.uid = uid;
-    props.status = StatusType.FULLFILED;
+    props.user = user;
+    const boards: IBoard[] = await Board.find({ user: user._id });
+    props.boards = JSON.parse(JSON.stringify(boards));
     return {
       props,
     };
   } catch (error) {
-    console.log({ status: 'Error Block' });
     console.log({ error });
-    props.error = {
-      messsage: `Error connecting to DB`,
-      error,
-    };
-    props.status = StatusType.ERROR;
     return {
       props,
       redirect: {
