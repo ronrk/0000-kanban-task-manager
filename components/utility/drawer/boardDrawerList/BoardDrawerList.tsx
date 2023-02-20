@@ -38,7 +38,7 @@ const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
           <button
             key={board._id.toString()}
             className={currentBoard?._id === board._id ? 'active' : ''}
-            onClick={() => dispatch(changeActiveBoard(board))}
+            onClick={() => dispatch(changeActiveBoard())}
           >
             <li className="text-primary fs-500 fw-m capitalize flex">
               <IconBoard />
