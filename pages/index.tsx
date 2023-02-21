@@ -56,7 +56,7 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
 
   if (isLoading) {
     return (
-      <PrimaryLayout>
+      <PrimaryLayout className={isLoading ? 'loading' : ''}>
         <LoadingSpinner />;
       </PrimaryLayout>
     );

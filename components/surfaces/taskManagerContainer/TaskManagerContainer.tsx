@@ -16,7 +16,7 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
 
   if (StatusType.PENDING === status) {
     return (
-      <Wrapper className="flex">
+      <Wrapper className="flex loading">
         <LoadingSpinner />
       </Wrapper>
     );

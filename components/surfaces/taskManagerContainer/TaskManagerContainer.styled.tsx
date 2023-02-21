@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const StyledTaskManagerContainer = styled.div`
   height: 100%;
   width: 100%;
-  display: grid;
+  /* display: grid; */
   padding: 1em;
   /* height: 83vh; */
   /* max-height: 100%; */
@@ -12,6 +12,9 @@ const StyledTaskManagerContainer = styled.div`
   /* row-gap: 0.5em; */
   /* justify-content: start; */
   /* grid-template-rows: 20px 1fr; */
+  &.loading {
+    display: grid;
+  }
 
   & .column {
     width: clamp(15.5rem, 5vw, 21.875rem);

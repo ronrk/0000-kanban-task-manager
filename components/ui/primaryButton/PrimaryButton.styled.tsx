@@ -7,6 +7,8 @@ export interface IPrimaryButton
   color: 'primary' | 'primary-light' | 'red' | 'white';
 }
 const StyledPrimaryButton = styled.button<IPrimaryButton>`
+  display: flex;
+  justify-content: center;
   align-items: center;
   --gap: 0.5em;
   background-color: ${({ color }) =>
@@ -14,9 +16,9 @@ const StyledPrimaryButton = styled.button<IPrimaryButton>`
       ? 'hsla(var(--clr-primary-light),.3)'
       : `hsl(var(--clr-${color}))`};
   color: ${(props) =>
-    props.color === 'white' ? 'hsl(var(--clr-primary))' : '#ffffff'};
+    props.color === 'white' ? 'hsl(var(--clr-primary-light))' : '#ffffff'};
   width: ${(props) => props.fullWidth && '100%'};
-  padding: 1em 2em;
+  padding: 0.75em 1.25em;
   border-radius: 100px;
   transition: all 0.2s;
   &:hover {

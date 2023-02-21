@@ -5,11 +5,18 @@ interface ILayoutProps {
 }
 
 const StyledPrimaryLayout = styled.div<ILayoutProps>`
+  &.loading {
+    & main {
+      display: grid;
+      place-items: center;
+    }
+  }
   &.sign-in__page {
     display: flex;
     flex-direction: column;
     text-align: center;
     & main {
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
     }
@@ -80,7 +87,7 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
       }
     }
   }
-  /* min-height: 100vh; */
+  min-height: 100vh;
   display: grid;
   grid-template-rows: min-content 1fr;
   grid-template-columns: min-content 1fr;

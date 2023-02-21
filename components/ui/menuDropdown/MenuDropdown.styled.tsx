@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const StyledDropdown = styled.div`
   cursor: pointer;
   position: relative;
+  align-self: flex-end;
 
   &.columns-type {
     width: 100%;
@@ -34,7 +35,7 @@ const StyledDropdown = styled.div`
     /* padding: 1em; */
     border: 1px solid hsl(var(--clr-text-light));
     border-radius: 5px;
-    margin-top: 0.5em;
+    margin-top: 1.5em;
 
     & .dropdown-option {
       padding: 1em;

@@ -6,6 +6,7 @@ const StyledDropdown = styled.div`
 
   &.columns-type {
     width: 100%;
+    max-width: 150px;
   }
 
   & .dropdown-bar {
@@ -13,8 +14,9 @@ const StyledDropdown = styled.div`
     align-items: center;
     border: 1px solid hsl(var(--clr-text-light));
     background-color: hsla(var(--clr-box-bg), 0.4);
-    padding: 1em 0.5em;
+    padding: 1em 0.8em;
     transition: all 0.2s;
+    border-radius: 6px;
     /* width: 100%; */
     & .icon {
       transition: all 0.2s;
@@ -32,13 +34,17 @@ const StyledDropdown = styled.div`
     width: 100%;
     min-width: 150px;
     /* padding: 1em; */
-    border: 1px solid hsl(var(--clr-text-light));
+    border: 2px solid hsl(var(--clr-text-light));
     border-radius: 5px;
     margin-top: 0.5em;
+    z-index: 2000;
 
     & .dropdown-option {
       padding: 1em;
       transition: all 0.2s;
+      &:not(:last-of-type) {
+        border-bottom: 1px hsla(var(--clr-primary), 0.4) solid;
+      }
       &.active {
         background-color: hsla(var(--clr-primary-light), 0.7);
       }

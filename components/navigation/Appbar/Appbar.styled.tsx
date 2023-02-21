@@ -37,7 +37,7 @@ const StyledAppbar = styled.header`
     height: 100%;
   }
   & .actions {
-    align-items: center;
+    align-items: baseline;
     margin-left: 0.5em;
     --gap: 1rem;
   }

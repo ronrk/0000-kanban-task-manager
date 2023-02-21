@@ -2,32 +2,55 @@ import styled from 'styled-components';
 
 const ModalWrapper = styled.div`
   overflow-y: scroll;
-  bottom: 20%;
-
+  top: 20%;
+  /* bottom: 50%; */
   position: absolute;
   width: 90vw;
   max-width: 600px;
-  min-height: 50vh;
+  /* min-height: 50vh; */
   max-height: 90vh;
   margin-inline: auto;
   padding: 2em 2em;
   border-radius: 6px;
   --gap: 0.5em;
+  & h3 {
+    text-align: center;
+  }
 
-  &.loading {
+  & .loading {
     display: grid;
+    place-items: center;
+    flex-grow: 1;
   }
 
   & .submit-btn {
+    align-self: center;
+    padding-inline: 3rem;
   }
 
   & .columns {
     --gap: 0.3em;
     margin-bottom: 3em;
     flex-grow: 1;
+    & .columns__wrapper {
+      --gap: 1rem;
+      flex-wrap: wrap;
+    }
+    & .form-control {
+      align-items: center;
+      width: 30%;
+    }
 
     & button {
       margin-top: 0.3em;
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s;
+      &:hover {
+        color: hsla(var(--clr-primary-light));
+      }
     }
     & .subtask {
       margin-bottom: 1em;
@@ -179,14 +202,20 @@ const ModalWrapper = styled.div`
   }
 
   &.delete-box {
-    display: grid;
-    gap: 1em;
-    top: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
     & .actions {
+      width: 100%;
+      display: flex;
+      flex-grow: 1;
       margin-top: 2em;
-      justify-content: center;
+      justify-content: space-evenly;
+      align-items: center;
       & button {
-        width: 30%;
+        width: 40%;
       }
     }
   }

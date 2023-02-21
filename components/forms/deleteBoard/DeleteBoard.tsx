@@ -29,8 +29,8 @@ const DeleteBoard: FC<IProps> = ({ type, task }) => {
   }
   return (
     <Wrapper className="delete-box bg-box">
-      <h2 className="text-red fs-500 fw-b">Delete this {type}?</h2>
-      <p className="text-light fs-400">
+      <h2 className="text-red fs-600 fw-b">Delete this {type}?</h2>
+      <p className="text-light fs-500">
         {type === 'board'
           ? `Are you sure you want to delete the '${currentBoard?.name}' board? This
         action will remove all columns and tasks and cannot be reversed.`

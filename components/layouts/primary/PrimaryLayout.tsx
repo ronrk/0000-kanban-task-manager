@@ -13,6 +13,7 @@ export interface IPrimaryLayout extends React.ComponentPropsWithoutRef<'div'> {
 const PrimaryLayout: React.FC<IPrimaryLayout> = ({
   withAppBar,
   children,
+  className,
   title = 'Task Manager',
   ...divProps
 }) => {
@@ -31,9 +32,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
       </Head>
       <Wrapper
         {...divProps}
-        className={
-          darkTheme ? `${divProps.className} dark` : `${divProps.className}`
-        }
+        className={darkTheme ? `${className} dark` : `${className}`}
         withAppBar
       >
         {withAppBar && <Appbar />}

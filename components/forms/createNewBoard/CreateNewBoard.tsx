@@ -185,10 +185,10 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
     }
   };
 
-  let content = (
+  let formElement = (
     <form onSubmit={submitHandler} className="flex-col">
       <div className="form-control flex-col">
-        <label htmlFor="name" className="text-light fs-300">
+        <label htmlFor="name" className="text-light fs-500">
           Name
         </label>
         <PrimaryInput
@@ -207,48 +207,51 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         </p>
       </div>
       <div className="columns flex-col">
-        <label className="fw-m fs-300 text-light">Board Columns:</label>
-        {columnsChoosen.map((col, idx) => {
-          return (
-            <div className="form-control flex" key={idx}>
-              <TodoDropdown
-                onChange={(colType) => handleColChange(col, colType)}
-                value={col.status}
-              />
+        <label className="fw-m fs-500 text-light">Board Columns:</label>
+        <div className="columns__wrapper flex">
+          {columnsChoosen.map((col, idx) => {
+            return (
+              <div className="form-control flex" key={idx}>
+                <TodoDropdown
+                  onChange={(colType) => handleColChange(col, colType)}
+                  value={col.status}
+                />
 
-              <IconRemove
-                onClick={() => handleRemoveColumns(col, idx)}
-                type="button"
-              ></IconRemove>
-            </div>
-          );
-        })}
-        <PrimaryButton
-          color="primary-light"
+                <IconRemove
+                  onClick={() => handleRemoveColumns(col, idx)}
+                  type="button"
+                ></IconRemove>
+              </div>
+            );
+          })}
+        </div>
+        <button
           type="button"
-          fullWidth
+          className="add-culumn fs-400 text-primary"
           onClick={addNewColumn}
         >
-          <HiOutlinePlus /> Add New Column
-        </PrimaryButton>
+          <HiOutlinePlus fontSize={'17px'} className="text-primary" /> Add New
+          Column
+        </button>
       </div>
 
-      <PrimaryButton
-        color="primary"
-        type="submit"
-        fullWidth
-        className="submit-btn"
-      >
+      <PrimaryButton color="primary" type="submit" className="submit-btn">
         {isEdit ? `Edit '${board?.name}'` : 'Create New Board'}
       </PrimaryButton>
     </form>
   );
   return (
     <Wrapper className="bg-app create-board flex-col">
-      <h3 className="text-dark fs-500">
+      <h3 className="text-dark fs-600">
         {isEdit ? board?.name : 'Add new Board'}
       </h3>
-      {status === StatusType.PENDING && !isEdit ? <LoadingSpinner /> : content}
+      {status === StatusType.PENDING && !isEdit ? (
+        <div className="loading">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        formElement
+      )}
     </Wrapper>
   );
 };
