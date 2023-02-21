@@ -31,6 +31,7 @@ export interface ITask {
 }
 
 export interface ISubtask {
+  _id: mongoose.Types.ObjectId;
   title: string;
   isCompleted: boolean;
 }

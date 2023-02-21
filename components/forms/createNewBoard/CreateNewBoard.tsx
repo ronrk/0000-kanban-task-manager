@@ -166,9 +166,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         boardId: formBoard?._id,
         board: { ...formBoard, name: enteredName },
       })
-        .then((data) => {
-          console.log(data);
-        })
+        .then(() => dispatch(closeModal()))
         .catch((error) => {
           console.log({ error });
         });
@@ -178,6 +176,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         uid: user?._id,
         board: { ...formBoard, name: enteredName },
       })
+        .unwrap()
         .then(() => dispatch(closeModal()))
         .catch((error) => {
           console.log({ error, message: 'Error Creating New Board' });

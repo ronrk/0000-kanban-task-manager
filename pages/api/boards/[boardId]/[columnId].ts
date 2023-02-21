@@ -3,10 +3,12 @@ import {
   Column,
   connectMongo,
   server404Error,
+  Subtask,
+  Task,
   wrongMethodError,
 } from '@/database';
-import { IColumnSchema } from '@/types';
-import mongoose from 'mongoose';
+import { IColumnSchema, ISubtaskSchema } from '@/types';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 // server404Error(res, `Cant find user with id :${query.uid}`);
 // server404Error(res, 'createNewUser: no data on req.body');
@@ -20,7 +22,6 @@ export default async function handler(
       res.status(405).json({ message: 'Error connecting to DB', error: error })
     );
     const board = await Board.findById(query.boardId);
-
     if (!board) {
       return server404Error(res, `Cant find board with id :${query.boardId}`);
     }
@@ -28,6 +29,24 @@ export default async function handler(
     if (!column) {
       return server404Error(res, `Cant find column with id :${query.columnId}`);
     }
+
+    //
+
+    if (method === 'POST') {
+      const subtasks = body.subtasks.map(
+        (sub: ISubtaskSchema) => new Subtask(sub)
+      );
+
+      const newTask = new Task({ ...body, subtasks });
+      column.tasks.push(newTask._id);
+      await column.save();
+      await newTask.save();
+      await subtasks.forEach(
+        async (sub: HydratedDocument<ISubtaskSchema>) => await sub.save()
+      );
+      return res.status(201).json({ body, newTask, subtasks, column });
+    }
+
     if (method === 'PATCH') {
       if (!body) {
         server404Error(res, 'updateColumn: no data on req.body');

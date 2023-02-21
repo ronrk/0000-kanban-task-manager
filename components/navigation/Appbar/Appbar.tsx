@@ -1,5 +1,6 @@
 // import AuthButton from '../../buttons/auth/AuthButton';
 import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
+import CreateNewTask from '@/components/forms/createNewTask/CreateNewTask';
 import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
@@ -52,6 +53,7 @@ const Appbar: React.FC<IAppbar> = () => {
             disabled={
               !currentBoard || currentBoard.columns.length === 0 ? true : false
             }
+            onClick={() => dispatch(openModal(<CreateNewTask />))}
           >
             <HiOutlinePlus />
             <span className="create-btn-text">Add New Task</span>
