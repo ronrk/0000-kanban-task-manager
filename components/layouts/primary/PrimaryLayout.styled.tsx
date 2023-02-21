@@ -90,6 +90,9 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
 
   & .app {
     grid-area: app;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    align-self: stretch;
     /* display: grid; */
     /* padding: 1em; */
     /* padding-left: var(--drawer-width); */
