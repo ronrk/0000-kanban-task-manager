@@ -1,7 +1,7 @@
 import { IMenuDropdown } from './MenuDropdown';
 
 const base: IMenuDropdown = {
-  onChange: (type: string) => {},
+  cb: () => {},
   value: '',
   options: [],
 };

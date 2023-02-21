@@ -1,6 +1,6 @@
+import { ISubtaskSchema, ITaskSchema } from '@/types/schemaTypes';
 import { Model, model, models, Schema } from 'mongoose';
 import { removeEntiteis } from '../serverFunction';
-import { ISubtaskSchema, ITaskSchema } from './types';
 
 // TYPES MODEL
 

@@ -9,8 +9,12 @@ import {
   closeModal,
   selectBoardValue,
   selectUser,
+  useAddColumnByIdMutation,
   useAppDispatch,
   useCreateNewBoardMutation,
+  useDeleteColumnByColIdMutation,
+  useEditBoardByIdMutation,
+  useEditColumnMutation,
   useGetTemplateBoardQuery,
 } from '@/store';
 import { ColType, IBoard, IColumn, StatusType } from '@/types';
@@ -21,7 +25,7 @@ import { useSelector } from 'react-redux';
 import Wrapper from '../FormWrapper.styled';
 
 export interface ICreateNewBoard extends React.ComponentPropsWithoutRef<'div'> {
-  board?: IBoard;
+  board?: IBoard | null;
 }
 
 const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
@@ -32,8 +36,13 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   const { user } = useSelector(selectUser);
   const { status } = useSelector(selectBoardValue);
   const [addBoard] = useCreateNewBoardMutation();
+  const [editBoard] = useEditBoardByIdMutation();
+  const [editColumn] = useEditColumnMutation();
+  const [addnewColumnToBoard] = useAddColumnByIdMutation();
+  const [deleteColumn] = useDeleteColumnByColIdMutation();
   const dispatch = useAppDispatch();
   const { data, isSuccess } = useGetTemplateBoardQuery('');
+  let isEdit = board ? true : false;
 
   useEffect(() => {
     if (!formBoard && isSuccess) {
@@ -42,7 +51,40 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
     }
   }, [data, isSuccess, formBoard]);
 
+  const {
+    value: enteredName,
+    handleChange: handleNameChange,
+    isError: isNameError,
+    onFocus: handleNameFocus,
+    onBlur: handleNameBlur,
+  } = useInput((value) => value.length > 0, isEdit ? board?.name : '');
+
   const addNewColumn = async () => {
+    if (isEdit) {
+      const templateCol = await fetch('/api/boards?template=true')
+        .then((res) => res.json())
+        .then((data) => data.initialColumn);
+      if (!templateCol) {
+        return;
+      }
+      addnewColumnToBoard({
+        boardId: board!._id,
+        newCol: templateCol,
+      })
+        .unwrap()
+        .then((data) => {
+          setColumnsChoosen((prev) => [...prev, data.newColumn]);
+          setFormBoard((prev) => {
+            if (!prev) return prev;
+            return { ...data.board, name: enteredName };
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      return;
+    }
     fetch(`/api/boards?template=true`)
       .then((res) => res.json())
       .then((data: { initialColumn: IColumn }) => {
@@ -67,15 +109,43 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
       );
   };
 
-  const {
-    value: enteredName,
-    handleChange: handleNameChange,
-    isError: isNameError,
-    onFocus: handleNameFocus,
-    onBlur: handleNameBlur,
-  } = useInput((value) => value.length > 0);
+  const handleRemoveColumns = async (col: IColumn, idx: number) => {
+    if (isEdit) {
+      console.log(col._id, col);
+      deleteColumn({
+        colId: col._id,
+        boardId: board!._id,
+      })
+        .unwrap()
+        .then(() => {
+          console.log('REMOVED');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    setColumnsChoosen((prev) =>
+      prev.filter((column, colIdx) => idx !== colIdx)
+    );
+  };
 
   const handleColChange = (col: any, colType: ColType) => {
+    if (isEdit) {
+      editColumn({
+        boardId: board!._id,
+        columnId: col._id,
+        col: { status: colType },
+      })
+        .unwrap()
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
     const updatedColumns = columnsChoosen.map((column) => {
       if (column._id === col._id) {
         return { ...column, status: colType };
@@ -91,15 +161,28 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    addBoard({
-      uid: user?._id,
-      board: { ...formBoard, name: enteredName },
-    })
-      .then(() => dispatch(closeModal()))
-      .catch((error) => {
-        console.log({ error, message: 'Error Creating New Board' });
-      });
+    if (isEdit) {
+      editBoard({
+        boardId: formBoard?._id,
+        board: { ...formBoard, name: enteredName },
+      })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+      return;
+    } else {
+      addBoard({
+        uid: user?._id,
+        board: { ...formBoard, name: enteredName },
+      })
+        .then(() => dispatch(closeModal()))
+        .catch((error) => {
+          console.log({ error, message: 'Error Creating New Board' });
+        });
+    }
   };
 
   let content = (
@@ -134,11 +217,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
               />
 
               <IconRemove
-                onClick={() =>
-                  setColumnsChoosen((prev) =>
-                    prev.filter((column, colIdx) => idx !== colIdx)
-                  )
-                }
+                onClick={() => handleRemoveColumns(col, idx)}
                 type="button"
               ></IconRemove>
             </div>
@@ -160,14 +239,16 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         fullWidth
         className="submit-btn"
       >
-        Create New Board
+        {isEdit ? `Edit '${board?.name}'` : 'Create New Board'}
       </PrimaryButton>
     </form>
   );
   return (
     <Wrapper className="bg-app create-board flex-col">
-      <h3 className="text-dark fs-500">Add new Board</h3>
-      {status === StatusType.PENDING ? <LoadingSpinner /> : content}
+      <h3 className="text-dark fs-500">
+        {isEdit ? board?.name : 'Add new Board'}
+      </h3>
+      {status === StatusType.PENDING && !isEdit ? <LoadingSpinner /> : content}
     </Wrapper>
   );
 };

@@ -37,10 +37,41 @@ export const boardApi = createApi({
       }),
       invalidatesTags: ['Boards'],
     }),
+    editBoardById: builder.mutation({
+      query: ({ boardId, board }) => ({
+        url: `/${boardId}`,
+        method: 'PATCH',
+        body: board,
+      }),
+      invalidatesTags: ['Boards'],
+    }),
     deleteBoardById: builder.mutation({
       query: (boardId) => ({
         url: `/${boardId}`,
         method: 'DELETE',
+      }),
+      invalidatesTags: ['Boards'],
+    }),
+    deleteColumnByColId: builder.mutation({
+      query: ({ colId, boardId }) => ({
+        url: `/${boardId}/${colId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Boards'],
+    }),
+    addColumnById: builder.mutation({
+      query: ({ boardId, newCol }) => ({
+        url: `/${boardId}`,
+        method: 'POST',
+        body: newCol,
+      }),
+      invalidatesTags: ['Boards'],
+    }),
+    editColumn: builder.mutation({
+      query: ({ boardId, columnId, col }) => ({
+        url: `/${boardId}/${columnId}`,
+        method: 'PATCH',
+        body: col,
       }),
       invalidatesTags: ['Boards'],
     }),
@@ -53,4 +84,8 @@ export const {
   useGetBoardsByUIDQuery,
   useGetTemplateBoardQuery,
   useDeleteBoardByIdMutation,
+  useEditBoardByIdMutation,
+  useDeleteColumnByColIdMutation,
+  useAddColumnByIdMutation,
+  useEditColumnMutation,
 } = boardApi;

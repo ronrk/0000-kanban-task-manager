@@ -2,6 +2,7 @@ import {
   Board,
   Column,
   connectMongo,
+  editBoardByIdAPI,
   server404Error,
   wrongMethodError,
 } from '@/database';
@@ -25,7 +26,7 @@ export default async function handler(
       res.status(200).json({ message: 'Get Single Board', board });
     }
     if (method === 'POST') {
-      const newColumn = await Column.create({ ...body });
+      const newColumn = await Column.create({ ...body, board: board._id });
       board.columns.push(newColumn._id);
       await board.save();
 
@@ -38,12 +39,7 @@ export default async function handler(
         server404Error(res, 'updateBoard : no data on req.body');
         return;
       }
-      const updatedBoard = await Board.findOneAndUpdate(
-        { _id: board._id },
-        body,
-        { new: true }
-      );
-      return res.status(200).json({ message: 'Updated board', updatedBoard });
+      return await editBoardByIdAPI(req, res);
     }
     if (method === 'DELETE') {
       await board.remove();

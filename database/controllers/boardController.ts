@@ -1,7 +1,8 @@
 import { IColumnSchema } from '@/types';
 import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Board, Column } from '../models/Board';
+import { Board } from '../models/Board';
+import { Column } from '../models/Column';
 import { User } from '../models/User';
 import { server404Error } from '../serverFunction';
 
@@ -89,6 +90,38 @@ export const getSingleBoardAPI = async (
     return res
       .status(200)
       .json({ message: 'Get board by board id', data: board });
+  } catch (error) {
+    return server404Error(res, `Cant find board with id :${query.boardId}`);
+  }
+};
+
+export const editBoardByIdAPI = async (
+  { query, body }: NextApiRequest,
+  res: NextApiResponse
+) => {
+  try {
+    console.log({ message: 'EDIT BOARD CONTROLLER' });
+    const columns = await body.columns.map(async (col: IColumnSchema) => {
+      const updatedCol = await Column.findByIdAndUpdate(col._id, col, {
+        new: true,
+      });
+      if (!updatedCol) {
+        return await Column.create(col);
+      }
+      return updatedCol;
+    });
+
+    console.log({ columns });
+    const board = await Board.findByIdAndUpdate(query.boardId, body, {
+      new: true,
+    });
+    console.log({ board, columns });
+    if (!board) {
+      return server404Error(res, `Cant find board with id :${query.boardId}`);
+    }
+    return res
+      .status(200)
+      .json({ message: 'Edit board by board id', data: { board, columns } });
   } catch (error) {
     return server404Error(res, `Cant find board with id :${query.boardId}`);
   }

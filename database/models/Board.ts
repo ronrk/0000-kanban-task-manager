@@ -1,28 +1,13 @@
+import { IBoardSchema } from '@/types/schemaTypes';
 import { Model, model, models, Schema } from 'mongoose';
 import { removeEntiteis } from '../serverFunction';
-import { IBoardSchema, IColumnsSchema } from './types';
+import { Column } from './Column';
 import { User } from './User';
 
 // TYPES MODEL
 
-interface IColumnMethods extends IColumnsSchema {}
 interface IBoardMethods extends IBoardSchema {}
-
-interface IColumnModel extends Model<IColumnMethods> {}
 interface IBoardModel extends Model<IBoardMethods> {}
-
-// COLUMN MODEL
-
-const columnSchema: Schema<IColumnMethods> = new Schema({
-  status: {
-    type: String,
-    default: 'Todo',
-  },
-  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
-});
-
-export const Column =
-  models?.Column || model<IColumnMethods, IColumnModel>('Column', columnSchema);
 
 // BOARD MODEL
 
@@ -55,15 +40,7 @@ boardScehma.pre<IBoardSchema>('remove', async function (next) {
     removeEntiteis(Column, column);
   });
   const user = await User.findById(this.user);
-  // console.log({ user: user.boards, board: this }, 'BEFORE');
   const updatedBoards = user.boards.filter((board: IBoardSchema) => {
-    /*     console.log({
-      typeBoard: typeof board._id,
-      typeThis: typeof this._id,
-      boardId: board._id,
-      thisID: this._id,
-      state: this._id.toString() === board._id.toString(),
-    }); */
     return board._id.toString() !== this._id.toString();
   });
   const newUser = await User.findOneAndUpdate(

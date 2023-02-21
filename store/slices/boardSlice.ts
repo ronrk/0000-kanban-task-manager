@@ -61,10 +61,16 @@ const slice = createSlice({
     builder.addMatcher(
       boardApi.endpoints.getBoardsByUID.matchFulfilled,
       (state, action) => {
-        console.log('GET BOARD BY UID');
         state.boards = action.payload.data;
         if (action.payload.data.length > 0 && !state.currentBoard) {
           state.currentBoard = action.payload.data[0];
+        }
+        if (state.currentBoard) {
+          const updateBoardIdx = state.boards.findIndex(
+            (board) => board._id === state.currentBoard!._id
+          );
+          console.log({ updated: state.boards[updateBoardIdx] });
+          state.currentBoard = state.boards[updateBoardIdx];
         }
         state.status = StatusType.FULLFILED;
       }
@@ -78,6 +84,7 @@ const slice = createSlice({
           action.payload.data[action.payload.data.length - 1];
       }
     );
+
     builder.addMatcher(
       boardApi.endpoints.deleteBoardById.matchFulfilled,
       (state) => {
@@ -92,7 +99,8 @@ const slice = createSlice({
 
     builder.addMatcher(
       boardApi.endpoints.getBoardsByUID.matchRejected,
-      (state) => {
+      (state, action) => {
+        console.log({ payload: action.payload, error: action.error });
         state.status = StatusType.ERROR;
       }
     );

@@ -6,7 +6,8 @@ export interface IMenuDropdown extends React.ComponentPropsWithoutRef<'div'> {
   // eslint-disable-next-line no-unused-vars
   value: string | null;
   options: string[];
-  cb(): void;
+  // eslint-disable-next-line no-unused-vars
+  cb(type: string): void;
 }
 
 const MenuDropdown: React.FC<IMenuDropdown> = ({ cb, value, options }) => {

@@ -1,4 +1,5 @@
 // import AuthButton from '../../buttons/auth/AuthButton';
+import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
 import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
@@ -73,8 +74,14 @@ const Appbar: React.FC<IAppbar> = () => {
           <MenuDropdown
             value={null}
             options={['edit', 'delete']}
-            cb={() => {
-              dispatch(openModal(<DeleteBoard type={'board'} />));
+            cb={(type) => {
+              if (type === 'edit') {
+                console.log('edit');
+                dispatch(openModal(<CreateNewBoard board={currentBoard} />));
+              }
+              if (type === 'delete') {
+                dispatch(openModal(<DeleteBoard type={'board'} />));
+              }
             }}
           />
         </div>
