@@ -32,8 +32,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: working on it
+- Live Site URL: [Under Development](https://0000-kanban-task-manager.vercel.app/)
 
 ## My process
 
