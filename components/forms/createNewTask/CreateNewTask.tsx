@@ -9,7 +9,7 @@ import { FC, FormEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Wrapper from '../FormWrapper.styled';
 
-interface IProps {
+export interface ICreateNewTask {
   task?: ITask;
 }
 
@@ -19,7 +19,7 @@ const initialSubtask = {
   _id: new mongoose.Types.ObjectId(),
 };
 
-const CreateNewTask: FC<IProps> = ({ task }) => {
+const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
   // const dispatch = useAppDispatch();
   const { currentBoard, boards } = useSelector(selectBoardValue);
   const { columns } = currentBoard!;

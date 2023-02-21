@@ -1,8 +1,6 @@
 import { ICreateNewTask } from './CreateNewTask';
 
-const base: ICreateNewTask = {
-  sampleTextProps: 'Hello World',
-};
+const base: ICreateNewTask = {};
 
 export const mockCreateNewTaskProps = {
   base,
