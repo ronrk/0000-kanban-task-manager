@@ -28,7 +28,13 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
-      <Wrapper {...divProps} className={darkTheme ? 'dark' : ''}>
+      <Wrapper
+        {...divProps}
+        className={
+          darkTheme ? `${divProps.className} dark` : `${divProps.className}`
+        }
+        withAppBar
+      >
         {withAppBar && <Appbar />}
         <main
           className={

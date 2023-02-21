@@ -3,11 +3,12 @@ import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import PrimaryInput from '@/components/ui/primaryInput/PrimaryInput.styled';
 import { checkClientSessionAuthentication, CustomError } from '@/database';
-import { selectStatus, useRegisterMutation } from '@/store';
+import { selectClientValue, selectStatus, useRegisterMutation } from '@/store';
 import { IUser, StatusType } from '@/types';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { signIn, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import Router from 'next/router';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -28,12 +29,13 @@ const Login: NextPageWithLayout<IProps> = () => {
   const [registerUser] = useRegisterMutation();
   const { status } = useSession();
   const authStatus = useSelector(selectStatus);
+  const { darkTheme } = useSelector(selectClientValue);
   let isLoading = authStatus === StatusType.PENDING || loadingState;
   let pageState = isLoading
     ? 'Loading...'
     : isAlreadyUser
-    ? 'Login page'
-    : 'Signup Page';
+    ? 'Welcome back, enter your credentials'
+    : 'Welcome, please sign up';
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -121,18 +123,25 @@ const Login: NextPageWithLayout<IProps> = () => {
   );
 
   return (
-    <PrimaryLayout>
-      <section className="bg-app sign_in--page flex-col">
-        <h1 className="fs-700 text-dark">{pageState}</h1>
-        <form onSubmit={handleSubmit} className="flex-col">
+    <PrimaryLayout className="sign-in__page">
+      <div className="image__wrapper ">
+        <Image
+          src={darkTheme ? '/assets/logo-light.svg' : '/assets/logo-dark.svg'}
+          alt={''}
+          fill
+        />
+      </div>
+      <section className="bg-app flex-col">
+        <h2 className="fs-700  text-primary-light">{pageState}</h2>
+        <form onSubmit={handleSubmit} className="flex-col ">
           {status === 'loading' || isLoading ? (
             <LoadingSpinner />
           ) : (
-            <section>
+            <>
               <div className="form-control">
                 <label
                   htmlFor="username"
-                  className="fs-700 text-dark uppercase"
+                  className="fs-600 text-light uppercase"
                 >
                   Username:
                 </label>
@@ -146,12 +155,16 @@ const Login: NextPageWithLayout<IProps> = () => {
                   name="username"
                   onChange={handleChange}
                   value={values.username}
+                  color="primary"
                 />
               </div>
 
               {!isAlreadyUser && (
                 <div className="form-control">
-                  <label htmlFor="email" className="fs-700 text-dark uppercase">
+                  <label
+                    htmlFor="email"
+                    className="fs-600 text-light uppercase"
+                  >
                     Email:
                   </label>
                   <PrimaryInput
@@ -170,7 +183,7 @@ const Login: NextPageWithLayout<IProps> = () => {
               <div className="form-control">
                 <label
                   htmlFor="password"
-                  className="fs-700 text-dark uppercase"
+                  className="fs-600 text-light uppercase"
                 >
                   Password:
                 </label>
@@ -187,16 +200,25 @@ const Login: NextPageWithLayout<IProps> = () => {
                 />
               </div>
               {error.status && (
-                <p className="text-red fs-400">{error.message}</p>
+                <p className="error--message text-red fs-400">
+                  {error.message}
+                </p>
               )}
-              <PrimaryButton color="primary" type="submit" fullWidth>
-                {isAlreadyUser ? 'Login' : 'Signup'}
-              </PrimaryButton>
-            </section>
+              <div className="btns__container flex-col align-center justify-center">
+                <PrimaryButton
+                  color="primary"
+                  type="submit"
+                  className="submit--btn"
+                >
+                  {isAlreadyUser ? 'Login' : 'Signup'}
+                </PrimaryButton>
+                <div className="switchType">
+                  {isLoading ? null : switchContent}
+                </div>
+              </div>
+            </>
           )}
         </form>
-
-        {isLoading ? null : switchContent}
       </section>
     </PrimaryLayout>
   );

@@ -71,8 +71,9 @@ input {
   background: none;
   border: none;
   border-radius: none;
-  font-family: inherit;
+  font-family: var(--ff);
 }
+
 button {
   cursor: pointer;
   display: block;
@@ -87,12 +88,10 @@ a {
 body {
   font-family: var(--ff);
   font-weight: 500;
-  /* min-height: 100vh; */
   overflow-x: hidden;
+  font-family: var(--ff);
+  /* min-height: 100vh; */
 }
-/* #__next {
-  height: 100vh;
-} */
 
 /* UTILS */
 
@@ -190,35 +189,16 @@ body {
 .flex-col {
   display: flex;
   flex-direction: column;
-  gap: var(--gap, 2rem);
+  gap: var(--gap, 1rem);
 }
 
-.sign_in--page {
-  max-width: 80%;
-  margin-inline: auto;
+.align-center {
   align-items: center;
+}
+.justify-center {
   justify-content: center;
 }
-.sign_in--page form input {
-  padding: 1rem;
-  border-radius: 5px;
-  margin-top: 1rem;
-}
-.sign_in--page form .form-control {
-  padding-block: 0.5rem;
-}
 
-.sign_in--page p {
-  align-self: flex-start;
-}
-.sign_in--page p button:disabled {
-  background-color: black;
-}
-
-.sign_in--page p button span {
-  transition: all 0.2s;
-}
-
-.sign_in--page p button:hover span {
-  color: hsl(var(--clr-primary));
+.image__wrapper {
+  position: relative;
 }
