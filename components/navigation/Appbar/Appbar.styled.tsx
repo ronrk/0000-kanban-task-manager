@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const StyledAppbar = styled.header`
+  grid-area: appbar;
   position: relative;
   --gap: 1rem;
   height: 10vh;

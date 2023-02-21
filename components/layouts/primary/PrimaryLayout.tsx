@@ -1,4 +1,5 @@
 import Appbar from '@/components/navigation/Appbar/Appbar';
+import Drawer from '@/components/utility/drawer/Drawer';
 import { selectClientValue } from '@/store';
 import Head from 'next/head';
 import { useSelector } from 'react-redux';
@@ -43,6 +44,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
         >
           {children}
         </main>
+        {withAppBar && <Drawer />}
         {/* <div className="m-auto" /> */}
       </Wrapper>
     </>

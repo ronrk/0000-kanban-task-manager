@@ -5,10 +5,9 @@ interface ILayoutProps {
 }
 
 const StyledPrimaryLayout = styled.div<ILayoutProps>`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   &.sign-in__page {
+    display: flex;
+    flex-direction: column;
     text-align: center;
     & main {
       display: flex;
@@ -81,15 +80,23 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
       }
     }
   }
+  /* min-height: 100vh; */
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    'appbar appbar'
+    'sidebar app';
 
   & .app {
+    grid-area: app;
     /* display: grid; */
     /* padding: 1em; */
-    padding-left: var(--drawer-width);
-    flex: 1;
-    transition: all 0.3s;
-    min-height: 90vh;
-    max-height: 100%;
+    /* padding-left: var(--drawer-width); */
+    /* flex: 1; */
+    /* transition: all 0.3s; */
+    /* min-height: 90vh; */
+    /* max-height: 100%; */
     &.full-w {
       /* padding-left: 1em; */
       padding: 0;

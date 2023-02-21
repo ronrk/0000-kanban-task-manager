@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const StyledDrawer = styled.nav`
-  position: absolute;
+  grid-area: sidebar;
+  /* position: absolute; */
   top: 100%;
   left: 0;
   width: var(--drawer-width);
@@ -11,7 +12,7 @@ const StyledDrawer = styled.nav`
   align-items: flex-start;
   border-right: 2px solid hsl(var(--clr-line));
 
-  transition: all 0.2s;
+  transition: width 0.4s;
 
   & .theme-toggle {
     width: 100%;
@@ -76,9 +77,36 @@ const StyledDrawer = styled.nav`
     }
   }
   &.hide {
+    width: 0px;
     transition: transform 0.2s;
-    transform: translateX(-200%);
+    overflow: hidden;
+    /* transform: translateX(-200%); */
+    /*     animation-name: drawerOpen;
+    animation-iteration-count: 1;
+    animation-delay: 2000ms;
+    animation-duration: 30000ms; */
   }
+  /*   @keyframes drawerOpen {
+    0% {
+      background-color: red;
+      * > {
+        background-color: red;
+        display: none;
+      }
+    }
+    99% {
+      background-color: red;
+      * > {
+        background-color: red;
+        display: none;
+      }
+    }
+    100% {
+      * > {
+        display: initial;
+      }
+    }
+  } */
 `;
 
 export default StyledDrawer;

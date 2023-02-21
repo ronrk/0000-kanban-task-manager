@@ -4,7 +4,6 @@ import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import ShowDrawerButton from '@/components/ui/showDrawerButton/ShowDrawerButton';
-import Drawer from '@/components/utility/drawer/Drawer';
 import {
   logout,
   openModal,
@@ -30,7 +29,6 @@ const Appbar: React.FC<IAppbar> = () => {
 
   return (
     <Wrapper className="flex bg-box">
-      <Drawer />
       <div
         className={
           isDrawerOpen ? 'image-wrapper' : 'image-wrapper drawer-hidden'
