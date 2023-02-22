@@ -1,5 +1,6 @@
 import { connectMongo } from '@/database';
 import { User } from '@/database/models/User';
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import mongoose from 'mongoose';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
