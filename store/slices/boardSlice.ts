@@ -17,7 +17,6 @@ const slice = createSlice({
       const foundBoard = state.boards.find(
         (board) => board._id === action.payload
       );
-      console.log({ foundBoard });
       if (foundBoard) {
         state.currentBoard = foundBoard;
       }

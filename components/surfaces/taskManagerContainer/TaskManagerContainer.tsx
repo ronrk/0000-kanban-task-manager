@@ -14,16 +14,14 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
 
   let errorState = status === StatusType.ERROR || !currentBoard;
 
-  if (StatusType.PENDING === status) {
+  /*   if (StatusType.PENDING === status) {
     return (
-      <Wrapper className="flex loading">
-        <LoadingSpinner />
-      </Wrapper>
+      
     );
-  }
+  } */
   if (boards.length <= 0) {
     return (
-      <Wrapper className="flex">
+      <Wrapper className="flex empty">
         <EmptyBoards />
       </Wrapper>
     );
@@ -43,8 +41,9 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
   });
 
   return (
-    <Wrapper className="flex">
-      {boardColumnsDisplay}
+    <Wrapper className={`flex ${StatusType.PENDING ? 'loading' : ''}`}>
+      {StatusType.PENDING === status ? <LoadingSpinner /> : boardColumnsDisplay}
+
       <EmptyColumn />
     </Wrapper>
   );

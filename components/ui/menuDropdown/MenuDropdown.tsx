@@ -8,9 +8,15 @@ export interface IMenuDropdown extends React.ComponentPropsWithoutRef<'div'> {
   options: string[];
   // eslint-disable-next-line no-unused-vars
   cb(type: string): void;
+  disabled?: boolean;
 }
 
-const MenuDropdown: React.FC<IMenuDropdown> = ({ cb, value, options }) => {
+const MenuDropdown: React.FC<IMenuDropdown> = ({
+  cb,
+  value,
+  options,
+  disabled,
+}) => {
   const activeBoard = true;
   const { handleOptionClick, handleClick, isOpen, divElRef } =
     useDropdownHook(cb);
@@ -39,7 +45,7 @@ const MenuDropdown: React.FC<IMenuDropdown> = ({ cb, value, options }) => {
       <button
         className="flex bg-box text-light btn--menu"
         onClick={handleClick}
-        disabled={activeBoard ? false : true}
+        disabled={disabled}
         type="button"
       >
         <HiDotsVertical className="icon" />

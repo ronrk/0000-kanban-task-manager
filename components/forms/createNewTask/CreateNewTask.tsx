@@ -1,8 +1,14 @@
+import IconButton from '@/components/ui/iconButton/IconButton.styled';
 import { IconRemove } from '@/components/ui/icons';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import PrimaryInput from '@/components/ui/primaryInput/PrimaryInput.styled';
 import TodoDropdown from '@/components/ui/todoDropdown/TodoDropdown';
-import { selectBoardValue, useCreateNewTaskMutation } from '@/store';
+import {
+  closeModal,
+  selectBoardValue,
+  useAppDispatch,
+  useCreateNewTaskMutation,
+} from '@/store';
 import { IColumn, ISubtask, ITask } from '@/types';
 import mongoose from 'mongoose';
 import { FC, FormEvent, useState } from 'react';
@@ -30,6 +36,7 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
   const [description, setDescription] = useState(task ? task.description : '');
   const [dropdownValue, setDropdownValue] = useState(columns[0]);
   const [addNewTask] = useCreateNewTaskMutation();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,7 +44,10 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
       title,
       description,
       colStatus: dropdownValue.status,
-      subtasks,
+      subtasks: subtasks.map((sub) => ({
+        title: sub.title,
+        isCompleted: sub.isCompleted,
+      })),
     };
     await addNewTask({
       boardId: currentBoard?._id,
@@ -45,9 +55,7 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
       task,
     })
       .unwrap()
-      .then((data) => {
-        console.log({ data });
-      })
+      .then(() => dispatch(closeModal()))
       .catch((error) => {
         console.log({ error });
       });
@@ -81,11 +89,11 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
           />
         </div>
         <div className="form-control flex-col">
-          <label htmlFor="title" className="text-light fs-500 fw-m">
+          <label htmlFor="title" className="text-light fs-400 fw-m">
             Description:
           </label>
           <textarea
-            className="text-dark fs-300"
+            className="text-dark fs-400"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
@@ -93,17 +101,17 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
 recharge the batteries a little"
           ></textarea>
         </div>
+        <label htmlFor="title" className="text-light fs-400 fw-m">
+          Subtasks:
+        </label>
         <div className="subtasks form-control flex-col">
-          <label htmlFor="title" className="text-light fs-500 fw-m">
-            Subtasks:
-          </label>
           {subtasks.map((sub, id) => {
             return (
               <div key={sub._id.toString()} className="subtask flex">
                 <PrimaryInput
                   fullWidth
                   type="text"
-                  placeholder="e.g Web Design"
+                  placeholder="e.g Web Design - Subtask"
                   className="text-dark fs-400"
                   value={sub.title}
                   onChange={(e) =>
@@ -121,43 +129,42 @@ recharge the batteries a little"
                 />
                 <IconRemove
                   onClick={() => {
-                    // dispatch(deleteSubtask(sub.id));
+                    setSubtasks((prev) =>
+                      prev.filter((val) => val._id !== sub._id)
+                    );
                   }}
                   type="button"
                 ></IconRemove>
               </div>
             );
           })}
-
-          <PrimaryButton
+        </div>
+        <div className="actions flex">
+          <div className="dropdown form-control flex-col">
+            <label htmlFor="" className="fs-500 text-light">
+              Column:
+            </label>
+            <TodoDropdown
+              onChange={(col) => onDropdownChange(col)}
+              value={dropdownValue.status}
+              columns={columns}
+              col={dropdownValue}
+            />
+          </div>
+          <IconButton
+            className="icon-btn"
             type="button"
-            fullWidth
-            color="primary-light"
             onClick={() => {
               setSubtasks((prev) => [
                 ...prev,
                 { ...initialSubtask, _id: new mongoose.Types.ObjectId() },
               ]);
             }}
-            className="fs-400"
           >
             Add New Subtask
-          </PrimaryButton>
+          </IconButton>
         </div>
-        <div className="dropdown form-control flex-col">
-          <label htmlFor="" className="fs-500 text-light">
-            Column:
-          </label>
-          <TodoDropdown
-            onChange={(col) => onDropdownChange(col)}
-            value={dropdownValue.status}
-            columns={columns}
-            col={dropdownValue}
-          />
-        </div>
-
         <PrimaryButton
-          fullWidth
           color="primary"
           type="submit"
           className="submit-btn fs-400"

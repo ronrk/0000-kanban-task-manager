@@ -66,12 +66,13 @@ const Appbar: React.FC<IAppbar> = () => {
               signOut();
             }}
           >
-            <span className="text-dark  logout--btn_text">Logout</span>
+            <span className="text-dark logout--btn_text">Logout</span>
             <span className="logout--icon">
               <CiLogout />
             </span>
           </PrimaryButton>
           <MenuDropdown
+            disabled={currentBoard ? false : true}
             value={null}
             options={['edit', 'delete']}
             cb={(type) => {

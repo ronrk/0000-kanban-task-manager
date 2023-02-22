@@ -7,8 +7,9 @@ interface ILayoutProps {
 const StyledPrimaryLayout = styled.div<ILayoutProps>`
   &.loading {
     & main {
-      display: grid;
-      place-items: center;
+      display: flex;
+
+      justify-content: center;
     }
   }
   &.sign-in__page {
@@ -19,6 +20,12 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
       flex-grow: 1;
       display: flex;
       flex-direction: column;
+    }
+    & .loading {
+      align-items: center;
+      justify-content: center;
+      flex-grow: 0.5;
+      width: 100%;
     }
     & section {
       flex-grow: 1;
@@ -87,7 +94,9 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
       }
     }
   }
+
   min-height: 100vh;
+  max-height: 100vh;
   display: grid;
   grid-template-rows: min-content 1fr;
   grid-template-columns: min-content 1fr;
@@ -99,7 +108,11 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
     grid-area: app;
     overflow-x: scroll;
     overflow-y: scroll;
+    position: relative;
     align-self: stretch;
+    /* position: relative; */
+    /*     max-height: 100%;
+    overflow-y: scroll; */
     /* display: grid; */
     /* padding: 1em; */
     /* padding-left: var(--drawer-width); */

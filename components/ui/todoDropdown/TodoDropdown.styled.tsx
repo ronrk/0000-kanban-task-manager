@@ -78,7 +78,7 @@ const StyledDropdown = styled.div`
   }
   &.menu {
     & .dropdown-options {
-      text-transform: capitalize;
+      /* text-transform: capitalize; */
       right: 0;
       top: 3.5em;
     }

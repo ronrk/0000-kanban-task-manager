@@ -3,11 +3,14 @@ import styled from 'styled-components';
 const StyledEmptyColumn = styled.div`
   position: relative;
   z-index: 0;
+
+  top: 2%;
+  /* right: 0; */
+  max-height: 80vh;
   justify-self: center;
   align-items: center;
   justify-content: center;
   grid-row: 2/-1;
-  height: 95%;
   margin-top: 0.5em;
 
   & button {
@@ -30,16 +33,17 @@ const StyledEmptyColumn = styled.div`
   }
   & .empty-column-actions {
     position: absolute;
-
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
+    --gap: 0;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     align-items: center;
     justify-content: center;
-    background-color: hsla(var(--clr-text-dark), 0.3);
+    background-color: hsla(var(--clr-app-bg), 0.1);
 
     & button {
       background-color: hsla(var(--clr-app-bg), 0.9);
@@ -66,8 +70,7 @@ const StyledEmptyColumn = styled.div`
       }
     }
     & .cancel-btn {
-      flex-grow: 1;
-      /* padding: 1em; */
+      padding: 1em;
       text-transform: uppercase;
 
       &:hover {

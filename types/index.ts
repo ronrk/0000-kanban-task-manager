@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 export enum ColType {
-  TODO = 'TODO',
-  DOING = 'DOING',
-  DONE = 'DONE',
+  TODO = 'Todo',
+  DOING = 'Doing',
+  DONE = 'Done',
 }
 export enum StatusType {
   IDLE = 'Idle',

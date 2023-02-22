@@ -132,10 +132,15 @@ const Login: NextPageWithLayout<IProps> = () => {
         />
       </div>
       <section className="bg-app flex-col">
-        <h2 className="fs-700  text-primary-light">{pageState}</h2>
+        {isLoading ? null : (
+          <h2 className="fs-700  text-primary-light">{pageState}</h2>
+        )}
         <form onSubmit={handleSubmit} className="flex-col ">
           {status === 'loading' || isLoading ? (
-            <LoadingSpinner />
+            <div className="loading flex-col">
+              <h2 className="fs-700  text-primary-light">{pageState}</h2>
+              <LoadingSpinner />
+            </div>
           ) : (
             <>
               <div className="form-control">

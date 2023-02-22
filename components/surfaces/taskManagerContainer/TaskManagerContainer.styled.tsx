@@ -6,7 +6,6 @@ const StyledTaskManagerContainer = styled.div`
   /* display: grid; */
   padding: 1em;
   /* height: 83vh; */
-  /* max-height: 100%; */
 
   /* column-gap: 1em; */
   /* row-gap: 0.5em; */

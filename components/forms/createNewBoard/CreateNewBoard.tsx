@@ -1,3 +1,4 @@
+import IconButton from '@/components/ui/iconButton/IconButton.styled';
 import { IconRemove } from '@/components/ui/icons';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
@@ -20,7 +21,6 @@ import {
 import { ColType, IBoard, IColumn, StatusType } from '@/types';
 import mongoose from 'mongoose';
 import { FormEvent, useEffect, useState } from 'react';
-import { HiOutlinePlus } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Wrapper from '../FormWrapper.styled';
 
@@ -224,14 +224,9 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
             );
           })}
         </div>
-        <button
-          type="button"
-          className="add-culumn fs-400 text-primary"
-          onClick={addNewColumn}
-        >
-          <HiOutlinePlus fontSize={'17px'} className="text-primary" /> Add New
-          Column
-        </button>
+        <IconButton onClick={addNewColumn} type="button">
+          Add New Column
+        </IconButton>
       </div>
 
       <PrimaryButton color="primary" type="submit" className="submit-btn">

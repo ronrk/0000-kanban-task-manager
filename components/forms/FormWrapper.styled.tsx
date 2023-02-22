@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 const ModalWrapper = styled.div`
   overflow-y: scroll;
-  top: 20%;
+  top: 10%;
   /* bottom: 50%; */
   position: absolute;
   width: 90vw;
   max-width: 600px;
   /* min-height: 50vh; */
-  max-height: 90vh;
+  max-height: 80vh;
   margin-inline: auto;
   padding: 2em 2em;
   border-radius: 6px;
@@ -21,6 +21,7 @@ const ModalWrapper = styled.div`
     display: grid;
     place-items: center;
     flex-grow: 1;
+    min-height: 35vh;
   }
 
   & .submit-btn {
@@ -32,6 +33,10 @@ const ModalWrapper = styled.div`
     --gap: 0.3em;
     margin-bottom: 3em;
     flex-grow: 1;
+    & .dropdown {
+      flex: 1;
+      margin-bottom: 4em;
+    }
     & .columns__wrapper {
       --gap: 1rem;
       flex-wrap: wrap;
@@ -52,56 +57,53 @@ const ModalWrapper = styled.div`
         color: hsla(var(--clr-primary-light));
       }
     }
-    & .subtask {
-      margin-bottom: 1em;
-      & input {
-        flex: 1;
-        padding: 0.3em;
-      }
+  }
+  & .subtask {
+    margin-bottom: 1em;
+    max-width: 350px;
+    --gap: 2rem;
+    & input {
+      flex: 1;
+      padding: 0.3em;
+    }
 
+    & .icon {
+      font-size: 2.5rem;
+      transition: all 0.2s;
+    }
+
+    & button:hover {
       & .icon {
-        font-size: 1.5rem;
-        transition: all 0.2s;
-      }
-
-      & button:hover {
-        & .icon {
-          color: hsl(var(--clr-dark));
-        }
+        color: hsl(var(--clr-dark));
       }
     }
   }
-
   & form {
     --gap: 0em;
     flex-grow: 1;
-
-    & .dropdown {
-      flex: 1;
-      margin-bottom: 4em;
-    }
   }
 
   & textarea {
     background: transparent;
     font-family: inherit;
     padding: 1em 0.7em;
+    border: 2px solid transparent;
+    outline: 1px solid hsla(var(--clr-text-dark));
+    border-radius: 6px;
   }
 
   & .subtasks {
-    --gap: 0.3em;
+    max-height: 150px;
+    overflow-y: scroll;
+
     & button {
       margin-top: 0.3em;
     }
     & .subtask {
       margin-bottom: 1em;
-      & input {
-        flex: 1;
-        padding: 0.3em;
-      }
 
       & .icon {
-        font-size: 1.5rem;
+        /* font-size: 1.5rem; */
         transition: all 0.2s;
       }
 
@@ -110,6 +112,18 @@ const ModalWrapper = styled.div`
           color: hsl(var(--clr-dark));
         }
       }
+    }
+  }
+  & .actions {
+    --gap: 1rem;
+    margin-bottom: 4em;
+    align-items: center;
+    & .dropdown {
+      flex: 0.3;
+      align-items: flex-start;
+    }
+    & .icon-btn {
+      align-self: flex-end;
     }
   }
 

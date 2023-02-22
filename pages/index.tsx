@@ -29,11 +29,9 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
   const { isModalOpen, modalChildren } = useSelector(selectClientValue);
   const { status: boardStatus } = useSelector(selectBoardValue);
   const dispatch = useAppDispatch();
-  const {
-    isLoading: loadingBoards,
-    isError,
-    error,
-  } = useGetBoardsByUIDQuery(user?._id);
+  const { isLoading: loadingBoards, isError } = useGetBoardsByUIDQuery(
+    user?._id
+  );
 
   let isLoading = authStatus === 'loading' || loadingBoards;
   let errorState =
