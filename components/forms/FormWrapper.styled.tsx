@@ -169,19 +169,7 @@ const ModalWrapper = styled.div`
         appearance: none;
         display: none;
       }
-      & .check-btn {
-        width: 1.5em;
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
 
-        & .icon {
-          opacity: 0;
-          transform: scale(1.5);
-          transition: all 0.2s;
-        }
-      }
       & label {
         width: 100%;
         transition: all 0.2s;

@@ -14,6 +14,8 @@ const StyledBoardDrawerList = styled.div`
       transition: padding 0.6s linear;
       gap: 1em;
       align-items: center;
+      padding: 1em 1em;
+
       & svg > * {
         transition: all 0.4s linear;
       }
@@ -27,7 +29,6 @@ const StyledBoardDrawerList = styled.div`
       }
     }
     & button {
-      padding: 1em 1em;
       text-align: left;
 
       &.active {

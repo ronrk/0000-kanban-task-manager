@@ -26,7 +26,11 @@ const BoardColumn: React.FC<IBoardColumn> = ({ column }) => {
       </h3>
       <div className="tasks flex-col">
         {column.tasks.map((task: ITask) => (
-          <SingleTaskBox key={task._id.toString()} task={task} />
+          <SingleTaskBox
+            key={task._id.toString()}
+            task={task}
+            colId={column._id}
+          />
         ))}
       </div>
     </Wrapper>

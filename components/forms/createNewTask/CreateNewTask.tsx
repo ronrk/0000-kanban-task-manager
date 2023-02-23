@@ -1,3 +1,4 @@
+import CheckboxInput from '@/components/ui/checkboxInput/CheckboxInput';
 import IconButton from '@/components/ui/iconButton/IconButton.styled';
 import { IconRemove } from '@/components/ui/icons';
 import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
@@ -37,6 +38,18 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
   const [dropdownValue, setDropdownValue] = useState(columns[0]);
   const [addNewTask] = useCreateNewTaskMutation();
   const dispatch = useAppDispatch();
+
+  const handleSubtaskChange = (sub: ISubtask) => {
+    setSubtasks((prev) => {
+      return prev.map((subtask) => {
+        if (subtask._id === sub._id) {
+          return { ...sub, isCompleted: !sub.isCompleted };
+        } else {
+          return subtask;
+        }
+      });
+    });
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -126,6 +139,12 @@ recharge the batteries a little"
                   // onBlur={handleNameBlur}
                   // onFocus={handleNameFocus}
                   required
+                />
+                <CheckboxInput
+                  isChecked={sub.isCompleted}
+                  inputId={sub.title}
+                  inputLabel={sub.title}
+                  onChangeCb={() => handleSubtaskChange(sub)}
                 />
                 <IconRemove
                   onClick={() => {
