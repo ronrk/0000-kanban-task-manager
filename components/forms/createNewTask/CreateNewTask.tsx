@@ -222,9 +222,9 @@ recharge the batteries a little"
             </label>
             <TodoDropdown
               onChange={(col) => onDropdownChange(col)}
-              value={dropdownValue.status}
+              value={dropdownValue!.status}
               columns={columns}
-              col={dropdownValue}
+              col={dropdownValue!}
             />
           </div>
           <IconButton
