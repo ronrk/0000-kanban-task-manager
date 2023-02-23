@@ -10,12 +10,12 @@ import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Wrapper from '../../forms/FormWrapper.styled';
 
-interface IProps {
+export interface ITaskDetail {
   task: ITask;
   colId: mongoose.Types.ObjectId;
 }
 
-const TaskDetail: FC<IProps> = ({ task, colId }) => {
+const TaskDetail: FC<ITaskDetail> = ({ task, colId }) => {
   const dispatch = useAppDispatch();
   const { currentBoard } = useSelector(selectBoardValue);
   const { columns } = currentBoard!;
