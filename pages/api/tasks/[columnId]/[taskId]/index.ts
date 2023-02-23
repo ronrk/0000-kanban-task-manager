@@ -1,10 +1,12 @@
 import {
+  Column,
   connectMongo,
   server404Error,
   Subtask,
   Task,
   wrongMethodError,
 } from '@/database';
+import { ISubtaskSchema, ITaskSchema } from '@/types';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -17,37 +19,56 @@ export default async function handler(
     await connectMongo().catch((error) =>
       res.status(405).json({ message: 'Error connecting to DB', error: error })
     );
-
+    const column = await Column.findById(query.columnId);
     const task = await Task.findById(query.taskId);
     if (!task) {
-      server404Error(res, `Cant find task with id :${query.taskId}`);
-      return;
+      return server404Error(res, `Cant find task with id :${query.taskId}`);
     }
     if (method === 'GET') {
       return res.status(200).json({ message: 'Get Single Task', task });
     }
     if (method === 'POST') {
       if (!body) {
-        server404Error(res, 'createNewTask: No data on req.body');
-        return;
+        return server404Error(res, 'createNewTask: No data on req.body');
       }
       const newSubtask = await Subtask.create(body);
       task.subtasks.push(newSubtask._id);
       await task.save();
       return res
         .status(200)
-        .json({ message: 'Create new board', newSubtask, task });
+        .json({ message: 'Create new subtask', newSubtask, task });
     }
 
     if (method === 'PATCH') {
       if (!body) {
-        server404Error(res, 'UpdateTask: no data on req.body');
-        return;
+        return server404Error(res, 'UpdateTask: no data on req.body');
       }
-      const updatedTask = await Task.findOneAndUpdate({ _id: task._id }, body, {
-        new: true,
-        runValidators: true,
-      });
+      body.subtasks.forEach(
+        async (subtask: ISubtaskSchema) =>
+          await Subtask.findByIdAndUpdate(subtask._id, subtask)
+      );
+
+      const isTaskAlreadyInColumn = column.tasks.find(
+        (tsk: ITaskSchema) => tsk._id === task._id
+      );
+      if (!isTaskAlreadyInColumn) {
+        const originalColumn = await Column.findById(body.originalColumn._id);
+        column.tasks.push(task._id);
+        originalColumn.tasks = originalColumn.tasks.filter(
+          (tsk: ITaskSchema) => tsk._id.toString() !== task._id.toString()
+        );
+        await column.save();
+        await originalColumn.save();
+      }
+
+      const updatedTask = await Task.findOneAndUpdate(
+        { _id: task._id },
+        body.task,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
       return res.status(200).json({ message: 'Update Task', updatedTask });
     }
 

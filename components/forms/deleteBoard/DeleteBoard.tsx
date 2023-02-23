@@ -3,8 +3,10 @@ import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import {
   closeModal,
   selectBoardValue,
+  selectTaskValue,
   useAppDispatch,
   useDeleteBoardByIdMutation,
+  useRemoveTaskMutation,
 } from '@/store';
 import { ITask } from '@/types';
 import { FC } from 'react';
@@ -18,8 +20,12 @@ interface IProps {
 
 const DeleteBoard: FC<IProps> = ({ type, task }) => {
   const { currentBoard } = useSelector(selectBoardValue);
+  const { currentColumn } = useSelector(selectTaskValue);
   const dispatch = useAppDispatch();
-  const [deleteBoard, { isLoading }] = useDeleteBoardByIdMutation();
+  const [deleteBoard, { isLoading: boardLoading }] =
+    useDeleteBoardByIdMutation();
+  const [deleteTask, { isLoading: taskLoading }] = useRemoveTaskMutation();
+  const isLoading = taskLoading || boardLoading;
   if (isLoading) {
     return (
       <Wrapper className="delete-box bg-box">
@@ -40,10 +46,18 @@ const DeleteBoard: FC<IProps> = ({ type, task }) => {
         <PrimaryButton
           color="red"
           className="fs-400"
-          onClick={() =>
-            type === 'board' &&
-            deleteBoard(currentBoard?._id!).then(() => dispatch(closeModal()))
-          }
+          onClick={() => {
+            if (type === 'board') {
+              deleteBoard(currentBoard?._id!).then(() =>
+                dispatch(closeModal())
+              );
+            }
+            if (type === 'task') {
+              deleteTask({ colId: currentColumn?._id, taskId: task?._id })
+                .unwrap()
+                .then(() => dispatch(closeModal()));
+            }
+          }}
         >
           Delete
         </PrimaryButton>

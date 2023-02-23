@@ -57,7 +57,6 @@ userSchema.pre('findOne', function (next) {
 });
 
 userSchema.pre<IUserSchema>('remove', async function (next): Promise<void> {
-  console.log('USER PRE REMOVE');
   this.boards.forEach(async (board) => {
     const foundedBoard = await Board.findById(board);
     if (!foundedBoard) {

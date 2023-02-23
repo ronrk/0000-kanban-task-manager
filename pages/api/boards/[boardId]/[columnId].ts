@@ -3,12 +3,10 @@ import {
   Column,
   connectMongo,
   server404Error,
-  Subtask,
-  Task,
   wrongMethodError,
 } from '@/database';
-import { IColumnSchema, ISubtaskSchema } from '@/types';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { IColumnSchema } from '@/types';
+import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 // server404Error(res, `Cant find user with id :${query.uid}`);
 // server404Error(res, 'createNewUser: no data on req.body');
@@ -31,21 +29,6 @@ export default async function handler(
     }
 
     //
-
-    if (method === 'POST') {
-      const subtasks = body.subtasks.map(
-        (sub: ISubtaskSchema) => new Subtask(sub)
-      );
-
-      const newTask = new Task({ ...body, subtasks });
-      column.tasks.push(newTask._id);
-      await column.save();
-      await newTask.save();
-      await subtasks.forEach(
-        async (sub: HydratedDocument<ISubtaskSchema>) => await sub.save()
-      );
-      return res.status(201).json({ body, newTask, subtasks, column });
-    }
 
     if (method === 'PATCH') {
       if (!body) {
@@ -80,7 +63,7 @@ export default async function handler(
       console.log({ deletedColumn, updatedBoard, columns });
       return res.status(200).json({ message: 'Column Removed', deletedColumn });
     }
-    wrongMethodError(req, res, ['POST', 'PATCH', 'DELETE']);
+    wrongMethodError(req, res, ['PATCH', 'DELETE']);
     return;
   } catch (error) {
     console.log({ error });

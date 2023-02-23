@@ -1,5 +1,8 @@
 // import { useGetAllTasksByColumnIdQuery } from '@/store';
+import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
+import { selectTaskValue, useGetTasksByColIdQuery } from '@/store';
 import { IColumn, ITask } from '@/types';
+import { useSelector } from 'react-redux';
 import SingleTaskBox from '../singleTaskBox/SingleTaskBox';
 import Wrapper from './BoardColumn.styled';
 
@@ -8,30 +11,28 @@ export interface IBoardColumn {
 }
 
 const BoardColumn: React.FC<IBoardColumn> = ({ column }) => {
-  /*   if (data) {
+  const { status } = useSelector(selectTaskValue);
+  const { data, isLoading } = useGetTasksByColIdQuery(column._id.toString());
+
+  if (isLoading) {
     return (
-      <Wrapper className={`column ${column.name.toLowerCase()}`}>
-        <h3 className="col-title text-light fs-400">{column.name}</h3>
-       <div className="tasks flex-col">{column.name} column is Empty</div>
+      <Wrapper>
+        <LoadingSpinner />
       </Wrapper>
     );
-  } 
-  */
+  }
 
   return (
     <Wrapper className={`column ${column.status.toLowerCase()}`}>
       <h3 className="col-title text-light fs-400 uppercase">
         {column.status}
-        <span className="fs-300">{column.tasks.length}</span>
+        <span className="fs-300">{data.tasks.length}</span>
       </h3>
       <div className="tasks flex-col">
-        {column.tasks.map((task: ITask) => (
-          <SingleTaskBox
-            key={task._id.toString()}
-            task={task}
-            colId={column._id}
-          />
-        ))}
+        {data.tasks.length > 0 &&
+          data.tasks.map((task: ITask) => (
+            <SingleTaskBox key={task._id.toString()} task={task} col={column} />
+          ))}
       </div>
     </Wrapper>
   );

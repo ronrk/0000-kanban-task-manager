@@ -1,15 +1,14 @@
-import { openModal, useAppDispatch } from '@/store';
-import { ITask } from '@/types';
-import mongoose from 'mongoose';
+import { openModal, setCurrentColumn, useAppDispatch } from '@/store';
+import { IColumn, ITask } from '@/types';
 import TaskDetail from '../taskDetail/TaskDetail';
 import Wrapper from './SingleTaskBox.styled';
 
 export interface ISingleTaskBox {
   task: ITask;
-  colId: mongoose.Types.ObjectId;
+  col: IColumn;
 }
 
-const SingleTaskBox: React.FC<ISingleTaskBox> = ({ task, colId }) => {
+const SingleTaskBox: React.FC<ISingleTaskBox> = ({ task, col }) => {
   const dispatch = useAppDispatch();
   let { pendingSubtasks, completedSubtasks } = task.subtasks.reduce(
     (acc, sub) => {
@@ -22,15 +21,17 @@ const SingleTaskBox: React.FC<ISingleTaskBox> = ({ task, colId }) => {
     },
     { pendingSubtasks: 0, completedSubtasks: 0 }
   );
+
   return (
     <Wrapper
-      onClick={() =>
-        dispatch(openModal(<TaskDetail task={task} colId={colId} />))
-      }
+      onClick={() => {
+        dispatch(setCurrentColumn(col));
+        dispatch(openModal(<TaskDetail task={task} />));
+      }}
     >
       <h3 className="text-dark fs-500">{task.title}</h3>
       <p className="text-light fs-400 fw-b">
-        {pendingSubtasks} of {completedSubtasks + pendingSubtasks} substasks
+        {completedSubtasks} of {completedSubtasks + pendingSubtasks} substasks
       </p>
     </Wrapper>
   );

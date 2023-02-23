@@ -2,12 +2,11 @@ import styled from 'styled-components';
 
 const ModalWrapper = styled.div`
   overflow-y: scroll;
-  top: 10%;
+  /* top: 10%; */
   /* bottom: 50%; */
   position: absolute;
   width: 90vw;
   max-width: 600px;
-  /* min-height: 50vh; */
   max-height: 80vh;
   margin-inline: auto;
   padding: 2em 2em;
@@ -101,10 +100,16 @@ const ModalWrapper = styled.div`
     }
     & .subtask {
       margin-bottom: 1em;
-
+      align-items: center;
+      --gap: 0.5rem;
       & .icon {
         /* font-size: 1.5rem; */
         transition: all 0.2s;
+      }
+      &.checked {
+        & input[type='text'] {
+          text-decoration: line-through;
+        }
       }
 
       & button:hover {
@@ -148,7 +153,6 @@ const ModalWrapper = styled.div`
   }
   &.task-detail {
     min-height: 50vh;
-
     text-transform: capitalize;
     & header {
       justify-content: space-between;
@@ -197,6 +201,10 @@ const ModalWrapper = styled.div`
     }
     & .dropdown {
       padding-bottom: 7em;
+    }
+    & .checkbox-wrapper {
+      max-height: 300px;
+      overflow-y: scroll;
     }
   }
   & input {

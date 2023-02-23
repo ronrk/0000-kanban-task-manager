@@ -75,14 +75,14 @@ export const boardApi = createApi({
       }),
       invalidatesTags: ['Boards'],
     }),
-    createNewTask: builder.mutation({
+    /*     createNewTask: builder.mutation({
       query: ({ boardId, colId, task }) => ({
         url: `/${boardId}/${colId}`,
         method: 'POST',
         body: task,
       }),
       invalidatesTags: ['Boards'],
-    }),
+    }), */
   }),
 });
 
@@ -96,5 +96,4 @@ export const {
   useDeleteColumnByColIdMutation,
   useAddColumnByIdMutation,
   useEditColumnMutation,
-  useCreateNewTaskMutation,
 } = boardApi;

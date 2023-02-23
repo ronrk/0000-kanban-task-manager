@@ -12,7 +12,8 @@ const StyledTaskManagerContainer = styled.div`
   /* justify-content: start; */
   /* grid-template-rows: 20px 1fr; */
   &.loading {
-    display: grid;
+    align-items: center;
+    justify-content: space-between;
   }
 
   & .column {

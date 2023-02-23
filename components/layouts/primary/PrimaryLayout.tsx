@@ -1,3 +1,4 @@
+import ModalContainer from '@/components/cards/modalContainer/ModalContainer';
 import Appbar from '@/components/navigation/Appbar/Appbar';
 import Drawer from '@/components/utility/drawer/Drawer';
 import { selectClientValue } from '@/store';
@@ -17,7 +18,8 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
   title = 'Task Manager',
   ...divProps
 }) => {
-  const { darkTheme, isDrawerOpen } = useSelector(selectClientValue);
+  const { darkTheme, isDrawerOpen, isModalOpen, modalChildren } =
+    useSelector(selectClientValue);
 
   return (
     <>
@@ -35,6 +37,7 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({
         className={darkTheme ? `${className} dark` : `${className}`}
         withAppBar
       >
+        {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
         {withAppBar && <Appbar />}
         <main
           className={

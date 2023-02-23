@@ -4,7 +4,7 @@ import Wrapper from './CheckboxInput.styled';
 export interface ICheckboxInput extends React.ComponentPropsWithoutRef<'div'> {
   isChecked: boolean;
   inputId: string;
-  inputLabel: string;
+  inputLabel?: string;
   onChangeCb(): void;
 }
 
@@ -27,12 +27,14 @@ const CheckboxInput: React.FC<ICheckboxInput> = ({
         checked={isChecked}
         onChange={() => onChangeCb()}
       />
-      <label
-        className={isChecked ? 'text-light' : 'text-dark'}
-        htmlFor={inputId}
-      >
-        {inputLabel}
-      </label>
+      {inputLabel && (
+        <label
+          className={isChecked ? 'text-light' : 'text-dark'}
+          htmlFor={inputId}
+        >
+          {inputLabel}
+        </label>
+      )}
     </Wrapper>
   );
 };

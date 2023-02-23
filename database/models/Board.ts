@@ -21,7 +21,6 @@ const boardScehma: Schema<IBoardMethods> = new Schema({
   },
 });
 boardScehma.pre('find', function (next) {
-  console.log('FIND ALL BOARDS');
   this.populate({
     path: 'columns',
     model: 'Column',
@@ -35,7 +34,6 @@ boardScehma.pre('find', function (next) {
 });
 
 boardScehma.pre<IBoardSchema>('remove', async function (next) {
-  console.log('BOARD PRE REMOVE');
   this.columns.forEach(async (column) => {
     removeEntiteis(Column, column);
   });
@@ -43,12 +41,7 @@ boardScehma.pre<IBoardSchema>('remove', async function (next) {
   const updatedBoards = user.boards.filter((board: IBoardSchema) => {
     return board._id.toString() !== this._id.toString();
   });
-  const newUser = await User.findOneAndUpdate(
-    { _id: user._id },
-    { boards: updatedBoards },
-    { new: true }
-  );
-  // console.log({ newUser: newUser.boards, board: this, updatedBoards }, 'AFTER');
+  await User.findOneAndUpdate({ _id: user._id }, { boards: updatedBoards });
 
   next();
 });

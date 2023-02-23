@@ -34,7 +34,6 @@ const taskSchema: Schema<ITaskSchema> = new Schema({
 });
 
 taskSchema.pre('findOne', function (next) {
-  console.log('FIND TASK');
   this.populate({
     path: 'subtasks',
     model: 'Subtask',

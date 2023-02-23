@@ -94,7 +94,6 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
       }
     }
   }
-
   min-height: 100vh;
   max-height: 100vh;
   display: grid;
@@ -110,6 +109,7 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
     overflow-y: scroll;
     position: relative;
     align-self: stretch;
+
     /* position: relative; */
     /*     max-height: 100%;
     overflow-y: scroll; */

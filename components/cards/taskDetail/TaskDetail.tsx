@@ -3,31 +3,49 @@ import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
 import CheckboxInput from '@/components/ui/checkboxInput/CheckboxInput';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import TodoDropdown from '@/components/ui/todoDropdown/TodoDropdown';
-import { openModal, selectBoardValue, useAppDispatch } from '@/store';
-import { ColType, IColumn, ISubtask, ITask } from '@/types';
-import mongoose from 'mongoose';
+import {
+  openModal,
+  selectBoardValue,
+  selectTaskValue,
+  useAppDispatch,
+  useChangeSubtaskStatusMutation,
+  useChangeTaskColumnMutation,
+} from '@/store';
+import { IColumn, ISubtask, ITask } from '@/types';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Wrapper from '../../forms/FormWrapper.styled';
 
 export interface ITaskDetail {
   task: ITask;
-  colId: mongoose.Types.ObjectId;
 }
 
-const TaskDetail: FC<ITaskDetail> = ({ task, colId }) => {
+const TaskDetail: FC<ITaskDetail> = ({ task }) => {
   const dispatch = useAppDispatch();
   const { currentBoard } = useSelector(selectBoardValue);
   const { columns } = currentBoard!;
-  let currentColumn = columns.find((col) => col._id === colId);
+  const { currentColumn } = useSelector(selectTaskValue);
   const [dropdownValue, setDropdownValue] = useState(currentColumn);
   const [subtasks, setSubtasks] = useState(task.subtasks);
-
-  let dropdownOptions: ColType[] = columns.map((col) => col.status);
+  const [changeTaskColumn] = useChangeTaskColumnMutation();
+  const [changeSubtaskStatus] = useChangeSubtaskStatusMutation();
 
   const onDropdownChange = (value: IColumn) => {
     setDropdownValue(value);
     const newTask: ITask = { ...task };
+
+    changeTaskColumn({
+      taskId: task._id,
+      colId: currentColumn?._id,
+      newColId: value._id,
+    })
+      .unwrap()
+      .then((data) => {
+        console.log({ data });
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
     // dispatch(editTask(newTask));
   };
   const onMenuClick = (option: string) => {
@@ -40,7 +58,17 @@ const TaskDetail: FC<ITaskDetail> = ({ task, colId }) => {
     }
   };
 
-  const handleSubtaskChange = (sub: ISubtask) => {
+  const handleSubtaskChange = async (sub: ISubtask) => {
+    await changeSubtaskStatus({
+      colId: dropdownValue?._id,
+      taskId: task._id,
+      subtaskId: sub._id,
+    })
+      .unwrap()
+      .catch((error) => {
+        console.log({ error });
+      });
+
     setSubtasks((prev) => {
       return prev.map((subtask) => {
         if (subtask._id === sub._id) {
@@ -56,6 +84,18 @@ const TaskDetail: FC<ITaskDetail> = ({ task, colId }) => {
     return <></>;
   }
 
+  let { pendingSubtasks, completedSubtasks } = subtasks.reduce(
+    (acc, sub) => {
+      if (sub.isCompleted) {
+        acc.completedSubtasks += 1;
+      } else {
+        acc.pendingSubtasks += 1;
+      }
+      return acc;
+    },
+    { pendingSubtasks: 0, completedSubtasks: 0 }
+  );
+
   return (
     <Wrapper className="task-detail bg-box flex-col">
       <header className="flex">
@@ -69,7 +109,8 @@ const TaskDetail: FC<ITaskDetail> = ({ task, colId }) => {
       <p className="fs-500 text-light">{task.description}</p>
       <div className="checkbox-wrapper">
         <label htmlFor="" className="text-light fs-400">
-          Subtasks ({0} of {3 + 0})
+          Subtasks ({completedSubtasks} of {pendingSubtasks + completedSubtasks}
+          )
         </label>
         {subtasks.map((sub) => {
           return (

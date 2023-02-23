@@ -1,4 +1,3 @@
-import ModalContainer from '@/components/cards/modalContainer/ModalContainer';
 import PrimaryLayout from '@/components/layouts/primary/PrimaryLayout';
 import TaskManagerContainer from '@/components/surfaces/taskManagerContainer/TaskManagerContainer';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
@@ -69,7 +68,6 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
 
   return (
     <PrimaryLayout withAppBar>
-      {isModalOpen && <ModalContainer>{modalChildren}</ModalContainer>}
       <TaskManagerContainer />
     </PrimaryLayout>
   );

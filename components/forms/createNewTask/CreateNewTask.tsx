@@ -7,8 +7,11 @@ import TodoDropdown from '@/components/ui/todoDropdown/TodoDropdown';
 import {
   closeModal,
   selectBoardValue,
+  selectTaskValue,
   useAppDispatch,
   useCreateNewTaskMutation,
+  useEditTaskMutation,
+  useRemoveSubtaskMutation,
 } from '@/store';
 import { IColumn, ISubtask, ITask } from '@/types';
 import mongoose from 'mongoose';
@@ -27,17 +30,23 @@ const initialSubtask = {
 };
 
 const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
-  // const dispatch = useAppDispatch();
-  const { currentBoard, boards } = useSelector(selectBoardValue);
+  const { currentBoard } = useSelector(selectBoardValue);
+  const { currentColumn } = useSelector(selectTaskValue);
+  const [loading, setLoading] = useState(false);
   const { columns } = currentBoard!;
   const [subtasks, setSubtasks] = useState<ISubtask[]>(
     task ? task.subtasks : [initialSubtask]
   );
   const [title, setTitle] = useState(task ? task.title : '');
   const [description, setDescription] = useState(task ? task.description : '');
-  const [dropdownValue, setDropdownValue] = useState(columns[0]);
+  const [dropdownValue, setDropdownValue] = useState(
+    task ? currentColumn : columns[0]
+  );
   const [addNewTask] = useCreateNewTaskMutation();
+  const [editTask] = useEditTaskMutation();
+  const [deleteSubtask] = useRemoveSubtaskMutation();
   const dispatch = useAppDispatch();
+  const originalColumn = (() => currentColumn)();
 
   const handleSubtaskChange = (sub: ISubtask) => {
     setSubtasks((prev) => {
@@ -53,23 +62,55 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const task = {
+    setLoading(true);
+    if (task) {
+      await editTask({
+        colId: dropdownValue?._id,
+        task: {
+          title,
+          description,
+          colStatus: dropdownValue?.status,
+          _id: task._id,
+        },
+        subtasks: subtasks.map((sub) => ({
+          title: sub.title,
+          isCompleted: sub.isCompleted,
+        })),
+        originalColumn,
+      })
+        .unwrap()
+        .then(() => {
+          setLoading(false);
+          dispatch(closeModal());
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log({ error });
+        });
+      return;
+    }
+
+    const formTask = {
       title,
       description,
-      colStatus: dropdownValue.status,
+      colStatus: dropdownValue?.status,
       subtasks: subtasks.map((sub) => ({
         title: sub.title,
         isCompleted: sub.isCompleted,
       })),
     };
+
     await addNewTask({
-      boardId: currentBoard?._id,
-      colId: dropdownValue._id,
-      task,
+      colId: dropdownValue?._id,
+      task: formTask,
     })
       .unwrap()
-      .then(() => dispatch(closeModal()))
+      .then(() => {
+        dispatch(closeModal());
+        setLoading(false);
+      })
       .catch((error) => {
+        setLoading(false);
         console.log({ error });
       });
   };
@@ -118,9 +159,12 @@ recharge the batteries a little"
           Subtasks:
         </label>
         <div className="subtasks form-control flex-col">
-          {subtasks.map((sub, id) => {
+          {subtasks.map((sub) => {
             return (
-              <div key={sub._id.toString()} className="subtask flex">
+              <div
+                key={sub._id.toString()}
+                className={`subtask flex ${sub.isCompleted ? 'checked' : ''}`}
+              >
                 <PrimaryInput
                   fullWidth
                   type="text"
@@ -143,11 +187,24 @@ recharge the batteries a little"
                 <CheckboxInput
                   isChecked={sub.isCompleted}
                   inputId={sub.title}
-                  inputLabel={sub.title}
                   onChangeCb={() => handleSubtaskChange(sub)}
                 />
                 <IconRemove
                   onClick={() => {
+                    if (task) {
+                      deleteSubtask({
+                        colId: currentColumn?._id,
+                        taskId: task._id,
+                        subId: sub._id,
+                      })
+                        .unwrap()
+                        .then((data) => {
+                          console.log({ data });
+                        })
+                        .catch((error) => {
+                          console.log({ error });
+                        });
+                    }
                     setSubtasks((prev) =>
                       prev.filter((val) => val._id !== sub._id)
                     );
@@ -187,6 +244,7 @@ recharge the batteries a little"
           color="primary"
           type="submit"
           className="submit-btn fs-400"
+          disabled={loading}
         >
           {task ? 'Save Changes' : 'Create Task'}
         </PrimaryButton>
