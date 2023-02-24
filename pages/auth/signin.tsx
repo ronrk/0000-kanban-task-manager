@@ -139,7 +139,7 @@ const Login: NextPageWithLayout<IProps> = () => {
           {status === 'loading' || isLoading ? (
             <div className="loading flex-col">
               <h2 className="fs-700  text-primary-light">{pageState}</h2>
-              <LoadingSpinner />
+              <LoadingSpinner color="primary" />
             </div>
           ) : (
             <>
@@ -214,9 +214,9 @@ const Login: NextPageWithLayout<IProps> = () => {
                   color="primary"
                   type="submit"
                   className="submit--btn"
-                >
-                  {isAlreadyUser ? 'Login' : 'Signup'}
-                </PrimaryButton>
+                  textLabel={isAlreadyUser ? 'Login' : 'Signup'}
+                />
+
                 <div className="switchType">
                   {isLoading ? null : switchContent}
                 </div>
