@@ -8,7 +8,7 @@
   --ff: 'Plus Jakarta Sans', sans-serif;
   --clr-primary: 242, 48%, 58%;
   --clr-primary-light: 243, 100%, 82%;
-  --clr-white: #ffffff;
+  --clr-white: 0, 0%, 100%;
   --clr-text-dark: 237, 100%, 4%;
   --clr-text-light: 216, 15%, 57%;
   --clr-app-bg: 220, 69%, 97%;
@@ -111,7 +111,7 @@ body {
   background-color: hsl(var(--clr-red));
 }
 .bg-red-light {
-  background-color: hsl(var(--clr-redlight));
+  background-color: hsl(var(--clr-red-light));
 }
 .bg-linear {
   background: var(--linear-bg);
@@ -132,7 +132,7 @@ body {
   color: hsl(var(--clr-red));
 }
 .text-red-light {
-  color: hsl(var(--clr-redlight));
+  color: hsl(var(--clr-red-light));
 }
 .fs-700 {
   font-size: var(--fs-700);

@@ -20,9 +20,8 @@ const EmptyBoards: React.FC<IEmptyBoards> = () => {
         className="fs-600"
         color={'primary'}
         onClick={() => dispatch(openModal(<CreateNewBoard />))}
-      >
-        <>Click to add new Board</>
-      </PrimaryButton>
+        textLabel="Click to add new Board"
+      />
     </Wrapper>
   );
 };

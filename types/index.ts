@@ -11,5 +11,18 @@ export enum StatusType {
   ERROR = 'Error',
 }
 
+export const TColors = {
+  PRIMARY: 'primary',
+  PRIMARY_LIGHT: 'primary-light',
+  RED: 'red',
+  RED_LIGHT: 'red-light',
+  DARK: 'dark',
+  LIGHT: 'light',
+  BOX: 'box',
+  APP: 'app',
+  LIN: 'linear',
+};
+export type ColorsType = (typeof TColors)[keyof typeof TColors];
+
 export * from './schemaTypes';
 export * from './types';

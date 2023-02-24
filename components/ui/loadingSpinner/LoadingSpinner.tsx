@@ -1,19 +1,20 @@
+import { ColorsType } from '@/types';
 import Wrapper from './LoadingSpinner.styled';
 
-export interface ILoadingSpinner {}
+export interface ILoadingSpinner {
+  color: ColorsType;
+}
 
-const LoadingSpinner: React.FC<ILoadingSpinner> = () => {
+const numberOfCircles = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+const LoadingSpinner: React.FC<ILoadingSpinner> = ({ color = 'primary' }) => {
+  const background = `bg-${color}`;
+
   return (
     <Wrapper className="spinner-container">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      {numberOfCircles.map((div) => (
+        <div key={div} className={background}></div>
+      ))}
     </Wrapper>
   );
 };

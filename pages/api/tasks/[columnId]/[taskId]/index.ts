@@ -43,33 +43,43 @@ export default async function handler(
       if (!body) {
         return server404Error(res, 'UpdateTask: no data on req.body');
       }
-      body.subtasks.forEach(
-        async (subtask: ISubtaskSchema) =>
-          await Subtask.findByIdAndUpdate(subtask._id, subtask)
-      );
+      try {
+        body.subtasks.forEach(async (subtask: ISubtaskSchema) => {
+          const updated = await Subtask.findByIdAndUpdate(
+            subtask._id,
+            subtask
+          ).catch((error) => {
+            console.log({ error });
+          });
+        });
 
-      const isTaskAlreadyInColumn = column.tasks.find(
-        (tsk: ITaskSchema) => tsk._id === task._id
-      );
-      if (!isTaskAlreadyInColumn) {
-        const originalColumn = await Column.findById(body.originalColumn._id);
-        column.tasks.push(task._id);
-        originalColumn.tasks = originalColumn.tasks.filter(
-          (tsk: ITaskSchema) => tsk._id.toString() !== task._id.toString()
+        const isTaskAlreadyInColumn = column.tasks.find(
+          (tsk: ITaskSchema) => tsk._id === task._id
         );
-        await column.save();
-        await originalColumn.save();
-      }
-
-      const updatedTask = await Task.findOneAndUpdate(
-        { _id: task._id },
-        body.task,
-        {
-          new: true,
-          runValidators: true,
+        if (!isTaskAlreadyInColumn) {
+          const originalColumn = await Column.findById(body.originalColumn._id);
+          column.tasks.push(task._id);
+          originalColumn.tasks = originalColumn.tasks.filter(
+            (tsk: ITaskSchema) => tsk.toString() !== task._id.toString()
+          );
+          await column.save();
+          console.log({ body });
+          await originalColumn.save();
         }
-      );
-      return res.status(200).json({ message: 'Update Task', updatedTask });
+
+        const updatedTask = await Task.findOneAndUpdate(
+          { _id: task._id },
+          body.task,
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+        console.log({ updatedTask, column });
+        return res.status(200).json({ message: 'Update Task', updatedTask });
+      } catch (error) {
+        return res.status(401).json(error);
+      }
     }
 
     if (method === 'DELETE') {
@@ -79,8 +89,7 @@ export default async function handler(
         .json({ message: 'Remove Task', taskDeleted: task._id });
     }
 
-    wrongMethodError(req, res, ['GET', 'POST', 'PATCH', 'DELETE']);
-    return;
+    return wrongMethodError(req, res, ['GET', 'POST', 'PATCH', 'DELETE']);
   } catch (error) {
     console.log({ error });
     return res.status(404).json({ message: 'Error propeties/', error });

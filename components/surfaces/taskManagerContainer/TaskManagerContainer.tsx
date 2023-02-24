@@ -42,7 +42,11 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
 
   return (
     <Wrapper className={`flex ${StatusType.PENDING ? 'loading' : ''}`}>
-      {StatusType.PENDING === status ? <LoadingSpinner /> : boardColumnsDisplay}
+      {StatusType.PENDING === status ? (
+        <LoadingSpinner color="primary" />
+      ) : (
+        boardColumnsDisplay
+      )}
 
       <EmptyColumn />
     </Wrapper>

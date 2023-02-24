@@ -1,9 +1,15 @@
+import { ColorsType } from '@/types';
 import { FC } from 'react';
-import { HiOutlinePlus } from 'react-icons/hi';
+import { CiLogout } from 'react-icons/ci';
+import { HiOutlineMinus, HiOutlinePlus } from 'react-icons/hi';
 import styled from 'styled-components';
 
 export interface IIconButton extends React.ComponentPropsWithRef<'button'> {
   fullWidth?: boolean;
+  textLabel?: string;
+  color: ColorsType;
+  icon: 'add' | 'remove' | 'edit' | 'logout';
+  background?: ColorsType;
 }
 
 const StyledIconButton = styled.button<IIconButton>`
@@ -13,9 +19,13 @@ const StyledIconButton = styled.button<IIconButton>`
   --gap: 0.5em;
   transition: all 0.2s;
   &:hover {
-    filter: brightness(250%) contrast(150px);
+    filter: brightness(150%) contrast(250px);
     opacity: 0.8;
-    color: ${({ color }) => color === 'primary-light' && '#000000'};
+
+    & .icon {
+      filter: brightness(150%) contrast(250px);
+      opacity: 0.8;
+    }
   }
   &:disabled {
     opacity: 0.3;
@@ -23,13 +33,27 @@ const StyledIconButton = styled.button<IIconButton>`
   }
 `;
 
-const IconButton: FC<IIconButton> = ({ children, ...props }) => (
+const IconButton: FC<IIconButton> = ({ ...props }) => (
   <StyledIconButton
     {...props}
-    className={`add-subinput fs-400 text-primary ${props.className}`}
+    className={`add-subinput fs-400 text-${props.color} ${props.className} ${
+      props.background ? `bg-${props.background}` : ''
+    }`}
   >
-    <HiOutlinePlus fontSize={'17px'} className="text-primary" />
-    {children}
+    {props.icon === 'add' && (
+      <HiOutlinePlus fontSize={'17px'} className={`icon text-${props.color}`} />
+    )}
+    {props.icon === 'remove' && (
+      <HiOutlineMinus
+        fontSize={'17px'}
+        className={`icon text-${props.color}`}
+      />
+    )}
+    {props.icon === 'add' && (
+      <CiLogout fontSize={'17px'} className={`icon text-${props.color}`} />
+    )}
+
+    {props.textLabel}
   </StyledIconButton>
 );
 

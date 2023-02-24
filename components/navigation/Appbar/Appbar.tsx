@@ -2,8 +2,8 @@
 import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
 import CreateNewTask from '@/components/forms/createNewTask/CreateNewTask';
 import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
+import IconButton from '@/components/ui/iconButton/IconButton.styled';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
-import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import ShowDrawerButton from '@/components/ui/showDrawerButton/ShowDrawerButton';
 import {
   logout,
@@ -15,8 +15,6 @@ import {
 } from '@/store';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { CiLogout } from 'react-icons/ci';
-import { HiOutlinePlus } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Wrapper from './Appbar.styled';
 
@@ -47,30 +45,29 @@ const Appbar: React.FC<IAppbar> = () => {
         </h2>
 
         <div className="actions flex">
-          <PrimaryButton
+          <IconButton
             color="primary"
             className="create-task-btn flex text-dark"
             disabled={
               !currentBoard || currentBoard.columns.length === 0 ? true : false
             }
             onClick={() => dispatch(openModal(<CreateNewTask />))}
-          >
-            <HiOutlinePlus />
-            <span className="create-btn-text">Add New Task</span>
-          </PrimaryButton>
-          <PrimaryButton
+            textLabel="Add New Task"
+            icon="add"
+            background="primary"
+          />
+
+          <IconButton
             color="red"
             className="fs-100 logout--btn"
             onClick={() => {
               dispatch(logout());
               signOut();
             }}
-          >
-            <span className="text-dark logout--btn_text">Logout</span>
-            <span className="logout--icon">
-              <CiLogout />
-            </span>
-          </PrimaryButton>
+            icon="logout"
+            textLabel="Logout"
+          />
+
           <MenuDropdown
             disabled={currentBoard ? false : true}
             value={null}

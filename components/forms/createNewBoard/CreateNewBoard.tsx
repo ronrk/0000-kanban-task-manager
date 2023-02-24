@@ -224,14 +224,21 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
             );
           })}
         </div>
-        <IconButton onClick={addNewColumn} type="button">
-          Add New Column
-        </IconButton>
+        <IconButton
+          onClick={addNewColumn}
+          type="button"
+          textLabel="Add New Column"
+          color="primary"
+          icon="add"
+        />
       </div>
 
-      <PrimaryButton color="primary" type="submit" className="submit-btn">
-        {isEdit ? `Edit '${board?.name}'` : 'Create New Board'}
-      </PrimaryButton>
+      <PrimaryButton
+        color="primary"
+        type="submit"
+        className="submit-btn"
+        textLabel={isEdit ? `Edit '${board?.name}'` : 'Create New Board'}
+      />
     </form>
   );
   return (
@@ -241,7 +248,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
       </h3>
       {status === StatusType.PENDING && !isEdit ? (
         <div className="loading">
-          <LoadingSpinner />
+          <LoadingSpinner color="primary" />
         </div>
       ) : (
         formElement

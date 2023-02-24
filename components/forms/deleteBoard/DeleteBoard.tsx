@@ -29,7 +29,7 @@ const DeleteBoard: FC<IProps> = ({ type, task }) => {
   if (isLoading) {
     return (
       <Wrapper className="delete-box bg-box">
-        <LoadingSpinner />
+        <LoadingSpinner color="primary" />
       </Wrapper>
     );
   }
@@ -58,16 +58,15 @@ const DeleteBoard: FC<IProps> = ({ type, task }) => {
                 .then(() => dispatch(closeModal()));
             }
           }}
-        >
-          Delete
-        </PrimaryButton>
+          textLabel="Delete"
+        />
+
         <PrimaryButton
           color="white"
           className="fs-400"
           onClick={() => dispatch(closeModal())}
-        >
-          Cancel
-        </PrimaryButton>
+          textLabel="Cancel"
+        />
       </div>
     </Wrapper>
   );

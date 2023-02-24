@@ -1,10 +1,12 @@
+import { ColorsType } from '@/types';
 import { FC } from 'react';
 import styled from 'styled-components';
 
 export interface IPrimaryButton
   extends React.ComponentPropsWithoutRef<'button'> {
   fullWidth?: boolean;
-  color: 'primary' | 'primary-light' | 'red' | 'white';
+  color: ColorsType;
+  textLabel: string;
 }
 const StyledPrimaryButton = styled.button<IPrimaryButton>`
   display: flex;
@@ -18,7 +20,7 @@ const StyledPrimaryButton = styled.button<IPrimaryButton>`
   color: ${(props) =>
     props.color === 'white' ? 'hsl(var(--clr-primary-light))' : '#ffffff'};
   width: ${(props) => props.fullWidth && '100%'};
-  padding: 0.75em 1.25em;
+  padding: 0.95em 1.95em;
   border-radius: 100px;
   transition: all 0.2s;
   &:hover {
@@ -32,8 +34,8 @@ const StyledPrimaryButton = styled.button<IPrimaryButton>`
   }
 `;
 
-const PrimaryButton: FC<IPrimaryButton> = ({ children, ...props }) => (
-  <StyledPrimaryButton {...props}>{children}</StyledPrimaryButton>
+const PrimaryButton: FC<IPrimaryButton> = ({ ...props }) => (
+  <StyledPrimaryButton {...props}>{props.textLabel}</StyledPrimaryButton>
 );
 
 export default PrimaryButton;

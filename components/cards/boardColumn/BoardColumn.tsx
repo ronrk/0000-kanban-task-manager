@@ -17,7 +17,7 @@ const BoardColumn: React.FC<IBoardColumn> = ({ column }) => {
   if (isLoading) {
     return (
       <Wrapper>
-        <LoadingSpinner />
+        <LoadingSpinner color="primary" />
       </Wrapper>
     );
   }

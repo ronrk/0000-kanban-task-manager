@@ -72,10 +72,7 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
           colStatus: dropdownValue?.status,
           _id: task._id,
         },
-        subtasks: subtasks.map((sub) => ({
-          title: sub.title,
-          isCompleted: sub.isCompleted,
-        })),
+        subtasks,
         originalColumn,
       })
         .unwrap()
@@ -90,29 +87,31 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
       return;
     }
 
-    const formTask = {
-      title,
-      description,
-      colStatus: dropdownValue?.status,
-      subtasks: subtasks.map((sub) => ({
-        title: sub.title,
-        isCompleted: sub.isCompleted,
-      })),
-    };
+    if (!task) {
+      const formTask = {
+        title,
+        description,
+        colStatus: dropdownValue?.status,
+        subtasks: subtasks.map((sub) => ({
+          title: sub.title,
+          isCompleted: sub.isCompleted,
+        })),
+      };
 
-    await addNewTask({
-      colId: dropdownValue?._id,
-      task: formTask,
-    })
-      .unwrap()
-      .then(() => {
-        dispatch(closeModal());
-        setLoading(false);
+      await addNewTask({
+        colId: dropdownValue?._id,
+        task: formTask,
       })
-      .catch((error) => {
-        setLoading(false);
-        console.log({ error });
-      });
+        .unwrap()
+        .then(() => {
+          dispatch(closeModal());
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log({ error });
+        });
+    }
   };
 
   const onDropdownChange = (value: IColumn) => {
@@ -236,18 +235,18 @@ recharge the batteries a little"
                 { ...initialSubtask, _id: new mongoose.Types.ObjectId() },
               ]);
             }}
-          >
-            Add New Subtask
-          </IconButton>
+            textLabel="Add New Subtask"
+            color="primary"
+            icon="add"
+          />
         </div>
         <PrimaryButton
           color="primary"
           type="submit"
           className="submit-btn fs-400"
           disabled={loading}
-        >
-          {task ? 'Save Changes' : 'Create Task'}
-        </PrimaryButton>
+          textLabel={task ? 'Save Changes' : 'Create Task'}
+        />
       </form>
     </Wrapper>
   );

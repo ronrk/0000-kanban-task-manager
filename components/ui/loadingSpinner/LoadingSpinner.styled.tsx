@@ -14,7 +14,6 @@ const StyledLoadingSpinner = styled.div`
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      background: hsl(var(--clr-primary-light));
       animation: lds-grid 1.2s linear infinite;
 
       &:nth-child(1) {

@@ -2,7 +2,6 @@ import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 
 import { closeModal, selectClientValue, useAppDispatch } from '@/store';
 import { StatusType } from '@/types';
-
 import { useSelector } from 'react-redux';
 import Wrapper from './ModalContainer.styled';
 
@@ -12,18 +11,17 @@ export interface IModalContainer extends React.ComponentPropsWithoutRef<'div'> {
   error?: any;
 }
 
-const ModalContainer: React.FC<IModalContainer> = ({
-  children,
-  isLoading,
-  isError,
-  error,
-}) => {
+const ModalContainer: React.FC<IModalContainer> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { status } = useSelector(selectClientValue);
   return (
     <Wrapper>
       <div className="bg" onClick={() => dispatch(closeModal())}></div>
-      {status === StatusType.PENDING ? <LoadingSpinner /> : children}
+      {status === StatusType.PENDING ? (
+        <LoadingSpinner color="primary" />
+      ) : (
+        children
+      )}
     </Wrapper>
   );
 };

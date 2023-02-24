@@ -17,7 +17,6 @@ const MenuDropdown: React.FC<IMenuDropdown> = ({
   options,
   disabled,
 }) => {
-  const activeBoard = true;
   const { handleOptionClick, handleClick, isOpen, divElRef } =
     useDropdownHook(cb);
   const renderedOptions = options.map((option: string, id): React.ReactNode => {
