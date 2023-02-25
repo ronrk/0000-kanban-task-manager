@@ -6,6 +6,7 @@ export interface ICheckboxInput extends React.ComponentPropsWithoutRef<'div'> {
   inputId: string;
   inputLabel?: string;
   onChangeCb(): void;
+  disabled?: boolean;
 }
 
 const CheckboxInput: React.FC<ICheckboxInput> = ({
@@ -13,10 +14,16 @@ const CheckboxInput: React.FC<ICheckboxInput> = ({
   inputId,
   inputLabel,
   onChangeCb,
+  disabled,
 }) => {
   return (
     <Wrapper className={`form-control bg-app ${isChecked ? 'checked' : null}`}>
-      <button className="check-btn bg-box" type="button" onClick={onChangeCb}>
+      <button
+        className="check-btn bg-box"
+        type="button"
+        onClick={onChangeCb}
+        disabled={disabled}
+      >
         <IconChecked className="icon" />
       </button>
       <input
@@ -26,6 +33,7 @@ const CheckboxInput: React.FC<ICheckboxInput> = ({
         name={inputId}
         checked={isChecked}
         onChange={() => onChangeCb()}
+        disabled={disabled}
       />
       {inputLabel && (
         <label

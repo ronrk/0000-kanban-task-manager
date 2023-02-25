@@ -27,8 +27,12 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
   const { currentColumn } = useSelector(selectTaskValue);
   const [dropdownValue, setDropdownValue] = useState(currentColumn);
   const [subtasks, setSubtasks] = useState(task.subtasks);
-  const [changeTaskColumn] = useChangeTaskColumnMutation();
-  const [changeSubtaskStatus] = useChangeSubtaskStatusMutation();
+  const [changeTaskColumn, { isLoading: isChangeTask }] =
+    useChangeTaskColumnMutation();
+  const [changeSubtaskStatus, { isLoading: isChangeStatus }] =
+    useChangeSubtaskStatusMutation();
+
+  const isLoading = isChangeStatus || isChangeTask;
 
   const onDropdownChange = (value: IColumn) => {
     setDropdownValue(value);
@@ -104,6 +108,7 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
           cb={onMenuClick}
           value={null}
           options={['edit', 'delete']}
+          disabled={isLoading}
         />
       </header>
       <p className="fs-500 text-light">{task.description}</p>
@@ -115,6 +120,7 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
         {subtasks.map((sub) => {
           return (
             <CheckboxInput
+              disabled={isLoading}
               isChecked={sub.isCompleted}
               key={sub._id.toString()}
               inputId={sub._id.toString()}
@@ -135,6 +141,7 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
           value={dropdownValue?.status}
           columns={columns}
           col={dropdownValue}
+          disabled={isLoading}
         />
       </div>
     </Wrapper>

@@ -13,6 +13,7 @@ export interface ITodoDropdown {
   colId?: mongoose.Types.ObjectId;
   columns?: IColumn[];
   col?: IColumn;
+  disabled?: boolean;
 }
 const defaultOptions: TCol = [ColType.TODO, ColType.DOING, ColType.DONE];
 
@@ -21,6 +22,7 @@ const TodoDropdown: React.FC<ITodoDropdown> = ({
   value,
   columns,
   col,
+  disabled,
 }) => {
   const { handleOptionClick, handleClick, isOpen, divElRef } =
     useDropdownHook(onChange);
@@ -52,7 +54,9 @@ const TodoDropdown: React.FC<ITodoDropdown> = ({
               ? 'dropdown-option fs-300 text-dark active'
               : 'dropdown-option fs-300 text-dark'
           }
-          onClick={() => handleOptionClick(option)}
+          onClick={() => {
+            disabled ? null : handleOptionClick(option);
+          }}
           key={option}
         >
           {option}

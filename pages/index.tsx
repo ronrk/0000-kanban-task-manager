@@ -31,7 +31,6 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
   );
 
   let isLoading = authStatus === 'loading' || loadingBoards;
-  console.log({ isLoading, comp: 'IndexPage' });
   let errorState =
     isError ||
     boardStatus === StatusType.ERROR ||
@@ -40,12 +39,9 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
 
   useEffect(() => {
     if (authStatus === 'unauthenticated') {
-      console.log('HOME PAGE USE EFFECT NAVIGATE');
-      // Router.replace('/auth/signin');
+      return;
     }
     if (authStatus === 'authenticated') {
-      console.log('HOME PAGE USE EFFECT SET AUTH USER');
-      console.log({ user });
       dispatch(setAuthenticatedUser(user));
     }
   }, [authStatus, user, dispatch]);

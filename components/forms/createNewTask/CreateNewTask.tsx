@@ -64,6 +64,7 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
     e.preventDefault();
     setLoading(true);
     if (task) {
+      console.log('EDIT TASK');
       await editTask({
         colId: dropdownValue?._id,
         task: {
@@ -88,6 +89,7 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
     }
 
     if (!task) {
+      console.log('CREATE TASK');
       const formTask = {
         title,
         description,

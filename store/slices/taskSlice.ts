@@ -20,7 +20,6 @@ export const taskSlice = createSlice({
     builder.addMatcher(
       taskApi.endpoints.getTasksByColId.matchPending,
       (state) => {
-        console.log('PENDING');
         state.status = StatusType.PENDING;
       }
     );
@@ -39,7 +38,6 @@ export const taskSlice = createSlice({
     builder.addMatcher(
       taskApi.endpoints.createNewTask.matchPending,
       (state) => {
-        console.log('PENDING');
         state.status = StatusType.PENDING;
       }
     );
