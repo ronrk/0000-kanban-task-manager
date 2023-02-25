@@ -4,7 +4,6 @@ import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import { checkClientSessionAuthentication } from '@/database';
 import {
   selectBoardValue,
-  selectClientValue,
   setAuthenticatedUser,
   useAppDispatch,
   useGetBoardsByUIDQuery,
@@ -12,8 +11,8 @@ import {
 import { IUser, StatusType } from '@/types';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { authOptions } from './api/auth/index';
@@ -25,7 +24,6 @@ interface IProps {
 
 const Home: NextPageWithLayout<IProps> = ({ user }) => {
   const { status: authStatus } = useSession();
-  const { isModalOpen, modalChildren } = useSelector(selectClientValue);
   const { status: boardStatus } = useSelector(selectBoardValue);
   const dispatch = useAppDispatch();
   const { isLoading: loadingBoards, isError } = useGetBoardsByUIDQuery(
@@ -60,8 +58,11 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
   }
   if (errorState) {
     return (
-      <PrimaryLayout>
-        <h2 className="text-dark">SOMETHING WRONG</h2>
+      <PrimaryLayout className="error_page">
+        <h2 className="text-dark fs-700">There was error with your request</h2>
+        <Link href={'/'} className="text-primary fs-600">
+          Back to home page
+        </Link>
       </PrimaryLayout>
     );
   }

@@ -25,23 +25,25 @@ const BoardDrawerList: React.FC<IBoardDrawerList> = () => {
     content = '';
   } else if (status === StatusType.FULLFILED) {
     content = boards.map((board: IBoard) => (
-      <button
+      <li
+        className={`${currentBoard?._id === board._id ? 'active' : ''}`}
         key={board._id.toString()}
-        className={currentBoard?._id === board._id ? 'active' : ''}
-        onClick={() => dispatch(changeActiveBoard(board._id))}
       >
-        <li className="text-primary fs-500 fw-m capitalize flex">
+        <button
+          onClick={() => dispatch(changeActiveBoard(board._id))}
+          className="flex capitalize text-primary fs-500 fw-m"
+        >
           <IconBoard />
           {board.name}
-        </li>
-      </button>
+        </button>
+      </li>
     ));
   }
 
   return (
     <Wrapper>
-      <h3 className="fs-400 uppercase text-light">
-        All Boards{boards.length === 0 ? null : `(${boards.length})`}
+      <h3 className="fs-500 uppercase text-light">
+        All Boards {boards.length === 0 ? null : `(${boards.length})`}
       </h3>
       <ul className="board-list">
         {content}

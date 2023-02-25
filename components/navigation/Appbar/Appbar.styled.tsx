@@ -3,12 +3,13 @@ import styled from 'styled-components';
 const StyledAppbar = styled.header`
   grid-area: appbar;
   position: relative;
-  --gap: 1rem;
+  --gap: 0;
   height: 10vh;
   align-items: center;
 
   & h2 {
     text-transform: capitalize;
+    margin-right: 1rem;
   }
 
   & .image-wrapper {
@@ -19,6 +20,7 @@ const StyledAppbar = styled.header`
     border-bottom: 2px solid transparent;
     padding-left: 1em;
     height: 100%;
+    aspect-ratio: 2;
     transition: all 0.2s;
     & img {
       padding: 1.5rem;

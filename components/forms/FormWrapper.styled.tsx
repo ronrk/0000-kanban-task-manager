@@ -32,6 +32,9 @@ const ModalWrapper = styled.div`
     --gap: 0.3em;
     margin-bottom: 3em;
     flex-grow: 1;
+    min-height: 30vh;
+    max-height: 30vh;
+    overflow-y: scroll;
     & .dropdown {
       flex: 1;
       margin-bottom: 4em;

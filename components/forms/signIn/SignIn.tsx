@@ -101,19 +101,25 @@ const SignIn: React.FC<ISignIn> = () => {
   };
 
   const switchContent = isAlreadyUser ? (
-    <p className="text-light fs-500">
-      New User?
-      <button onClick={() => setIsAlreadyUser((prev) => !prev)}>
+    <div className="switchType">
+      <p className="text-light fs-500">New User?</p>
+      <button
+        className="text-light fs-500"
+        onClick={() => setIsAlreadyUser((prev) => !prev)}
+      >
         Click to <span>Signup</span>
       </button>
-    </p>
+    </div>
   ) : (
-    <p className="text-light fs-500">
-      Already a user? <br />
-      <button onClick={() => setIsAlreadyUser((prev) => !prev)}>
+    <div className="switchType">
+      <p className="text-light fs-500">Already a user?</p>
+      <button
+        className="text-light fs-500"
+        onClick={() => setIsAlreadyUser((prev) => !prev)}
+      >
         Click to <span>Login</span>
       </button>
-    </p>
+    </div>
   );
 
   return (
@@ -203,10 +209,7 @@ const SignIn: React.FC<ISignIn> = () => {
                   className="submit--btn"
                   textLabel={isAlreadyUser ? 'Login' : 'Signup'}
                 />
-
-                <div className="switchType">
-                  {isLoading ? null : switchContent}
-                </div>
+                {isLoading ? null : switchContent}
               </div>
             </>
           )}

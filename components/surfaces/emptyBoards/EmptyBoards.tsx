@@ -13,14 +13,14 @@ const EmptyBoards: React.FC<IEmptyBoards> = () => {
   const dispatch = useAppDispatch();
   return (
     <Wrapper className="flex-col">
-      <h1 className="text-primary fs-700 uppercase">
+      <h3 className="text-primary fs-600 uppercase">
         {user?.username} you have no boards
-      </h1>
+      </h3>
       <PrimaryButton
-        className="fs-600"
-        color={'primary'}
+        className="fs-500"
+        color={'primary-light'}
         onClick={() => dispatch(openModal(<CreateNewBoard />))}
-        textLabel="Click to add new Board"
+        textLabel="Create New Board"
       />
     </Wrapper>
   );

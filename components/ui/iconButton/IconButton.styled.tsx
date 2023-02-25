@@ -14,9 +14,9 @@ export interface IIconButton extends React.ComponentPropsWithRef<'button'> {
 
 const StyledIconButton = styled.button<IIconButton>`
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
-  --gap: 0.5em;
+  gap: 0.3em;
   transition: all 0.2s;
   &:hover {
     filter: brightness(150%) contrast(250px);
@@ -49,11 +49,10 @@ const IconButton: FC<IIconButton> = ({ ...props }) => (
         className={`icon text-${props.color}`}
       />
     )}
-    {props.icon === 'add' && (
+    {props.icon === 'logout' && (
       <CiLogout fontSize={'17px'} className={`icon text-${props.color}`} />
     )}
-
-    {props.textLabel}
+    <span>{props.textLabel}</span>
   </StyledIconButton>
 );
 

@@ -20,6 +20,14 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
       justify-content: center;
     }
   }
+  &.error_page {
+    & main {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
 
   &.sign-in__page {
     display: flex;
@@ -28,6 +36,9 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
     & main {
       display: grid;
       justify-content: center;
+      justify-items: center;
+      gap: 2rem;
+
       grid-template-rows: min-content 1fr;
       & .image__wrapper {
         margin: 2rem;

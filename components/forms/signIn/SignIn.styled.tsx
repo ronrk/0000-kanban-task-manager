@@ -3,8 +3,8 @@ import styled from 'styled-components';
 const StyledSignIn = styled.section`
   height: 80%;
   align-items: center;
+  justify-content: center;
   & h2 {
-    margin-block: 0.5rem 0.5em;
     text-align: center;
   }
   & form {
@@ -29,7 +29,11 @@ const StyledSignIn = styled.section`
     }
   }
   & .switchType {
+    width: 100%;
+    text-align: center;
     & button {
+      text-align: center;
+      width: 100%;
       &:disabled {
         background-color: black;
       }

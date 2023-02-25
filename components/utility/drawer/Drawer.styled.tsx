@@ -6,7 +6,6 @@ const StyledDrawer = styled.nav`
   top: 100%;
   left: 0;
   width: var(--drawer-width);
-
   min-height: 90vh;
   max-height: 100%;
   align-items: flex-start;
@@ -77,8 +76,7 @@ const StyledDrawer = styled.nav`
     }
   }
   &.hide {
-    width: 0px;
-    transition: transform 0.2s;
+    width: 0;
     overflow: hidden;
     /* transform: translateX(-200%); */
     /*     animation-name: drawerOpen;

@@ -6,7 +6,7 @@ export interface IPrimaryButton
   extends React.ComponentPropsWithoutRef<'button'> {
   fullWidth?: boolean;
   color: ColorsType;
-  textLabel: string;
+  textLabel: string | React.ReactNode;
 }
 const StyledPrimaryButton = styled.button<IPrimaryButton>`
   display: flex;
