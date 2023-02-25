@@ -5,95 +5,6 @@ interface ILayoutProps {
 }
 
 const StyledPrimaryLayout = styled.div<ILayoutProps>`
-  &.loading {
-    & main {
-      display: flex;
-
-      justify-content: center;
-    }
-  }
-  &.sign-in__page {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    & main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    & .loading {
-      align-items: center;
-      justify-content: center;
-      flex-grow: 0.5;
-      width: 100%;
-    }
-    & section {
-      flex-grow: 1;
-
-      & h2 {
-        margin-block: 2rem;
-      }
-    }
-
-    & .image__wrapper {
-      margin: 3rem;
-      max-width: 250px;
-      aspect-ratio: 3.5;
-    }
-    & form {
-      text-align: left;
-      max-width: 80%;
-      margin-inline: auto;
-      flex-grow: 1;
-
-      & input {
-        padding: 1rem;
-        border-radius: 5px;
-        margin-top: 1rem;
-        &::placeholder {
-        }
-        &:focus {
-          &::placeholder {
-            color: hsl(var(--clr-primary-light));
-          }
-        }
-      }
-      & .form-control {
-        padding-block: 0.5rem;
-        margin-bottom: 1rem;
-        &:last-of-type {
-          margin-bottom: 2rem;
-        }
-      }
-    }
-    & .btns__container {
-      align-self: center;
-      text-align: center;
-      margin-block: auto 10rem;
-
-      & .submit--btn {
-        width: 80%;
-        max-width: 350px;
-        margin-inline: auto;
-      }
-    }
-    & .switchType {
-      padding-inline: 4rem;
-      & button {
-        &:disabled {
-          background-color: black;
-        }
-        & span {
-          transition: all 0.2s;
-        }
-        &:hover {
-          & span {
-            color: hsl(var(--clr-primary));
-          }
-        }
-      }
-    }
-  }
   min-height: 100vh;
   max-height: 100vh;
   display: grid;
@@ -103,12 +14,46 @@ const StyledPrimaryLayout = styled.div<ILayoutProps>`
     'appbar appbar'
     'sidebar app';
 
+  &.loading {
+    & main {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  &.sign-in__page {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    & main {
+      display: grid;
+      justify-content: center;
+      grid-template-rows: min-content 1fr;
+      & .image__wrapper {
+        margin: 2rem;
+        max-width: 250px;
+        min-width: 200px;
+        display: inline-block;
+        aspect-ratio: 4;
+        /* aspect-ratio: 1; */
+      }
+    }
+
+    & .loading {
+      align-items: center;
+      justify-content: center;
+      flex-grow: 0.5;
+      width: 100%;
+    }
+  }
+
   & .app {
     grid-area: app;
     overflow-x: scroll;
     overflow-y: scroll;
     position: relative;
     align-self: stretch;
+    flex-grow: 1;
 
     /* position: relative; */
     /*     max-height: 100%;

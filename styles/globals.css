@@ -50,9 +50,21 @@
   );
 }
 
+@media screen and (max-width: 1100px) {
+  :root {
+    --drawer-width: 200px;
+    --fs-700: 1.7rem;
+    --fs-600: 1.3rem;
+    --fs-500: 1rem;
+  }
+}
+
 @media screen and (max-width: 650px) {
   :root {
     --drawer-width: 200px;
+    --fs-700: 1.5rem;
+    --fs-600: 1.2rem;
+    --fs-500: 0.875rem;
   }
 }
 

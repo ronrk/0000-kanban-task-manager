@@ -10,6 +10,7 @@ const StyledPrimaryInput = styled.input<IPrimaryInput>`
   border: 2px solid transparent;
   outline: 1px solid hsla(var(--clr-text-light), 1);
   border-radius: 5px;
+  padding: 0.875em 0.5em;
 
   &:focus {
     border-color: hsla(var(--clr-text-light), 1);
