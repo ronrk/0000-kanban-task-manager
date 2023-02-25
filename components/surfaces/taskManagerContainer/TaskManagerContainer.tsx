@@ -19,6 +19,9 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
       
     );
   } */
+
+  console.log({ status, comp: 'TaskContainer' });
+
   if (boards.length <= 0) {
     return (
       <Wrapper className="flex empty">
@@ -41,9 +44,13 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
   });
 
   return (
-    <Wrapper className={`flex ${StatusType.PENDING ? 'loading' : ''}`}>
+    <Wrapper
+      className={`flex ${status === StatusType.PENDING ? 'loading' : ''}`}
+    >
       {StatusType.PENDING === status ? (
-        <LoadingSpinner color="primary" />
+        <div className="loading">
+          <LoadingSpinner color="primary" />
+        </div>
       ) : (
         boardColumnsDisplay
       )}

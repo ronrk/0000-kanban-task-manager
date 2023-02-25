@@ -1,8 +1,7 @@
 // import { useGetAllTasksByColumnIdQuery } from '@/store';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
-import { selectTaskValue, useGetTasksByColIdQuery } from '@/store';
+import { useGetTasksByColIdQuery } from '@/store';
 import { IColumn, ITask } from '@/types';
-import { useSelector } from 'react-redux';
 import SingleTaskBox from '../singleTaskBox/SingleTaskBox';
 import Wrapper from './BoardColumn.styled';
 
@@ -11,13 +10,14 @@ export interface IBoardColumn {
 }
 
 const BoardColumn: React.FC<IBoardColumn> = ({ column }) => {
-  const { status } = useSelector(selectTaskValue);
   const { data, isLoading } = useGetTasksByColIdQuery(column._id.toString());
 
   if (isLoading) {
     return (
-      <Wrapper>
-        <LoadingSpinner color="primary" />
+      <Wrapper className="column">
+        <div className="loading">
+          <LoadingSpinner color="primary" />
+        </div>
       </Wrapper>
     );
   }

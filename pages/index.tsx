@@ -31,6 +31,7 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
   );
 
   let isLoading = authStatus === 'loading' || loadingBoards;
+  console.log({ isLoading, comp: 'IndexPage' });
   let errorState =
     isError ||
     boardStatus === StatusType.ERROR ||

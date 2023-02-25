@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const StyledDrawer = styled.nav`
   grid-area: sidebar;
-  /* position: absolute; */
   top: 100%;
   left: 0;
   width: var(--drawer-width);
@@ -17,7 +16,6 @@ const StyledDrawer = styled.nav`
     width: 100%;
     --gap: 1em;
     justify-content: center;
-    /* align-items: baseline; */
     align-items: center;
     margin-bottom: 1em;
     padding: 0.5em 1em;
@@ -78,33 +76,7 @@ const StyledDrawer = styled.nav`
   &.hide {
     width: 0;
     overflow: hidden;
-    /* transform: translateX(-200%); */
-    /*     animation-name: drawerOpen;
-    animation-iteration-count: 1;
-    animation-delay: 2000ms;
-    animation-duration: 30000ms; */
   }
-  /*   @keyframes drawerOpen {
-    0% {
-      background-color: red;
-      * > {
-        background-color: red;
-        display: none;
-      }
-    }
-    99% {
-      background-color: red;
-      * > {
-        background-color: red;
-        display: none;
-      }
-    }
-    100% {
-      * > {
-        display: initial;
-      }
-    }
-  } */
 `;
 
 export default StyledDrawer;
