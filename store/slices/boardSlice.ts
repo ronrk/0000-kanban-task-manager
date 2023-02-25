@@ -33,27 +33,28 @@ const slice = createSlice({
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchPending,
       (state) => {
+        console.log('PENDING');
         state.status = StatusType.PENDING;
       }
     );
     builder.addMatcher(
       boardApi.endpoints.createNewBoard.matchPending,
       (state) => {
+        console.log('PENDING');
         state.status = StatusType.PENDING;
       }
     );
     builder.addMatcher(
       boardApi.endpoints.deleteBoardById.matchPending,
       (state) => {
+        console.log('PENDING');
         state.status = StatusType.PENDING;
       }
     );
 
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchFulfilled,
-      (state, action) => {
-        console.log('GET BOARD BY ID');
-        console.log({ payload: action.payload });
+      (state) => {
         state.status = StatusType.FULLFILED;
       }
     );
@@ -68,8 +69,12 @@ const slice = createSlice({
           const updateBoardIdx = state.boards.findIndex(
             (board) => board._id === state.currentBoard!._id
           );
-          console.log({ updated: state.boards[updateBoardIdx] });
-          state.currentBoard = state.boards[updateBoardIdx];
+
+          if (updateBoardIdx !== -1) {
+            state.currentBoard = state.boards[updateBoardIdx];
+          } else {
+            state.currentBoard = state.boards[0];
+          }
         }
         state.status = StatusType.FULLFILED;
       }
@@ -87,11 +92,6 @@ const slice = createSlice({
     builder.addMatcher(
       boardApi.endpoints.deleteBoardById.matchFulfilled,
       (state) => {
-        if (state.boards.length > 0) {
-          state.currentBoard = state.boards[state.boards.length - 1];
-        } else {
-          state.currentBoard = null;
-        }
         state.status = StatusType.FULLFILED;
       }
     );
@@ -105,19 +105,22 @@ const slice = createSlice({
     );
     builder.addMatcher(
       boardApi.endpoints.getBoardById.matchRejected,
-      (state) => {
+      (state, action) => {
+        console.log({ payload: action.payload, error: action.error });
         state.status = StatusType.ERROR;
       }
     );
     builder.addMatcher(
       boardApi.endpoints.createNewBoard.matchRejected,
-      (state) => {
+      (state, action) => {
+        console.log({ payload: action.payload, error: action.error });
         state.status = StatusType.ERROR;
       }
     );
     builder.addMatcher(
       boardApi.endpoints.deleteBoardById.matchRejected,
-      (state) => {
+      (state, action) => {
+        console.log({ payload: action.payload, error: action.error });
         state.status = StatusType.ERROR;
       }
     );

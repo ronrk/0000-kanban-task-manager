@@ -36,12 +36,12 @@ const SignIn: React.FC<ISignIn> = () => {
     setError({ status: false, message: '' });
   };
 
-  const loginUser = async () => {
-    const { username, password } = values;
+  const loginUser = async ({ user, pass }: { user: string; pass: string }) => {
+    setLoadingState(true);
     try {
       const res = await signIn('credentials', {
-        username,
-        password,
+        username: user,
+        password: pass,
         redirect: false,
       });
       if (!res?.ok) {
@@ -55,12 +55,11 @@ const SignIn: React.FC<ISignIn> = () => {
       let errorMessage = 'Something went wrong with your signup';
       if (error.status === 400) {
         errorMessage =
-          'The username or email address you choose already been registered';
+          'The user or email address you choose already been registered';
         console.log('WRONG CREDENTIALS');
       }
-
-      setError({ status: true, message: errorMessage });
       setLoadingState(false);
+      setError({ status: true, message: errorMessage });
     }
   };
 
@@ -81,7 +80,7 @@ const SignIn: React.FC<ISignIn> = () => {
       await registerUser(values)
         .unwrap()
         .then(async () => {
-          loginUser();
+          loginUser({ user: username, pass: password });
         })
         .catch((error) => {
           let errorMessage = 'Something went wrong with your signup';
@@ -97,7 +96,11 @@ const SignIn: React.FC<ISignIn> = () => {
 
       return;
     }
-    await loginUser();
+    await loginUser({ user: username, pass: password });
+  };
+
+  const loginDemoUser = async () => {
+    await loginUser({ user: 'DemoUser', pass: '1234' });
   };
 
   const switchContent = isAlreadyUser ? (
@@ -109,6 +112,12 @@ const SignIn: React.FC<ISignIn> = () => {
       >
         Click to <span>Signup</span>
       </button>
+      <PrimaryButton
+        type="button"
+        color={'red-light'}
+        textLabel={'Demo App'}
+        onClick={loginDemoUser}
+      />
     </div>
   ) : (
     <div className="switchType">
@@ -119,6 +128,12 @@ const SignIn: React.FC<ISignIn> = () => {
       >
         Click to <span>Login</span>
       </button>
+      <PrimaryButton
+        type="button"
+        color={'red-light'}
+        textLabel={'Demo App'}
+        onClick={loginDemoUser}
+      />
     </div>
   );
 

@@ -1,4 +1,3 @@
-// import { useGetAllTasksByColumnIdQuery } from '@/store';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import { useGetTasksByColIdQuery } from '@/store';
 import { IColumn, ITask } from '@/types';

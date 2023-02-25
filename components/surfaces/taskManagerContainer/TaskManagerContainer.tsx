@@ -14,14 +14,6 @@ const TaskManagerContainer: React.FC<ITaskManagerContainer> = () => {
 
   let errorState = status === StatusType.ERROR || !currentBoard;
 
-  /*   if (StatusType.PENDING === status) {
-    return (
-      
-    );
-  } */
-
-  console.log({ status, comp: 'TaskContainer' });
-
   if (boards.length <= 0) {
     return (
       <Wrapper className="flex empty">

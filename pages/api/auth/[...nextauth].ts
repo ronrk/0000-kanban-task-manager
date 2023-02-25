@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: 'credentials',
       credentials: {},
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         await connectMongo().catch((error) => {
           console.log('Cant connect to db');
           console.log({ error });
@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       session.user._id = token._id as mongoose.Types.ObjectId;
       return session;
     },

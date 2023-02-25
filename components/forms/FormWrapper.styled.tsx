@@ -16,16 +16,29 @@ const ModalWrapper = styled.div`
     text-align: center;
   }
 
+  &.isLoading {
+    width: auto;
+  }
   & .loading {
-    display: grid;
+    /*     display: grid;
     place-items: center;
-    flex-grow: 1;
-    min-height: 35vh;
+    flex-grow: 1; */
   }
 
   & .submit-btn {
     align-self: center;
     padding-inline: 3rem;
+  }
+  &.create-board {
+    &.isLoading {
+      width: auto;
+      & .loading {
+        margin-top: 2rem;
+        display: grid;
+        place-items: center;
+        flex-grow: 1;
+      }
+    }
   }
 
   & .columns {
@@ -163,6 +176,11 @@ const ModalWrapper = styled.div`
   &.task-detail {
     min-height: 50vh;
     text-transform: capitalize;
+    & .description {
+      margin-block: 2rem;
+      max-width: 45ch;
+      line-height: 1.5;
+    }
     & header {
       justify-content: space-between;
       align-items: center;
@@ -214,6 +232,14 @@ const ModalWrapper = styled.div`
     & .checkbox-wrapper {
       max-height: 300px;
       overflow-y: scroll;
+    }
+    & .loading {
+      flex-grow: 1;
+      align-self: center;
+      display: flex;
+      justify-content: center;
+      /* min-height: 10vh; */
+      /* width: 100%; */
     }
   }
   & input {

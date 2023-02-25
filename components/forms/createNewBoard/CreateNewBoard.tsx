@@ -19,7 +19,6 @@ import {
   useGetTemplateBoardQuery,
 } from '@/store';
 import { ColType, IBoard, IColumn, StatusType } from '@/types';
-import mongoose from 'mongoose';
 import { FormEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Wrapper from '../FormWrapper.styled';
@@ -88,19 +87,13 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
     fetch(`/api/boards?template=true`)
       .then((res) => res.json())
       .then((data: { initialColumn: IColumn }) => {
-        const newColumnId = new mongoose.Types.ObjectId();
-        setColumnsChoosen((prev) => [
-          ...prev,
-          { ...data.initialColumn, _id: newColumnId },
-        ]);
+        setColumnsChoosen((prev) => [...prev, { ...data.initialColumn }]);
+
         setFormBoard((prev) => {
           if (!prev) return prev;
           return {
             ...prev,
-            columns: [
-              ...prev.columns,
-              { ...data.initialColumn, _id: newColumnId },
-            ],
+            columns: [...prev.columns, { ...data.initialColumn }],
           };
         });
       })
@@ -109,7 +102,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
       );
   };
 
-  const handleRemoveColumns = async (col: IColumn, idx: number) => {
+  const handleRemoveColumns = async (col: IColumn) => {
     if (isEdit) {
       console.log(col._id, col);
       deleteColumn({
@@ -125,9 +118,15 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         });
     }
 
-    setColumnsChoosen((prev) =>
-      prev.filter((column, colIdx) => idx !== colIdx)
+    const updatedColumns = columnsChoosen.filter(
+      (column) => col._id.toString() !== column._id.toString()
     );
+
+    setColumnsChoosen(updatedColumns);
+    setFormBoard((prev) => {
+      if (!prev) return prev;
+      return { ...prev, columns: updatedColumns };
+    });
   };
 
   const handleColChange = (col: any, colType: ColType) => {
@@ -208,16 +207,16 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
       <div className="columns flex-col">
         <label className="fw-m fs-500 text-light">Board Columns:</label>
         <div className="columns__wrapper flex">
-          {columnsChoosen.map((col, idx) => {
+          {columnsChoosen.map((col) => {
             return (
-              <div className="form-control flex" key={idx}>
+              <div className="form-control flex" key={col._id.toString()}>
                 <TodoDropdown
                   onChange={(colType) => handleColChange(col, colType)}
                   value={col.status}
                 />
 
                 <IconRemove
-                  onClick={() => handleRemoveColumns(col, idx)}
+                  onClick={() => handleRemoveColumns(col)}
                   type="button"
                 ></IconRemove>
               </div>
@@ -242,9 +241,13 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
     </form>
   );
   return (
-    <Wrapper className="bg-app create-board flex-col">
+    <Wrapper
+      className={`bg-app create-board flex-col ${
+        status === StatusType.PENDING && !isEdit ? 'isLoading' : ''
+      }`}
+    >
       <h3 className="text-dark fs-600">
-        {isEdit ? board?.name : 'Add new Board'}
+        {isEdit ? board?.name : 'Create New Board'}
       </h3>
       {status === StatusType.PENDING && !isEdit ? (
         <div className="loading">

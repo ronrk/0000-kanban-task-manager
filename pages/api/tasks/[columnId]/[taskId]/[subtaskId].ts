@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { body, query, method } = req;
+  const { query, method } = req;
 
   try {
     await connectMongo().catch((error) =>

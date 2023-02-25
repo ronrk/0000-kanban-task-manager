@@ -64,7 +64,6 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
     e.preventDefault();
     setLoading(true);
     if (task) {
-      console.log('EDIT TASK');
       await editTask({
         colId: dropdownValue?._id,
         task: {
@@ -89,7 +88,6 @@ const CreateNewTask: FC<ICreateNewTask> = ({ task }) => {
     }
 
     if (!task) {
-      console.log('CREATE TASK');
       const formTask = {
         title,
         description,
@@ -172,6 +170,7 @@ recharge the batteries a little"
                   placeholder="e.g Web Design - Subtask"
                   className="text-dark fs-400"
                   value={sub.title}
+                  autoFocus={true}
                   onChange={(e) =>
                     setSubtasks((prev) => {
                       return prev.map((val) =>

@@ -36,7 +36,7 @@ const userSchema: Schema<IUserMethods> = new Schema({
 
 userSchema.methods.comparePassword = async function (password: string) {
   console.log('COMPARING PASSWORDS');
-  const isMatch = bcrypt
+  const isMatch = await bcrypt
     .compare(password, this.password)
     .then((data) => data)
     .catch((e) => {

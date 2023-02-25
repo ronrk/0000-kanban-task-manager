@@ -83,7 +83,6 @@ export const getSingleBoardAPI = async (
 ) => {
   try {
     const board = await Board.findById(query.boardId);
-    console.log({ board, message: 'GET SINGLE BOARD CONTROLLER' });
     if (!board) {
       return server404Error(res, `Cant find board with id :${query.boardId}`);
     }
@@ -100,7 +99,6 @@ export const editBoardByIdAPI = async (
   res: NextApiResponse
 ) => {
   try {
-    console.log({ message: 'EDIT BOARD CONTROLLER' });
     const columns = await body.columns.map(async (col: IColumnSchema) => {
       const updatedCol = await Column.findByIdAndUpdate(col._id, col, {
         new: true,
@@ -111,7 +109,6 @@ export const editBoardByIdAPI = async (
       return updatedCol;
     });
 
-    console.log({ columns });
     const board = await Board.findByIdAndUpdate(query.boardId, body, {
       new: true,
     });

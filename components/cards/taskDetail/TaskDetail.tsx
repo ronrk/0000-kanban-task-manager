@@ -1,6 +1,7 @@
 import CreateNewTask from '@/components/forms/createNewTask/CreateNewTask';
 import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
 import CheckboxInput from '@/components/ui/checkboxInput/CheckboxInput';
+import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
 import TodoDropdown from '@/components/ui/todoDropdown/TodoDropdown';
 import {
@@ -36,7 +37,6 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
 
   const onDropdownChange = (value: IColumn) => {
     setDropdownValue(value);
-    const newTask: ITask = { ...task };
 
     changeTaskColumn({
       taskId: task._id,
@@ -50,7 +50,6 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
       .catch((error) => {
         console.log({ error });
       });
-    // dispatch(editTask(newTask));
   };
   const onMenuClick = (option: string) => {
     if (option === 'delete') {
@@ -104,6 +103,7 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
     <Wrapper className="task-detail bg-box flex-col">
       <header className="flex">
         <h3 className="fs-600 fw-m text-dark">{task.title}</h3>
+
         <MenuDropdown
           cb={onMenuClick}
           value={null}
@@ -111,7 +111,7 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
           disabled={isLoading}
         />
       </header>
-      <p className="fs-500 text-light">{task.description}</p>
+      <p className="fs-500 text-light description">{task.description}</p>
       <div className="checkbox-wrapper">
         <label htmlFor="" className="text-light fs-400">
           Subtasks ({completedSubtasks} of {pendingSubtasks + completedSubtasks}
@@ -132,17 +132,24 @@ const TaskDetail: FC<ITaskDetail> = ({ task }) => {
           );
         })}
       </div>
-      <div className="dropdown">
-        <label htmlFor="" className="text-light">
-          Current Status
-        </label>
-        <TodoDropdown
-          onChange={(col) => onDropdownChange(col)}
-          value={dropdownValue?.status}
-          columns={columns}
-          col={dropdownValue}
-          disabled={isLoading}
-        />
+      <div className="flex">
+        <div className="dropdown">
+          <label htmlFor="" className="text-light">
+            Current Status
+          </label>
+          <TodoDropdown
+            onChange={(col) => onDropdownChange(col)}
+            value={dropdownValue?.status}
+            columns={columns}
+            col={dropdownValue}
+            disabled={isLoading}
+          />
+        </div>
+        {isLoading ? (
+          <div className="loading">
+            <LoadingSpinner color="primary" />
+          </div>
+        ) : null}
       </div>
     </Wrapper>
   );

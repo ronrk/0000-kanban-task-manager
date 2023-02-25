@@ -5,7 +5,7 @@ const StyledSingleTaskBox = styled.div`
   border-radius: 8px;
   padding: 1em;
   margin: 1rem;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   align-items: center;
   transition: all 0.2s;

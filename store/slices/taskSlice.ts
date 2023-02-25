@@ -23,9 +23,26 @@ export const taskSlice = createSlice({
         state.status = StatusType.PENDING;
       }
     );
+
+    builder.addMatcher(
+      taskApi.endpoints.createNewTask.matchPending,
+      (state) => {
+        console.log('PENDING');
+        state.status = StatusType.PENDING;
+      }
+    );
+
     builder.addMatcher(
       taskApi.endpoints.getTasksByColId.matchFulfilled,
       (state) => {
+        console.log('PENDING');
+        state.status = StatusType.FULLFILED;
+      }
+    );
+    builder.addMatcher(
+      taskApi.endpoints.createNewTask.matchFulfilled,
+      (state) => {
+        console.log('PENDING');
         state.status = StatusType.FULLFILED;
       }
     );
@@ -33,18 +50,6 @@ export const taskSlice = createSlice({
       taskApi.endpoints.getTasksByColId.matchRejected,
       (state) => {
         state.status = StatusType.ERROR;
-      }
-    );
-    builder.addMatcher(
-      taskApi.endpoints.createNewTask.matchPending,
-      (state) => {
-        state.status = StatusType.PENDING;
-      }
-    );
-    builder.addMatcher(
-      taskApi.endpoints.createNewTask.matchFulfilled,
-      (state) => {
-        state.status = StatusType.FULLFILED;
       }
     );
     builder.addMatcher(

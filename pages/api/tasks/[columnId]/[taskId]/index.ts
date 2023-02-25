@@ -57,7 +57,6 @@ export default async function handler(
         );
 
         if (!isTaskAlreadyInColumn) {
-          console.log({ isTaskAlreadyInColumn });
           const originalColumn = await Column.findById(body.originalColumn._id);
           column.tasks.push(task._id);
           originalColumn.tasks = originalColumn.tasks.filter(

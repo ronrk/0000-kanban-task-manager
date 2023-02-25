@@ -28,7 +28,7 @@ const DeleteBoard: FC<IProps> = ({ type, task }) => {
   const isLoading = taskLoading || boardLoading;
   if (isLoading) {
     return (
-      <Wrapper className="delete-box bg-box">
+      <Wrapper className="delete-box bg-box isLoading">
         <LoadingSpinner color="primary" />
       </Wrapper>
     );
