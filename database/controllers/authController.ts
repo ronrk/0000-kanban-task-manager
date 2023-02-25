@@ -72,15 +72,10 @@ export const registerUserAPI = async (
       throw new CustomError.BadRequestError('Username already exist');
     }
     const requestedUser = await User.create({ email, password, username });
-    const tokenUser = createJWT({
-      username: requestedUser.username,
-      email: requestedUser.email,
-      _id: requestedUser.id,
-    });
     const user = await getUserByUID(requestedUser._id);
     return res
       .status(StatusCodes.CREATED)
-      .json({ message: 'Register User', token: tokenUser, user });
+      .json({ message: 'Register User', user });
   } catch (error) {
     res.status(400).json({ message: 'ERROR REGISTER', error: error });
   }

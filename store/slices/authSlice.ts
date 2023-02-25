@@ -6,9 +6,11 @@ import { authApi } from '../Api/authApi';
 const initialState = {
   user: null,
   status: StatusType.IDLE,
+  demoUser: false,
 } as {
   user: null | IUser;
   status: StatusType;
+  demoUser: boolean;
 };
 
 const slice = createSlice({
@@ -18,6 +20,9 @@ const slice = createSlice({
     logout: () => initialState,
     setAuthenticatedUser: (state, action) => {
       state.user = action.payload;
+    },
+    setDemoUser: (state) => {
+      state.demoUser = true;
     },
   },
   extraReducers: (builder) => {
@@ -40,7 +45,7 @@ const slice = createSlice({
   },
 });
 
-export const { setAuthenticatedUser, logout } = slice.actions;
+export const { setAuthenticatedUser, logout, setDemoUser } = slice.actions;
 export default slice.reducer;
 
 export const selectUser = (state: RootState) => state.auth;

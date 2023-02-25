@@ -1,3 +1,4 @@
+import DemoUserModal from '@/components/cards/demoUserModal/DemoUserModal';
 import IconButton from '@/components/ui/iconButton/IconButton.styled';
 import { IconRemove } from '@/components/ui/icons';
 import LoadingSpinner from '@/components/ui/loadingSpinner/LoadingSpinner';
@@ -8,6 +9,7 @@ import useInput from '@/hooks/useInput';
 
 import {
   closeModal,
+  openModal,
   selectBoardValue,
   selectUser,
   useAddColumnByIdMutation,
@@ -32,7 +34,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   const [columnsChoosen, setColumnsChoosen] = useState<IColumn[]>(
     board?.columns || []
   );
-  const { user } = useSelector(selectUser);
+  const { user, demoUser } = useSelector(selectUser);
   const { status } = useSelector(selectBoardValue);
   const [addBoard] = useCreateNewBoardMutation();
   const [editBoard] = useEditBoardByIdMutation();
@@ -103,7 +105,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   };
 
   const handleRemoveColumns = async (col: IColumn) => {
-    if (isEdit) {
+    if (isEdit && !demoUser) {
       console.log(col._id, col);
       deleteColumn({
         colId: col._id,
@@ -130,7 +132,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
   };
 
   const handleColChange = (col: any, colType: ColType) => {
-    if (isEdit) {
+    if (isEdit && !demoUser) {
       editColumn({
         boardId: board!._id,
         columnId: col._id,
@@ -160,7 +162,7 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isEdit) {
+    if (isEdit && !demoUser) {
       editBoard({
         boardId: formBoard?._id,
         board: { ...formBoard, name: enteredName },
@@ -171,6 +173,11 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         });
       return;
     } else {
+      if (demoUser) {
+        dispatch(closeModal());
+        dispatch(openModal(<DemoUserModal />));
+        return;
+      }
       addBoard({
         uid: user?._id,
         board: { ...formBoard, name: enteredName },

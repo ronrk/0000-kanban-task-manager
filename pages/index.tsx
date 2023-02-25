@@ -7,6 +7,7 @@ import {
   setAuthenticatedUser,
   useAppDispatch,
   useGetBoardsByUIDQuery,
+  setDemoUser,
 } from '@/store';
 import { IUser, StatusType } from '@/types';
 import { GetServerSideProps } from 'next';
@@ -42,6 +43,9 @@ const Home: NextPageWithLayout<IProps> = ({ user }) => {
       return;
     }
     if (authStatus === 'authenticated') {
+      if (user?.username === 'DemoUser') {
+        dispatch(setDemoUser());
+      }
       dispatch(setAuthenticatedUser(user));
     }
   }, [authStatus, user, dispatch]);
@@ -94,6 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       };
     }
+
     props.user = user;
     return {
       props,
