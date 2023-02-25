@@ -13,8 +13,6 @@ const StyledEmptyColumn = styled.div`
   grid-row: 2/-1;
   margin-top: 0.5em;
 
-  & button {
-  }
   & .new-col-btn {
     width: 100%;
     height: 100%;

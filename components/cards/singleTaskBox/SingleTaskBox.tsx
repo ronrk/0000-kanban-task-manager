@@ -24,6 +24,7 @@ const SingleTaskBox: React.FC<ISingleTaskBox> = ({ task, col }) => {
 
   return (
     <Wrapper
+      className="bg-app flex-col"
       onClick={() => {
         dispatch(setCurrentColumn(col));
         dispatch(openModal(<TaskDetail task={task} />));

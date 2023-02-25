@@ -23,7 +23,7 @@ const BoardColumn: React.FC<IBoardColumn> = ({ column }) => {
   }
 
   return (
-    <Wrapper className={`column ${column.status.toLowerCase()}`}>
+    <Wrapper className={`column ${column.status.toLowerCase()} flex-col`}>
       <h3 className="col-title text-light fs-400 uppercase">
         {column.status}
         <span className="fs-300">{data.tasks.length}</span>

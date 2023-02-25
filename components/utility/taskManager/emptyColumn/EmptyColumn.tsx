@@ -39,8 +39,12 @@ const EmptyColumn: React.FC<IEmptyColumn> = () => {
         <div className="empty-column-actions flex-col">
           <h3 className="fs-600 text-primary-light">Add Column:</h3>
           {columnsList.map((col) => (
-            <button className="todo" key={col} onClick={() => onAddColumn(col)}>
-              <span className="col-title text-dark fs-500 fw-m">{col}</span>
+            <button
+              className={`${col.toLowerCase()}`}
+              key={col}
+              onClick={() => onAddColumn(col)}
+            >
+              <span className={`col-title text-dark fs-500 fw-m `}>{col}</span>
             </button>
           ))}
 

@@ -89,9 +89,16 @@ const ModalWrapper = styled.div`
     background: transparent;
     font-family: inherit;
     padding: 1em 0.7em;
-    border: 2px solid transparent;
-    outline: 1px solid hsla(var(--clr-text-dark));
+    border: 1px solid hsla(var(--clr-text-dark), 0.3);
     border-radius: 6px;
+    &:hover {
+      border: 1px solid hsla(var(--clr-primary-light), 1);
+      outline: none;
+    }
+    &:focus {
+      border: 1px solid hsla(var(--clr-primary), 1);
+      outline: none;
+    }
   }
 
   & .subtasks {
@@ -139,7 +146,6 @@ const ModalWrapper = styled.div`
     --gap: 0.3em;
     margin-block: 0.5em;
     & input {
-      border: 1px solid hsl(var(--clr-text-dark));
       padding: 1em 0.7em;
     }
     & .form-error {

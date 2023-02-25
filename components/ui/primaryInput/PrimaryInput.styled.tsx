@@ -8,12 +8,16 @@ export interface IPrimaryInput extends React.ComponentPropsWithRef<'input'> {
 const StyledPrimaryInput = styled.input<IPrimaryInput>`
   width: ${({ fullWidth }) => fullWidth && '100%'};
   border: 2px solid transparent;
-  outline: 1px solid hsla(var(--clr-text-light), 1);
+  border: 1px solid hsla(var(--clr-text-dark), 0.3);
   border-radius: 5px;
   padding: 0.875em 0.5em;
 
+  &:hover {
+    border: 1px solid hsla(var(--clr-primary-light), 1);
+    outline: none;
+  }
   &:focus {
-    border-color: hsla(var(--clr-text-light), 1);
+    border: 1px solid hsla(var(--clr-primary), 1);
     outline: none;
   }
 `;
