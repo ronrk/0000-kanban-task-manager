@@ -26,14 +26,13 @@ Users should be able to:
 - Mark subtasks as complete and move tasks between columns
 - Hide/show the board sidebar
 - Toggle the theme between light/dark modes
-- **Bonus**: Allow users to drag and drop tasks to change their status and re-order them in a column
-- **Bonus**: Keep track of any changes, even after refreshing the browser (`localStorage` could be used for this if you're not building out a full-stack app)
-- **Bonus**: Build this project as a full-stack application
+- Keep track of any changes, even after refreshing the browser
+- Build this project as a full-stack application
 
 ### Links
 
 - Solution URL: working on it
-- Live Site URL: [Under Development](https://0000-kanban-task-manager.vercel.app/)
+- Live Site URL: [Live Preview](https://0000-kanban-task-manager.vercel.app/)
 
 ## My process
 
@@ -45,8 +44,11 @@ Users should be able to:
 - CSS Grid
 - Mobile-first workflow
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
+- [Next.js](https://nextjs.org/) - React fullstack framework
 - [Styled Components](https://styled-components.com/) - For styles
+- [mongoDB](https://mongoosejs.com/) - Database
+- [mongoose](https://mongoosejs.com/) - ODM
+- [next-auth](https://next-auth.js.org/) - Authentication
 
 ## Author
 

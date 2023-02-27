@@ -31,7 +31,7 @@ const StyledSignIn = styled.section`
   & .switchType {
     width: 100%;
     text-align: center;
-    & button {
+    & .switch--btn {
       text-align: center;
       width: 100%;
       &:disabled {
@@ -45,6 +45,11 @@ const StyledSignIn = styled.section`
           color: hsl(var(--clr-primary));
         }
       }
+    }
+    & .demo--btn {
+      width: 80%;
+      margin-inline: auto;
+      margin-top: 2rem;
     }
   }
 `;

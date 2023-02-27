@@ -4,7 +4,7 @@ const StyledAppbar = styled.header`
   grid-area: appbar;
   position: relative;
   --gap: 0;
-  height: 10vh;
+  min-height: 10vh;
   align-items: center;
 
   & h2 {
@@ -37,34 +37,36 @@ const StyledAppbar = styled.header`
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    & .menu {
+      display: none;
+    }
   }
   & .actions {
-    align-items: baseline;
+    align-items: center;
     margin-left: 0.5em;
     --gap: 1rem;
   }
-  & .logout--icon {
+  & .dropdown {
     display: none;
   }
 
-  @media screen and (max-width: 870px) {
+  @media screen and (max-width: 710px) {
+    & .appBar {
+      padding-inline: 0.5rem;
+    }
     & .actions {
       --gap: 0.3rem;
-    }
-    & .create-btn-text {
-      display: none;
+      & .create-task-btn {
+        & .text {
+          display: none;
+        }
+      }
     }
     & .logout--btn {
-      background-color: transparent;
-    }
-    & .logout--btn_text {
-      display: none;
-    }
-
-    & .logout--icon {
-      display: block;
-      font-size: 25px;
-      color: hsl(var(--clr-red));
+      margin-left: 0.5rem;
+      & .text {
+        display: none;
+      }
     }
   }
   @media screen and (max-width: 750px) {
@@ -73,13 +75,29 @@ const StyledAppbar = styled.header`
       --gap: 0;
 
       & .create-task-btn {
-        background-color: transparent;
+        /*         background-color: transparent;
         color: hsl(var(--clr-primary-light));
         font-size: 1rem;
         padding: 0;
         &:hover {
           color: hsl(var(--clr-primary));
-        }
+        } */
+      }
+    }
+  }
+  @media screen and (max-width: 650px) {
+    & .appBar {
+      & .appbar__heading {
+        display: none;
+      }
+      & .menu {
+        display: block;
+        align-items: center;
+        justify-content: center;
+      }
+      & .dropdown {
+        display: block;
+        min-width: 100px;
       }
     }
   }

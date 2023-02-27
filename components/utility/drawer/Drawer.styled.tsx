@@ -77,6 +77,9 @@ const StyledDrawer = styled.nav`
     width: 0;
     overflow: hidden;
   }
+  @media screen and (max-width: 650px) {
+    display: none;
+  }
 `;
 
 export default StyledDrawer;

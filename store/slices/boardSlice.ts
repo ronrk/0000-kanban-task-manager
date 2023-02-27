@@ -14,9 +14,11 @@ const slice = createSlice({
   initialState,
   reducers: {
     changeActiveBoard: (state, action) => {
+      console.log(action.payload);
       const foundBoard = state.boards.find(
         (board) => board._id === action.payload
       );
+      console.log({ foundBoard });
       if (foundBoard) {
         state.currentBoard = foundBoard;
       }

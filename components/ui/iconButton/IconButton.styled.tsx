@@ -52,7 +52,7 @@ const IconButton: FC<IIconButton> = ({ ...props }) => (
     {props.icon === 'logout' && (
       <CiLogout fontSize={'17px'} className={`icon text-${props.color}`} />
     )}
-    <span>{props.textLabel}</span>
+    <span className="text">{props.textLabel}</span>
   </StyledIconButton>
 );
 

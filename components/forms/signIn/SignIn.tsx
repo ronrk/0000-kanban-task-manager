@@ -104,10 +104,10 @@ const SignIn: React.FC<ISignIn> = () => {
   };
 
   const switchContent = isAlreadyUser ? (
-    <div className="switchType">
+    <div className="switchType ">
       <p className="text-light fs-500">New User?</p>
       <button
-        className="text-light fs-500"
+        className="text-light fs-500 switch--btn"
         onClick={() => setIsAlreadyUser((prev) => !prev)}
       >
         Click to <span>Signup</span>
@@ -117,22 +117,26 @@ const SignIn: React.FC<ISignIn> = () => {
         color={'red-light'}
         textLabel={'Demo App'}
         onClick={loginDemoUser}
+        className="demo--btn"
       />
     </div>
   ) : (
     <div className="switchType">
       <p className="text-light fs-500">Already a user?</p>
       <button
-        className="text-light fs-500"
+        className="text-light fs-500 switch--btn"
         onClick={() => setIsAlreadyUser((prev) => !prev)}
       >
         Click to <span>Login</span>
       </button>
       <PrimaryButton
+        className="demo--btn"
         type="button"
         color={'red-light'}
-        textLabel={'Demo App'}
+        textLabel={'Demo App / Unavaibale'}
         onClick={loginDemoUser}
+        fullWidth={false}
+        disabled={true}
       />
     </div>
   );

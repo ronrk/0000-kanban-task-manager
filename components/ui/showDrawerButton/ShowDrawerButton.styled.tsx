@@ -24,5 +24,8 @@ const StyledShowDrawerButton = styled.button`
       filter: blur(0) drop-shadow(0 0 2px red);
     }
   }
+  @media screen and (max-width: 650px) {
+    display: none;
+  }
 `;
 export default StyledShowDrawerButton;

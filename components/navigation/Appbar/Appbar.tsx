@@ -2,11 +2,12 @@
 import CreateNewBoard from '@/components/forms/createNewBoard/CreateNewBoard';
 import CreateNewTask from '@/components/forms/createNewTask/CreateNewTask';
 import DeleteBoard from '@/components/forms/deleteBoard/DeleteBoard';
+import BoardsDropdown from '@/components/ui/boardsDropdown/BoardsDropdown';
 import IconButton from '@/components/ui/iconButton/IconButton.styled';
 import MenuDropdown from '@/components/ui/menuDropdown/MenuDropdown';
-import PrimaryButton from '@/components/ui/primaryButton/PrimaryButton.styled';
 import ShowDrawerButton from '@/components/ui/showDrawerButton/ShowDrawerButton';
 import {
+  changeActiveBoard,
   logout,
   openModal,
   selectBoardValue,
@@ -14,9 +15,9 @@ import {
   selectUser,
   useAppDispatch,
 } from '@/store';
+import { IBoard } from '@/types';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { HiOutlinePlus } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Wrapper from './Appbar.styled';
 
@@ -25,7 +26,7 @@ export interface IAppbar extends React.ComponentPropsWithoutRef<'header'> {}
 const Appbar: React.FC<IAppbar> = () => {
   const { isDrawerOpen, darkTheme } = useSelector(selectClientValue);
   const { user } = useSelector(selectUser);
-  const { currentBoard } = useSelector(selectBoardValue);
+  const { currentBoard, boards } = useSelector(selectBoardValue);
   const dispatch = useAppDispatch();
 
   return (
@@ -43,12 +44,23 @@ const Appbar: React.FC<IAppbar> = () => {
       </div>
       <div className="appBar flex">
         <div className="flex">
-          <h2 className="fs-600 line-h-500 text-dark">
+          <h2 className="fs-600 line-h-500 text-dark appbar__heading">
             {!currentBoard ? `Welcome ${user?.username}` : currentBoard.name}
           </h2>
+          {user && currentBoard && (
+            <BoardsDropdown
+              options={boards.map((board: IBoard) => board.name)}
+              onChange={function (type: any): void {
+                dispatch(changeActiveBoard(type._id));
+              }}
+              value={currentBoard.name}
+              boards={boards}
+              board={currentBoard}
+            />
+          )}
           <IconButton
             color="red"
-            className="fs-200 logout--btn"
+            className="fs-200 logout--btn flex text-dark"
             onClick={() => {
               dispatch(logout());
               signOut();
@@ -59,19 +71,15 @@ const Appbar: React.FC<IAppbar> = () => {
         </div>
 
         <div className="actions flex">
-          <PrimaryButton
+          <IconButton
             color="primary"
             className="create-task-btn flex text-dark"
             disabled={
               !currentBoard || currentBoard.columns.length === 0 ? true : false
             }
             onClick={() => dispatch(openModal(<CreateNewTask />))}
-            textLabel={
-              <>
-                <HiOutlinePlus fontSize={'17px'} className={`icon text-dark`} />
-                Add New Task
-              </>
-            }
+            textLabel={'Add New Task'}
+            icon="add"
           />
 
           <MenuDropdown
