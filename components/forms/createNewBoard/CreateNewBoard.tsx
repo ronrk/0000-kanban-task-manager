@@ -173,11 +173,11 @@ const CreateNewBoard: React.FC<ICreateNewBoard> = ({ board }) => {
         });
       return;
     } else {
-      if (demoUser) {
+      /*       if (demoUser) {
         dispatch(closeModal());
         dispatch(openModal(<DemoUserModal />));
         return;
-      }
+      } */
       addBoard({
         uid: user?._id,
         board: { ...formBoard, name: enteredName },

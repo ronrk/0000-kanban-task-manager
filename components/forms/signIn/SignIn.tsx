@@ -112,13 +112,6 @@ const SignIn: React.FC<ISignIn> = () => {
       >
         Click to <span>Signup</span>
       </button>
-      <PrimaryButton
-        type="button"
-        color={'red-light'}
-        textLabel={'Demo App'}
-        onClick={loginDemoUser}
-        className="demo--btn"
-      />
     </div>
   ) : (
     <div className="switchType">
