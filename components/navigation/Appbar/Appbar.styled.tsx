@@ -7,11 +7,6 @@ const StyledAppbar = styled.header`
   min-height: 10vh;
   align-items: center;
 
-  & h2 {
-    text-transform: capitalize;
-    margin-right: 1rem;
-  }
-
   & .image-wrapper {
     padding: 1em 2em;
     position: relative;
@@ -37,7 +32,15 @@ const StyledAppbar = styled.header`
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    & .menu {
+    & .appbar__heading {
+      &.hide {
+        display: none;
+      }
+      display: block;
+      text-transform: capitalize;
+      margin-right: 1rem;
+    }
+    & .dropdown__wrapper {
       display: none;
     }
   }
@@ -45,9 +48,6 @@ const StyledAppbar = styled.header`
     align-items: center;
     margin-left: 0.5em;
     --gap: 1rem;
-  }
-  & .dropdown {
-    display: none;
   }
 
   @media screen and (max-width: 710px) {
@@ -90,14 +90,17 @@ const StyledAppbar = styled.header`
       & .appbar__heading {
         display: none;
       }
+      & .dropdown__wrapper {
+        display: block;
+        min-width: 100px;
+        & .dropdown {
+          width: 100%;
+        }
+      }
       & .menu {
         display: block;
         align-items: center;
         justify-content: center;
-      }
-      & .dropdown {
-        display: block;
-        min-width: 100px;
       }
     }
   }

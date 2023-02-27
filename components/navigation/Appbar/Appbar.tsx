@@ -47,17 +47,21 @@ const Appbar: React.FC<IAppbar> = () => {
           <h2 className="fs-600 line-h-500 text-dark appbar__heading">
             {!currentBoard ? `Welcome ${user?.username}` : currentBoard.name}
           </h2>
-          {user && currentBoard && (
-            <BoardsDropdown
-              options={boards.map((board: IBoard) => board.name)}
-              onChange={function (type: any): void {
-                dispatch(changeActiveBoard(type._id));
-              }}
-              value={currentBoard.name}
-              boards={boards}
-              board={currentBoard}
-            />
-          )}
+          <div className="dropdown__wrapper">
+            {user && currentBoard ? (
+              <BoardsDropdown
+                options={boards.map((board: IBoard) => board.name)}
+                onChange={function (type: any): void {
+                  dispatch(changeActiveBoard(type._id));
+                }}
+                value={currentBoard.name}
+                boards={boards}
+                board={currentBoard}
+              />
+            ) : (
+              <h2 className="fs-600 line-h-500 text-dark">{`Welcome ${user?.username}`}</h2>
+            )}
+          </div>
           <IconButton
             color="red"
             className="fs-200 logout--btn flex text-dark"

@@ -5,7 +5,7 @@ const StyledDrawer = styled.nav`
   top: 100%;
   left: 0;
   width: var(--drawer-width);
-  min-height: 90vh;
+
   max-height: 100%;
   align-items: flex-start;
   border-right: 2px solid hsl(var(--clr-line));
