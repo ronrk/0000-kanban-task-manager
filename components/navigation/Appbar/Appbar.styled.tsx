@@ -4,7 +4,8 @@ const StyledAppbar = styled.header`
   grid-area: appbar;
   position: relative;
   --gap: 0;
-  min-height: 10vh;
+  min-height: 70px;
+  max-height: 15vh;
   align-items: center;
 
   & .image-wrapper {
@@ -86,6 +87,9 @@ const StyledAppbar = styled.header`
     }
   }
   @media screen and (max-width: 650px) {
+    & .image-wrapper {
+      border-color: hsla(var(--clr-line));
+    }
     & .appBar {
       & .appbar__heading {
         display: none;

@@ -143,7 +143,6 @@ const SignIn: React.FC<ISignIn> = () => {
 
   return (
     <Wrapper className="flex-col">
-      <h2 className="fs-700  text-primary-light">{pageState}</h2>
       {isLoading ? (
         <LoadingSpinner color="primary" />
       ) : (
